@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <!--
+  You are free to copy and use this sample in accordance with the terms of the
+  Apache license (http://www.apache.org/licenses/LICENSE-2.0.html)
+  -->
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>
+      Daniel Lidström @ SL 5x5
+    </title>
+    <style type="text/css">
+    </style>
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load('visualization', '1', {packages: ['corechart']});
+    </script>
+    <script type="text/javascript">
+      function drawVisualization() {
+        // Create and populate the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('date', 'x');
+        data.addColumn('number', 'Daniel');
+        data.addColumn('number', 'Knäböj');
+        data.addColumn('number', 'Bänk');
+        data.addColumn('number', 'Rodd');
+        data.addColumn('number', 'Press');
+        data.addColumn('number', 'Marklyft');
+
+        // month is 0-based
+        data.addRow([new Date(2011, 08, 26), 82.4, 20.0, 20.0, 30.0, 20.0, 30]);
+        data.addRow([new Date(2011, 08, 28), 82.4, 22.5, 20.0, 30.0, 20.0, 30]);
+        data.addRow([new Date(2011, 08, 30), 82.4, 25.0, 22.5, 32.5, 20.0, 30]);
+        data.addRow([new Date(2011, 09, 03), 82.4, 27.5, 22.5, 32.5, 22.5, 45]);
+        data.addRow([new Date(2011, 09, 04), 82.4, 30.0, 25.0, 35.0, 22.5, 45]);
+        data.addRow([new Date(2011, 09, 05), 82.4, 32.5, 25.0, 35.0, 25.0, 50]);
+        data.addRow([new Date(2011, 09, 10), 82.4, 35.0, 27.5, 37.5, 25.0, 50]);
+        data.addRow([new Date(2011, 09, 12), 84.7, 37.5, 27.5, 37.5, 27.5, 55]);
+        data.addRow([new Date(2011, 09, 14), 84.7, 40.0, 30.0, 40.0, 27.5, 55]);
+        data.addRow([new Date(2011, 10, 04), 84.7, 35.0, 30.0, 40.0, 25.0, 50]);
+        data.addRow([new Date(2011, 10, 07), 84.0, 37.5, 32.5, 45.0, 25.0, 50]);
+        data.addRow([new Date(2011, 10, 09), 84.0, 40.0, 32.5, 45.0, 27.5, 55]);
+        data.addRow([new Date(2011, 10, 22), 83.8, 35.0, 35.0, 30.0, 27.5, 55]);
+        data.addRow([new Date(2011, 10, 24), 83.8, 37.5, 35.0, 30.0, 30.0, 60]);
+        data.addRow([new Date(2011, 10, 28), 84.7, 40.0, 37.5, 32.5, 30.0, 60]);
+        data.addRow([new Date(2011, 10, 30), 86.4, 42.5, 37.5, 32.5, 32.5, 65]);
+        data.addRow([new Date(2011, 11, 02), 85.4, 45.0, 40.0, 35.0, 32.5, 65]);
+        data.addRow([new Date(2011, 11, 05), 86.4, 47.5, 40.0, 35.0, 35.0, 70]);
+        data.addRow([new Date(2011, 11, 07), 86.4, 50.0, 42.5, 37.5, 35.0, 70]);
+        data.addRow([new Date(2011, 11, 09), 86.6, 52.5, 42.5, 37.5, 37.5, 75]);
+        data.addRow([new Date(2011, 11, 11), 85.8, 55.0, 45.0, 37.5, 40.0, 75]);
+        data.addRow([new Date(2011, 11, 13), 85.8, 57.5, 45.0, 40.0, 40.0, 80]);
+        data.addRow([new Date(2011, 11, 15), 86.7, 60.0, 47.5, 42.5, 40.0, 80]);
+        data.addRow([new Date(2011, 11, 17), 86.4, 62.5, 47.5, 42.5, 42.5, 85]);
+        data.addRow([new Date(2011, 11, 19), 86.2, 65.0, 50.0, 45.0, 42.5, 85]);
+        data.addRow([new Date(2011, 11, 21), 86.2, 67.5, 50.0, 45.0, 45.0, 90]);
+        data.addRow([new Date(2011, 11, 23), 86.2, 70.0, 52.5, 47.5, 45.0, 90]);
+
+        // Create and draw the visualization.
+        var chart = new google.visualization.LineChart(document.getElementById('visualization'));
+        var options = {/*title: "Daniel Lidström @ SL 5x5",*/ curveType: "function", width: 500, height: 400};
+        chart.draw(data, options);
+      }
+
+      google.setOnLoadCallback(drawVisualization);
+    </script>
+  </head>
+  <h3>Daniel Lidström @ <a href="http://stronglifts.com/stronglifts-5x5-beginner-strength-training-program/" target="_blank">SL 5x5</a></h3>
+  <body style="font-family: Arial;border: 0 none;">
+    <div id="visualization" style="width: 500px; height: 400px;"></div>
+  </body>
+</html>
