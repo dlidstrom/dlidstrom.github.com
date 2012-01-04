@@ -59,10 +59,10 @@
 
         // Create and draw the visualization.
         var continuousChart = new google.visualization.LineChart(document.getElementById('continuous-visualization'));
-        continuousChart.draw(data, { title: "By Date", curveType: "function", width: 500, height: 400, strictFirstColumnType: true });
-        
+        continuousChart.draw(data, { title: "Utveckling med hänsyn till tiden", curveType: "function", width: 500, height: 400, strictFirstColumnType: true });
+
         var chart = new google.visualization.LineChart(document.getElementById('visualization'));
-        chart.draw(data, { title: "By Improvement", curveType: "function", width: 500, height: 400 });
+        chart.draw(data, { title: "Utveckling utan hänsyn till tiden", curveType: "function", width: 500, height: 400 });
       }
 
       google.setOnLoadCallback(drawVisualization);
