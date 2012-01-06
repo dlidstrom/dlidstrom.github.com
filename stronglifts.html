@@ -60,10 +60,10 @@
 
         // Create and draw the visualization.
         var continuousChart = new google.visualization.LineChart(document.getElementById('continuous-visualization'));
-        continuousChart.draw(data, { title: "Utveckling med hänsyn till tiden", curveType: "function", width: 500, height: 400, strictFirstColumnType: true });
+        continuousChart.draw(data, { title: "Utveckling över tiden", curveType: "function", width: 700, height: 600, strictFirstColumnType: true });
 
         var chart = new google.visualization.LineChart(document.getElementById('visualization'));
-        chart.draw(data, { title: "Utveckling utan hänsyn till tiden", curveType: "function", width: 500, height: 400 });
+        chart.draw(data, { title: "Utveckling utan hänsyn till tiden", curveType: "function", width: 700, height: 600 });
       }
 
       google.setOnLoadCallback(drawVisualization);
@@ -71,7 +71,7 @@
   </head>
   <body style="font-family: Arial;border: 0 none;">
     <h3>Daniel Lidström @ <a href="http://stronglifts.com/stronglifts-5x5-beginner-strength-training-program/" target="_blank">SL 5x5</a></h3>
-    <div id="continuous-visualization" style="width: 500px; height: 400px;"></div>
-    <div id="visualization" style="width: 500px; height: 400px;"></div>
+    <div id="continuous-visualization" style="width: 700px; height: 600px; float: left"></div>
+    <div id="visualization" style="width: 700px; height: 600px; float: left"></div>
   </body>
 </html>
