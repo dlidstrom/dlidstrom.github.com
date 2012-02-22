@@ -72,10 +72,12 @@
 
         // Create and draw the visualization.
         var continuousChart = new google.visualization.LineChart(document.getElementById('continuous-visualization'));
-        continuousChart.draw(data, { title: "Utveckling över tiden", curveType: "function", width: 700, height: 600, strictFirstColumnType: true });
+        continuousChart.draw(data, { title: "Utveckling över tiden", curveType: "function", width: 700, height: 600 });
 
+        var dataView = new google.visualization.DataView(data);
+        dataView.setColumns([{ calc: function (data, row) { return data.getFormattedValue(row, 0); }, type: 'string' }, 1, 2, 3, 4, 5, 6]);
         var chart = new google.visualization.LineChart(document.getElementById('visualization'));
-        chart.draw(data, { title: "Utveckling utan hänsyn till tiden", curveType: "function", width: 700, height: 600 });
+        chart.draw(dataView, { title: "Utveckling utan hänsyn till tiden", curveType: "function", width: 700, height: 600 });
       }
 
       google.setOnLoadCallback(drawVisualization);
