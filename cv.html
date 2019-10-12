@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script>
+        setTimeout(() => location.reload(), 3000);
+    </script>
+    <style>
+        * {
+            border: 1px dashed red;
+        }
+        #container::after {
+            clear: both;
+        }
+        aside {
+            float: left;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="content">
+        <h1>Content</h1>
+        <section>left 1</section>
+    </div>
+    <aside>aside right</aside>
+</body>
+
+</html>
