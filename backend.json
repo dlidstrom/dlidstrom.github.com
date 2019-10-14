@@ -1,0 +1,30 @@
+{
+    "head": "Daniel is an experienced consultant within software development. He has worked since 2003 with product development in .NET and C++, both design, implementation, and maintenance. Daniel combines leadership skills with deep knowledge of modern web development using ASP.NET MVC/Core, HTML5, and JavaScript combined with domain driven design, test driven development, design patterns and SOLID principles to create highly productive environments. Daniel is regarded as dedicated, structured, and creative. He is able to stay ahead of the learning curve with new techniques and methods.",
+    "skills": [
+        "Leadership Qualities",
+        "Software Development (.NET, ASP.NET, WebAPI, JavaScript, HTML5)",
+        "Test Driven Development (BDD/TDD)",
+        "Design Patterns (GoF, SOLID)",
+        "SQL Server (T-SQL)",
+        "Git, TeamCity, SVN",
+        "Scrum, Kanban, SAFe"
+    ],
+    "assignments": [
+        {
+            "company": "Tradera",
+            "years": "2016 - 2017",
+            "title": "Software Developer Internet Commerce",
+            "description": "Developed frontend and backend functionality for new major feature Klasskassan campaigns. Also identified and developed necessary back office functionality for managing Klasskassan campaigns and related charities to simplify and speed up repetitive customer service work. Implemented several responsive web components that scale appropriately from mobile to desktop screens. Worked with my team to better use Kanban and speed up delivery process. Held presentation to entire development team on how to use Git effectively in a large team setting with offshore coworkers and also presented how to implement an effective software framework for business rules and informative logging. Investigated and verified usefulness of code search functionality of new version of GitLab code server to aid in navigating a very large code base. Started initiative to document internal acronyms and business rules in Wiki format.",
+            "technologies": [
+                "C#",
+                "CQRS",
+                "Git",
+                "MongoDB",
+                "CSS",
+                "React",
+                "Redux",
+                "RiotJS"
+            ]
+        }
+    ]
+}

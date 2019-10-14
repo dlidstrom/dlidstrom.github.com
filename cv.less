@@ -1,12 +1,28 @@
 * {
-    border: 1px dashed red;
+    // border: 1px dashed red;
 }
 
 /* body */
 body {
     font-family: Helvetica;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+
     &::after {
         clear: both;
+    }
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+article {
+    margin-top: 1rem;
+
+    h1 {
+        font-size: 1.5rem;
     }
 }
 
@@ -29,4 +45,36 @@ header {
 /* aside */
 aside {
     float: left;
+}
+
+ul li {
+    margin-left: 1rem;
+}
+
+.tech-list-header {
+    float: left;
+    // margin-right: 1rem;
+}
+
+ul.tech-list {
+    display: inline;
+    li {
+        width: auto;
+        list-style-type: none;
+        width: auto;
+        list-style-type: none;
+        border-radius: 3px;
+        background-color: steelblue;
+        color: white;
+        display: inline-block;
+        line-height: 1.2rem;
+        font-weight: bold;
+        padding: 1px 2px;
+        vertical-align: baseline;
+    }
+}
+
+.assignment-header-years {
+    font-size: 1.2rem;
+    color: grey;
 }

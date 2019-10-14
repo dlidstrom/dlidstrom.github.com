@@ -3,186 +3,80 @@
 
 <head>
     <meta charset="utf8" />
-    <script>
-        setTimeout(() => location.reload(), 3000);
-    </script>
     <link rel="stylesheet" type="text/css" href="reset.css">
     <link rel="stylesheet/less" type="text/css" href="cv.less">
     </style>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/less.js/3.9.0/less.js" ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/3.9.0/less.min.js" ></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js"
+        integrity="sha256-7/yoZS3548fXSRXqc/xYzjsmuW3sFKzuvOCHd06Pmps="
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+        //setTimeout(() => location.reload(), 3000);
+        let profileName = new URLSearchParams(location.search).get("p") || "profile.json";
+        jQuery.ajaxSettings.cache = false;
+        $(() => {
+            let template = _.template($("#profileTemplate").html());
+            $.ajax(profileName).done(profile => $("body").html(template(profile)));
+        });
+    </script>
+    <script type="text/html" id="profileTemplate">
+        <header>
+            <h1>Consultant Profile</h1>
+            <h2>Daniel Lidström</h2>
+        </header>
+        <div id="content">
+            <section>
+                <p><%= head %></p>
+                <section>
+                    <h1>
+                        Skills
+                    </h1>
+                    <p>
+                        <ul>
+                            <% _.each(skills, skill => { %>
+                                <li><%= skill %></li>
+                            <% }); %>
+                        </ul>
+                    </p>
+                </section>
+                <section>
+                    <h1>Assignments and Dates</h1>
+                    <% _.each(assignments, assignment => { %>
+                        <article>
+                                <header>
+                                    <h2 class="assignment-header-company">
+                                        <%= assignment.company %>
+                                        <span class="assignment-header-years">
+                                            <%= assignment.years %>
+                                        </span>
+                                    </h2>
+                                </header>
+                                <p>
+                                    <%= assignment.title %>
+                                </p>
+                                <p>
+                                    <%= assignment.description %>
+                                </p>
+                                <div>
+                                    <span class="tech-list-header">Technologies used:</span>
+                                    <ul class="tech-list">
+                                        <% _.each(assignment.technologies, tech => { %>
+                                        <li><%= tech %></li>
+                                        <% }); %>
+                                    </ul>
+                                </div>
+                            </article>
+                    <% }); %>
+                </section>
+            </section>
+        </div>
+        <aside>aside right</aside>
+    </script>
 </head>
 
 <body>
-    <header>
-        <h1>Consultant Profile</h1>
-        <h2>Daniel Lidström</h2>
-    </header>
-    <div id="content">
-        <h1>Content</h1>
-        <section>
-            <p>
-                Daniel is an experienced consultant within software development. He has worked since 2003 with product
-                development in .NET and C++, both design, implementation, and maintenance. Daniel combines leadership
-                skills with deep knowledge of modern web development using ASP.NET MVC/Core, HTML5, and JavaScript
-                combined with domain driven design, test driven development, design patterns and SOLID principles to
-                create highly productive environments. Daniel is regarded as dedicated, structured, and creative. He is
-                able to stay ahead of the learning curve with new techniques and methods.
-            </p>
-            <section>
-                <h1>
-                    Skills
-                </h1>
-                <p>
-                    <ul>
-                        <li>
-                            Leadership Qualities
-                        </li>
-                        <li>
-                            Software Development (.NET, ASP.NET, WebAPI, JavaScript, HTML5)
-                        </li>
-                        <li>
-                            Test Driven Development (BDD/TDD)
-                        </li>
-                        <li>
-                            Design Patterns (GoF, SOLID)
-                        </li>
-                        <li>
-                            SQL Server (T-SQL)
-                        </li>
-                        <li>
-                            Git, TeamCity, SVN
-                        </li>
-                        <li>
-                            Scrum, Kanban, SAFe
-                        </li>
-                    </ul>
-                </p>
-            </section>
-            <section>
-                <h1>
-                    Assignments and Dates
-                </h1>
-                <article>
-                    <header>
-                        <h2>
-                            Tradera
-                            <span>
-                                2016 – 2017
-                            </span>
-                        </h2>
-                    </header>
-                    <p>
-                        Software Developer Internet Commerce.
-                    </p>
-                    Developed frontend and backend functionality for new major feature Klasskassan campaigns. Also
-                    identified and developed necessary back office functionality for managing Klasskassan campaigns and
-                    related charities to simplify and speed up repetitive customer service work. Implemented several
-                    responsive web components that scale appropriately from mobile to desktop screens. Worked with my
-                    team to better use Kanban and speed up delivery process. Held presentation to entire development
-                    team on how to use Git effectively in a large team setting with offshore coworkers and also
-                    presented on how to implement an effective software framework for business rules and informative
-                    logging. Investigated and verified usefulness of code search functionality of new version of GitLab
-                    code server to aid in navigating a very large code base. Started initiative to document internal
-                    acronyms and business rules in Wiki format.
-                    Technologies used:.C#, CQRS, Git, MongoDB, CSS, React, Redux, RiotJS.
-                </article>
-            </section>
-            Com Hem 2015 – 2016
-            Lead Developer Telecommunications.
-            Responsible for a development team working with ITIL processes (network/customer incidents, field service
-            integration, and more). I work closely with process leaders (business reps) to plan and coordinate projects
-            and development tasks. I organize scrum meetings and effective development processes using JIRA. I am
-            modernizing legacy platforms by moving from COM+ into modern .NET. I am establishing continuous deployment
-            using WiX and MSI from what was previously manual copying steps. I introduced a common monitoring convention
-            using Windows EventLog and Grafana. I am also coaching junior developers to get them started with TDD and
-            basic database design principles.
-            Technologies used: C#, Wpf, NUnit, Git, WiX, RabbitMq, ServiceNow, JavaScript, PowerShell.
-            H&M 2012 – 2015
-            Software Developer Retail clothing. Development of internal web systems for a multinational retail company,
-            with thousands of users. I have developed and maintained 8 distinct systems (4 from scratch). There is a
-            large focus on usability and intuitive user interfaces coupled with performance requirements. Rapid
-            application development is achieved using unit tests, code review, team work, automation, and close
-            collaboration with product owners. I routinely perform code reviews, mentor other developers (Swedish and
-            offshore), and work to create a highly productive environment. I am joint-organizer of and presenter in a
-            JavaScript User Group, where we introduced and advocate AngularJS. Technologies used: ASP.NET MVC/WebAPI,
-            JavaScript/TypeScript, AngularJS, HTML5, MSMQ, TeamCity, PowerShell, WiX, CQRS, event sourcing, offshoring.
-            Qall 2012
-            Software Developer Telecom for small businesses. Responsible for migrating a customer base from a legacy
-            system to a new provider. Tens of thousands of customers and various types of phone subscriptions were
-            moved, using MySQL as an integration point. Implemented an automated process that was tuned with unit tests
-            to secure intended behaviour. Dozens of business rules were identified by close collaboration with domain
-            experts. Technologies used: MySQL, Git, TeamCity, NUnit.
-            Softronic 2011 – 2012
-            Software Developer Web-based insurance systems. Service oriented system architecture with integration to
-            external IT systems.
-            Delivered a new solution for customer address updates. This resulted in a fault tolerant daily-run batch
-            service that communicates with a web service at InfoTorg.
-            Delivered several integrations with 3rd party insurance systems. This was done by reading Excel documents
-            and a large refactoring was necessary. Unit tests were written to ensure existing functionality.
-            Designed and implemented an interface for administering insurance conditions and terms documents.
-            Took over responsibility for a portal where partners can register and manage bugs, requirements, and other
-            types of issues. Issues were stored as work items within Team Foundation Server. New functions included
-            reporting and viewing of hierarchical work items as well as improving the web design. Technologies used:
-            ASP.NET, WCF, MS SQL Server, COM+, TFS.
-            GpsGate 2010 jun – 2011 apr
-            Software Developer GPS tracking and monitoring of vehicles in real time over GPRS and SMS on a web based
-            platform.
-            Developed a template based scripting language with support for conditional expressions to enabled rapid
-            customization to mobile tracking units with new communication protocols.
-            Designed and implemented integration with an address and location service based in Singapore.
-            Responsible for migrating the code base from CVS to more modern tools. After an initial study, the
-            distributed version control system Mercurial was chosen and members of the development team were educated in
-            the new way of working. The team was able to work productively with much faster operations due to the
-            distributed nature of Mercurial. Implemented continuous integration using TeamCity which resulted in faster
-            and improved building of daily deliverables with no need for manual work. Technologies used: ASP.NET, MySQL,
-            JavaScript, Mercurial, TeamCity
-            Hexagon Machine Control 2009 – 2010
-            Technical Lead Embedded systems controlling heavy construction equipment for precise grade control.
-            Worked in an international project, close with project management, developers, and testers. Performed pair
-            programming, time estimates, and code reviews to be able to meet deadline. As a team effort, delivered
-            3-dimensional visualization of AutoCAD road models, a new mathematical model of the blades of graders and
-            integration with a number of 3rd party data formats. Daniel was appreciated by the team for his leadership,
-            attitude, and positive mindset. Technologies used: Linux, C++, Boost, OpenGL
-            Hexagon Machine Control 2007 – 2009
-            Software Developer Software for surveying and machine control applications.
-            Responsible for a C++ code base shared between multiple platforms. Delivered a mathematical road model using
-            test driven development; a necessity to ensure correct calculations on several platforms. A significant
-            optimization work was performed to enable continuous measurement and calculations on platforms with minimal
-            computing resources. Likewise, complex data structures were optimized to fit within the memory of portable
-            devices. Techniques were used to bridge platform independent code with APIs in Windows and Linux. This
-            simplified development for the team and greatly simplified platform independent development. Daniel was part
-            of the technical reference group were decisions were made regarding future development
-            directions. Technologies used: C++, STL, Boost, MSXML, CppUnit, Windows Mobile, Linux
-            Svensk ByggnadsGeodesi 2006 dec – 2007 mar
-            Software Developer Making a compactor machine autonomous.
-            Part of a research project aimed at making an autonomous 8 ton compactor machine. Implemented a
-            communications protocol and the steering and speed control of the compactor machine. After a couple of test
-            runs the compactor machine was able to receive directions from an asphalt machine, drive backwards and
-            forwards by itself, following a path, and make a small turn when changing directions. Project was cancelled
-            after proof of concept completion. Technologies used: C++, STL, Boost, Linux, TCP/IP
-            Svensk ByggnadsGeodesi 2003 – 2007
-            Software Developer Office tools for surveyors and field surveying software.
-            Responsible for developing functions for transmitting data to and from surveying instruments. Designed and
-            implemented new features within the office suite. Parallel with development, took on a customer support
-            role. Personal contact with key customers and the possibility to improve their working situation was both
-            motivating and satisfying.  Technologies used: C++, Boost, MFC, Microsoft.NET
-
-            Career History
-            Connecta 2012 – 2015
-            Consultant as a software developer at Connecta Microsoft
-            Softronic 2011 – 2012
-            Consultant as a software developer of insurance systems
-            GpsGate 2010 – 2011
-            Software developer and blogger
-            Hexagon Machine Control 2009 – 2010
-            Technical lead
-            Hexagon Machine Control (formerly Svensk ByggnadsGeodesi) 2007 – 2009
-            Software developer
-            Svensk ByggnadsGeodesi 2003 – 2006
-            Software developer and support
-        </section>
-    </div>
-    <aside>aside right</aside>
 </body>
 
 </html>
