@@ -14,7 +14,7 @@
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script>
         //setTimeout(() => location.reload(), 3000);
-        let profileName = new URLSearchParams(location.search).get("p") || "profile.json";
+        let profileName = new URLSearchParams(location.search).get("p") || "backend.json";
         jQuery.ajaxSettings.cache = false;
         $(() => {
             let template = _.template($("#profileTemplate").html());
@@ -29,10 +29,8 @@
         <div id="content">
             <section>
                 <p><%= head %></p>
-                <section>
-                    <h1>
-                        Skills
-                    </h1>
+                <section class="skills-section">
+                    <h1>Skills</h1>
                     <p>
                         <ul>
                             <% _.each(skills, skill => { %>
@@ -41,38 +39,42 @@
                         </ul>
                     </p>
                 </section>
-                <section>
+                <section class="assignments-section">
                     <h1>Assignments and Dates</h1>
                     <% _.each(assignments, assignment => { %>
                         <article>
-                                <header>
-                                    <h2 class="assignment-header-company">
-                                        <%= assignment.company %>
-                                        <span class="assignment-header-years">
-                                            <%= assignment.years %>
-                                        </span>
-                                    </h2>
-                                </header>
-                                <p>
-                                    <%= assignment.title %>
-                                </p>
-                                <p>
-                                    <%= assignment.description %>
-                                </p>
-                                <div>
-                                    <span class="tech-list-header">Technologies used:</span>
-                                    <ul class="tech-list">
-                                        <% _.each(assignment.technologies, tech => { %>
-                                        <li><%= tech %></li>
-                                        <% }); %>
-                                    </ul>
-                                </div>
-                            </article>
+                            <header>
+                                <h2 class="assignment-header-company">
+                                    <%= assignment.company %>
+                                    <span class="assignment-header-years">
+                                        <%= assignment.years %>
+                                    </span>
+                                </h2>
+                            </header>
+                            <p class="assignment-title">
+                                <%= assignment.title %>
+                            </p>
+                            <p class="assignment-description">
+                                <%= assignment.description %>
+                            </p>
+                            <div class="tech-list-container">
+                                <span class="tech-list-header">Technologies:</span>
+                                <ul class="tech-list">
+                                    <% _.each(assignment.technologies, tech => { %>
+                                    <li><%= tech %></li>
+                                    <% }); %>
+                                </ul>
+                            </div>
+                        </article>
                     <% }); %>
                 </section>
             </section>
         </div>
         <aside>aside right</aside>
+        <hr class="clear" />
+        <footer>
+            <span>Proudly designed by Daniel Lidström using <img class="html5-logo" src="HTML5 Logo Badge.svg"></img></span>
+        </footer>
     </script>
 </head>
 

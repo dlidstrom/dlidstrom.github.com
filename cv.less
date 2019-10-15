@@ -2,16 +2,19 @@
     // border: 1px dashed red;
 }
 
+@font-face {
+    font-family: 'HK Grotesk Regular';
+    font-style: normal;
+    font-weight: normal;
+    src: local('HK Grotesk Regular'), url('fonts/HKGrotesk-Regular.woff') format('woff');
+}
+
 /* body */
 body {
-    font-family: Helvetica;
+    font-family: 'HK Grotesk Regular';
     max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
-
-    &::after {
-        clear: both;
-    }
 }
 
 h1 {
@@ -28,6 +31,7 @@ article {
 
 /* header */
 header {
+    margin: 1rem 0;
     h1 {
         font-size: 2rem;
     }
@@ -36,10 +40,35 @@ header {
     }
 }
 
+footer {
+    margin: 2rem auto;
+    text-align: center;
+    .html5-logo {
+        height: 1rem;
+        vertical-align: middle;
+    }
+}
+
+hr.clear {
+    border: none;
+    clear: both;
+}
+
 /* content */
 #content {
     float: left;
     max-width: 60%;
+}
+
+.skills-section {
+    margin-top: 1rem;
+    ul {
+        padding-left: 1rem;
+    }
+}
+
+.assignments-section {
+    margin-top: 1rem;
 }
 
 /* aside */
@@ -48,29 +77,43 @@ aside {
 }
 
 ul li {
-    margin-left: 1rem;
+    // margin-left: 1rem;
 }
 
-.tech-list-header {
-    float: left;
-    // margin-right: 1rem;
+.assignment-title {
+    margin-bottom: 1rem;
 }
 
-ul.tech-list {
-    display: inline;
-    li {
-        width: auto;
-        list-style-type: none;
-        width: auto;
-        list-style-type: none;
-        border-radius: 3px;
-        background-color: steelblue;
-        color: white;
-        display: inline-block;
-        line-height: 1.2rem;
+.assignment-description {
+    margin-bottom: 1rem;
+}
+
+.tech-list-container {
+    .tech-list-header {
+        // float: left;
+        // margin-right: 1rem;
+        font-size: 0.8rem;
         font-weight: bold;
-        padding: 1px 2px;
-        vertical-align: baseline;
+        text-transform: uppercase;
+    }
+
+    ul.tech-list {
+        display: inline;
+        margin-right: 0.4rem;
+        li {
+            width: auto;
+            list-style-type: none;
+            border-radius: 3px;
+            background-color: rgba(175, 175, 175, 0.5);
+            color: rgba(51, 51, 51, 0.7);
+            display: inline-block;
+            line-height: 1.2rem;
+            font-weight: 500;
+            font-family: 'Ubuntu',"Trebuchet MS",Trebuchet,Verdana,Helvetica,Arial,sans-serif;
+            padding: 0.1rem 0.3rem;
+            vertical-align: baseline;
+            margin-right: 0.4rem;
+        }
     }
 }
 
