@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="utf8" />
@@ -70,7 +70,18 @@
                 </section>
             </section>
         </div>
-        <aside>aside right</aside>
+        <aside>
+            <% _.each(sidebarSections, sidebarSection => { %>
+            <section>
+                <h1><%= sidebarSection.title %></h1>
+                <ul>
+                    <% _.each(sidebarSection.items, item => { %>
+                        <li><%= item %></li>
+                    <% }); %>
+                </ul>
+            </section>
+            <% }); %>
+        </aside>
         <hr class="clear" />
         <footer>
             <span>Proudly designed by Daniel Lidström using <img class="html5-logo" src="HTML5 Logo Badge.svg"></img></span>

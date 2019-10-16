@@ -25,6 +25,194 @@
                 "Redux",
                 "RiotJS"
             ]
+        },
+        {
+            "company": "Com Hem",
+            "years": "2015-2016",
+            "title": "Lead Developer Telecom",
+            "description": "Responsible for a development team working with ITIL processes (network/customer incidents, field service integration, and more). I work closely with process leaders (business reps) to plan and coordinate projects and development tasks. I organize scrum meetings and effective development processes using JIRA. I am modernizing legacy platforms by moving from COM+ into modern .NET. I am establishing continuous deployment using WiX and MSI from what was previously manual copying steps. I introduced a common monitoring convention using Windows EventLog and Grafana. I am also coaching junior developers to get them started with TDD and basic database design principles.",
+            "technologies": [
+                "C#",
+                "Wpf",
+                "NUnit",
+                "Git",
+                "WiX",
+                "RabbitMq",
+                "ServiceNow",
+                "JavaScript",
+                "PowerShell"
+            ]
+        },
+        {
+            "company": "H&M",
+            "years": "2012-2015",
+            "title": "Software Developer Retail Clothing",
+            "description": "Development of internal web systems for a multinational retail company, with thousands of users. I have developed and maintained 8 distinct systems (4 from scratch). There is a large focus on usability and intuitive user interfaces coupled with performance requirements. Rapid application development is achieved using unit tests, code review, team work, automation, and close collaboration with product owners. I routinely perform code reviews, mentor other developers (Swedish and offshore), and work to create a highly productive environment. I am joint-organizer of and presenter in a JavaScript User Group, where we introduced and advocate AngularJS.",
+            "technologies": [
+                "ASP.NET MVC/WebAPI",
+                "JavaScript/TypeScript",
+                "AngularJS",
+                "HTML5",
+                "MSMQ",
+                "TeamCity",
+                "PowerShell",
+                "WiX",
+                "CQRS",
+                "event sourcing",
+                "offshoring"
+            ]
+        },
+        {
+            "company": "Qall",
+            "years": "2012",
+            "title": "Software Developer Telecom",
+            "description": "Responsible for migrating a customer base from a legacy system to a new provider. Tens of thousands of customers and various types of phone subscriptions were moved, using MySQL as an integration point. Implemented an automated process that was tuned with unit tests to secure intended behaviour. Dozens of business rules were identified by close collaboration with domain experts.",
+            "technologies": [
+                "MySQL",
+                "Git",
+                "TeamCity",
+                "NUnit"
+            ]
+        },
+        {
+            "company": "Softronic",
+            "years": "2011-2012",
+            "title": "Software Developer Insurances",
+            "description": "Service oriented system architecture with integration to external IT systems. Delivered a new solution for customer address updates. This resulted in a fault tolerant daily-run batch service that communicates with a web service at InfoTorg. Delivered several integrations with 3rd party insurance systems. This was done by reading Excel documents and a large refactoring was necessary. Unit tests were written to ensure existing functionality. Designed and implemented an interface for administering insurance conditions and terms documents. Took over responsibility for a portal where partners can register and manage bugs, requirements, and other types of issues. Issues were stored as work items within Team Foundation Server. New functions included reporting and viewing of hierarchical work items as well as improving the web design.",
+            "technologies": [
+                "ASP.NET",
+                "WCF",
+                "MS SQL Server",
+                "COM+",
+                "TFS"
+            ]
+        },
+        {
+            "company": "GpsGate",
+            "years": "2010-2011",
+            "title": "Software Developer Realtime GPS Tracking & Monitoring",
+            "description": "Developed a template based scripting language with support for conditional expressions to enabled rapid customisation to mobile tracking units with new communication protocols. Designed and implemented integration with an address and location service based in Singapore. Responsible for migrating the code base from CVS to more modern tools. After an initial study, the distributed version control system Mercurial was chosen and members of the development team were educated in the new way of working. The team was able to work productively with much faster operations due to the distributed nature of Mercurial. Implemented continuous integration using TeamCity which resulted in faster and improved building of daily deliverables with no need for manual work.",
+            "technologies": [
+                "ASP.NET",
+                "MySQL",
+                "JavaScript",
+                "Mercurial",
+                "TeamCity"
+            ]
+        },
+        {
+            "company": "Hexagon Machine Control",
+            "years": "2009-2010",
+            "title": "Technical Lead ",
+            "description": "Embedded systems controlling heavy construction equipment for precise grade control. Worked in an international project, close with project management, developers, and testers. Performed pair programming, time estimates, and code reviews to be able to meet deadline. As a team effort, delivered 3-dimensional visualisation of AutoCAD road models, a new mathematical model of the blades of graders and integration with a number of 3rd party data formats. Daniel was appreciated by the team for his leadership, attitude, and positive mindset.",
+            "technologies": [
+                "Linux",
+                "C++",
+                "Boost",
+                "OpenGL"
+            ]
+        },
+        {
+            "company": "Hexagon Machine Control",
+            "years": "2007-2009",
+            "title": "Software Developer Software for surveying and machine control applications",
+            "description": "Responsible for a C++ code base shared between multiple platforms. Delivered a mathematical road model using test driven development; a necessity to ensure correct calculations on several platforms. A significant optimisation work was performed to enable continuous measurement and calculations on platforms with minimal computing resources. Likewise, complex data structures were optimised to fit within the memory of portable devices. Techniques were used to bridge platform independent code with APIs in Windows and Linux. This simplified development for the team and greatly simplified platform independent development. Daniel was part of the technical reference group were decisions were made regarding future development directions.",
+            "technologies": [
+                "C++",
+                "STL",
+                "Boost",
+                "MSXML",
+                "CppUnit",
+                "Windows Mobile",
+                "Linux"
+            ]
+        },
+        {
+            "company": "Svensk ByggnadsGeodesi",
+            "years": "2006-2007",
+            "title": "Software Developer Making a compactor machine autonomous",
+            "description": "Part of a research project aimed at making an autonomous 8 ton compactor machine. Implemented a communications protocol and the steering and speed control of the compactor machine. After a couple of test runs the compactor machine was able to receive directions from an asphalt machine, drive backwards and forwards by itself, following a path, and make a small turn when changing directions. Project was cancelled after proof of concept completion.",
+            "technologies": [
+                "C++",
+                "STL",
+                "Boost",
+                "Linux",
+                "TCP/IP"
+            ]
+        },
+        {
+            "company": "Svensk ByggnadsGeodesi",
+            "years": "2003-2007",
+            "title": "Software Developer Office tools for surveyors and field surveying software",
+            "description": "Responsible for developing functions for transmitting data to and from surveying instruments. Designed and implemented new features within the office suite. Parallel with development, took on a customer support role. Personal contact with key customers and the possibility to improve their working situation was both motivating and satisfying.",
+            "technologies": [
+                "C++",
+                "Boost",
+                "MFC",
+                "Microsoft.NET"
+            ]
+        }
+    ],
+    "sidebarSections": [
+        {
+            "title": "LinkedIn",
+            "items": [
+                "se.linkedin.com/in/daniellidstrom"
+            ]
+        },
+        {
+            "title": "Educational Qualifications",
+            "items": [
+                "M.Sc. Computer Science",
+                "Upper Secondary Technical School"
+            ]
+        },
+        {
+            "title": "Software & Platforms",
+            "items": [
+                "Visual Studio 2017",
+                ".NET Framework/.NET Core",
+                "ASP.NET MVC/WebAPI/Core",
+                "HTML5/JavaScript/CSS",
+                "T-SQL/EntityFramework",
+                "ReSharper, StyleCop, NuGet",
+                "Internet Information Services (IIS)",
+                "TeamCity, GitHub, GitLab, Octopus Deploy",
+                "C/C++ Boost/STL"
+            ]
+        },
+        {
+            "title": "Databases",
+            "items": [
+                "MS Sql Server 2016",
+                "MySQL/PostgreSQL",
+                "Oracle 11g",
+                "MongoDB/RavenDB"
+            ]
+        },
+        {
+            "title": "Pet Projects (Open Source)",
+            "items": [
+                "https://github.com/dlidstrom",
+                "https://snittlistan.se",
+                "https://minaglosor.se",
+                "https://krysshjälpen.se"
+            ]
+        },
+        {
+            "title": "Language Skills",
+            "items": [
+                "Swedish",
+                "English",
+                "Persian - beginner"
+            ]
+        },
+        {
+            "title": "Free Time",
+            "items": [
+                "League Bowling",
+                "Family Life"
+            ]
         }
     ]
 }
