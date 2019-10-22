@@ -1,5 +1,5 @@
 {
-    "head": "Daniel is an experienced consultant within software development. He has worked since 2003 with product development in .NET and C++, both design, implementation, and maintenance. Daniel combines leadership skills with deep knowledge of modern web development using ASP.NET MVC/Core, HTML5, and JavaScript combined with domain driven design, test driven development, design patterns and SOLID principles to create highly productive environments. Daniel is regarded as dedicated, structured, and creative. He is able to stay ahead of the learning curve with new techniques and methods.",
+    "head": "Daniel is an experienced consultant within software development. He has worked since 2003 with product development, from design, implementation, deployment, and monitoring. Daniel combines leadership skills with deep knowledge of modern web development. By advancing software development using test-driven development, code review, tooling, and by investing in team members, Daniel has created many highly productive environments where the team is able to repeatedly deliver working software, tested and on time. Daniel is able to work in FRONTEND/BACKEND... He has good communication skills and . extensive background and communicative personality to develop systems by seeing them from all angles. using ASP.NET MVC/Core, HTML5, and JavaScript combined with domain driven design, test driven development, design patterns and SOLID principles to create highly productive environments. Daniel is regarded as dedicated, structured, and creative. Daniel makes sure to invest in team members which has payed off several times.",
     "skills": [
         "Leadership Qualities",
         "Software Development (.NET, ASP.NET, WebAPI, JavaScript, HTML5)",
@@ -10,6 +10,26 @@
         "Scrum, Kanban, SAFe"
     ],
     "assignments": [
+        {
+            "company": "H&M",
+            "years": "2017-2019",
+            "title": "System Architect",
+            "description": "",
+            "technologies": [
+                "CQRS", "RabbitMq", "MassTransit", "SAFe"
+            ]
+        },
+        {
+            "company": "Transdev",
+            "years": "Feb 2017",
+            "title": "Technical Reviewer",
+            "description": "Performed a technical review of a booking system. The resulting report was intended to guide business with deciding on future feature requests and to strengthen their position when negotiating with the booking system software vendor.",
+            "technologies": [
+                "C#",
+                "ER Modeling",
+                "Code Review"
+            ]
+        },
         {
             "company": "Tradera",
             "years": "2016-2017",
