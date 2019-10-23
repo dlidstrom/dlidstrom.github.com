@@ -69,6 +69,62 @@ hr.clear {
 
 .assignments-section {
     margin-top: 1rem;
+
+    article {
+        margin: 1rem 0;
+        border-left: 4px solid lightgrey;
+        padding-left: 1rem;
+    }
+
+    .assignment-title {
+        margin-bottom: 1rem;
+    }
+
+    .assignment-description {
+        margin-bottom: 1rem;
+    }
+
+    .tech-list-container {
+        position: relative;
+        line-height: 2rem;
+        .tech-list-header {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        ul.tech-list {
+            display: block;
+            margin-left: 8rem;
+            li {
+                width: auto;
+                list-style-type: none;
+                border-radius: 3px;
+                background-color: rgba(175, 175, 175, 0.5);
+                color: rgba(51, 51, 51, 0.7);
+                display: inline-block;
+                line-height: 1.2rem;
+                font-weight: 500;
+                // font-family: 'Ubuntu',"Trebuchet MS",Trebuchet,Verdana,Helvetica,Arial,sans-serif;
+                padding: 0.1rem 0.3rem;
+                vertical-align: baseline;
+                margin-right: 0.1rem;
+                text-transform: capitalize;
+            }
+        }
+    }
+
+    .assignment-role:after {
+        content: " - ";
+    }
+
+    .assignment-header-years {
+        font-size: 1.2rem;
+        color: grey;
+    }
 }
 
 /* aside */
@@ -85,50 +141,4 @@ aside {
     li {
         margin-left: 1rem;
     }
-}
-
-.assignment-title {
-    margin-bottom: 1rem;
-}
-
-.assignment-description {
-    margin-bottom: 1rem;
-}
-
-.tech-list-container {
-    position: relative;
-    line-height: 2rem;
-    .tech-list-header {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 0.8rem;
-        font-weight: bold;
-        text-transform: uppercase;
-    }
-
-    ul.tech-list {
-        display: block;
-        margin-left: 8rem;
-        li {
-            width: auto;
-            list-style-type: none;
-            border-radius: 3px;
-            background-color: rgba(175, 175, 175, 0.5);
-            color: rgba(51, 51, 51, 0.7);
-            display: inline-block;
-            line-height: 1.2rem;
-            font-weight: 500;
-            // font-family: 'Ubuntu',"Trebuchet MS",Trebuchet,Verdana,Helvetica,Arial,sans-serif;
-            padding: 0.1rem 0.3rem;
-            vertical-align: baseline;
-            margin-right: 0.1rem;
-            text-transform: capitalize;
-        }
-    }
-}
-
-.assignment-header-years {
-    font-size: 1.2rem;
-    color: grey;
 }

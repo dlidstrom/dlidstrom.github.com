@@ -44,16 +44,14 @@
                     <% _.each(assignments, assignment => { %>
                         <article>
                             <header>
-                                <h2 class="assignment-header-company">
-                                    <%= assignment.company %>
+                                <h2>
+                                    <span class="assignment-role"><%= assignment.title %></span>
+                                    <span><%= assignment.company %></span>
                                     <span class="assignment-header-years">
                                         <%= assignment.years %>
                                     </span>
                                 </h2>
                             </header>
-                            <p class="assignment-title">
-                                <%= assignment.title %>
-                            </p>
                             <p class="assignment-description">
                                 <%= assignment.description %>
                             </p>
