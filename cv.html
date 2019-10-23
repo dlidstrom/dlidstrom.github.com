@@ -26,6 +26,18 @@
             <h1>Consultant Profile</h1>
             <h2>Daniel Lidström</h2>
         </header>
+        <aside>
+            <% _.each(sidebarSections, sidebarSection => { %>
+            <section>
+                <h1><%= sidebarSection.title %></h1>
+                <ul>
+                    <% _.each(sidebarSection.items, item => { %>
+                        <li><%= item %></li>
+                    <% }); %>
+                </ul>
+            </section>
+            <% }); %>
+        </aside>
         <div id="content">
             <section>
                 <p><%= head %></p>
@@ -68,18 +80,6 @@
                 </section>
             </section>
         </div>
-        <aside>
-            <% _.each(sidebarSections, sidebarSection => { %>
-            <section>
-                <h1><%= sidebarSection.title %></h1>
-                <ul>
-                    <% _.each(sidebarSection.items, item => { %>
-                        <li><%= item %></li>
-                    <% }); %>
-                </ul>
-            </section>
-            <% }); %>
-        </aside>
         <hr class="clear" />
         <footer>
             <span>Proudly designed by Daniel Lidström using <img class="html5-logo" src="HTML5 Logo Badge.svg"></img></span>

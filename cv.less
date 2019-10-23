@@ -55,11 +55,6 @@ hr.clear {
 }
 
 /* content */
-#content {
-    float: left;
-    width: @content-width;
-}
-
 .skills-section {
     margin-top: 1rem;
     ul {
@@ -129,10 +124,14 @@ hr.clear {
 
 /* aside */
 aside {
-    margin-left: @content-width;
-    padding-left: 2rem;
+    float: right;
+    width: 25%;
+    border: 3px solid lightgray;
+    border-radius: 5px;
+    padding: 1rem;
+    margin-left: 1rem;
     font-size: 0.8rem;
-    section {
+    section:not(:first-child) {
         margin-top: 1rem;
     }
     h1 {

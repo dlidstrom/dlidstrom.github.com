@@ -14,7 +14,7 @@
             "company": "H&M",
             "years": "2017-2019",
             "title": "System Architect",
-            "description": "Technical responsibility of a business critical system used for planning the assortment. Responsible for leading and coaching of 15 developers through knowledge sharing, laying a technical foundation, and ensuring the solution is aligned with business needs (functional and non-functional). Documented and communicated technical solutions using PlantUML (ER and sequence diagrams), code samples, defect heatmaps, and developed Monte Carlo-based estimation method.",
+            "description": "Technical responsibility of a business critical system used for planning the assortment. Responsible for leading and coaching of 15 developers through knowledge sharing, laying a technical foundation, and ensuring the solution is aligned with business needs (functional and non-functional). Documented and communicated technical solutions using PlantUML (ER and sequence diagrams, etc), developed defect heatmaps to guide enabler work, and developed Monte Carlo-based estimation method.",
             "technologies": [
                 "C#", "F#", "Microservices", "CQRS", "RabbitMq", "MassTransit", "Angular", "Sql Server", "Jira", "Octopus Deploy", "GIT", "Monte Carlo", "SAFe"
             ]
