@@ -23,8 +23,7 @@
     </script>
     <script type="text/html" id="profileTemplate">
         <header>
-            <h1>Consultant Profile</h1>
-            <h2>Daniel Lidström</h2>
+            <h1>Daniel Lidström - Consultant Profile</h1>
         </header>
         <aside>
             <% _.each(sidebarSections, sidebarSection => { %>
@@ -41,16 +40,6 @@
         <div id="content">
             <section>
                 <p><%= head %></p>
-                <section class="skills-section">
-                    <h1>Skills</h1>
-                    <p>
-                        <ul>
-                            <% _.each(skills, skill => { %>
-                                <li><%= skill %></li>
-                            <% }); %>
-                        </ul>
-                    </p>
-                </section>
                 <section class="assignments-section">
                     <h1>Assignments and Dates</h1>
                     <% _.each(assignments, assignment => { %>

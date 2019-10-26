@@ -1,22 +1,13 @@
 {
     "head": "Daniel is an experienced consultant within software development. He has worked since 2003 with product development, from design, implementation, and deployment to production monitoring. Daniel combines leadership skills with deep knowledge of modern web development. He has created many exceedingly productive development environments by effective use of test-driven development, modern design patterns, code review, tooling, and by investing heavily in team members. This enables the team to continuously and predictably deliver working software, tested and on time. Daniel is regarded as dedicated, structured, and creative. He has great communication skills, written and spoken, and is a very valuable team member.",
-    "skills": [
-        "Leadership Qualities",
-        "Software Development (.NET, ASP.NET, WebAPI, JavaScript, HTML5)",
-        "Test Driven Development (BDD/TDD)",
-        "Design Patterns (GoF, SOLID)",
-        "SQL Server (T-SQL)",
-        "Git, TeamCity, SVN",
-        "Scrum, Kanban, SAFe"
-    ],
     "assignments": [
         {
             "company": "H&M",
             "years": "2017-2019",
             "title": "System Architect",
-            "description": "Technical responsibility of a business critical system used for planning the assortment. Responsible for leading and coaching of 15 developers through knowledge sharing, laying a technical foundation, and ensuring the solution is aligned with business needs (functional and non-functional). Documented and communicated technical solutions using PlantUML (ER and sequence diagrams, etc), developed defect heatmaps to guide enabler work, and developed Monte Carlo-based estimation method. Defined and implemented common logging format for end to end business process monitoring over several systems using Splunk Glass Tables.",
+            "description": "Technical responsibility of a business critical system used for planning the assortment. Responsible for leading and coaching of 15 developers through knowledge sharing, laying a technical foundation, and ensuring the solution is aligned with business needs (functional and non-functional). Documented and communicated technical solutions using PlantUML (ER and sequence diagrams, etc), developed defect heatmaps to guide enabler work, and developed Monte Carlo-based estimation method. Defined and implemented common logging format for end to end business process monitoring across several systems using Splunk Glass Tables.",
             "technologies": [
-                "C#", "F#", "Microservices", "Azure", "CQRS", "RabbitMq", "MassTransit", "Angular", "Sql Server", "Jira", "Splunk", "Octopus Deploy", "GIT", "Monte Carlo Simulation", "SAFe"
+                "C#/F#", "Microservices", "Azure", "CQRS", "RabbitMq", "Angular", "Splunk"
             ]
         },
         {
@@ -33,7 +24,7 @@
         {
             "company": "Tradera",
             "years": "2016-2017",
-            "title": "Software Developer Internet Commerce",
+            "title": "Software Developer",
             "description": "Developed frontend and backend functionality for new major feature Klasskassan campaigns. Also identified and developed necessary back office functionality for managing Klasskassan campaigns and related charities to simplify and speed up repetitive customer service work. Implemented several responsive web components that scale appropriately from mobile to desktop screens. Worked with my team to better use Kanban and speed up delivery process. Held presentation to entire development team on how to use Git effectively in a large team setting with offshore coworkers and also presented how to implement an effective software framework for business rules and informative logging. Investigated and verified usefulness of code search functionality of new version of GitLab code server to aid in navigating a very large code base. Started initiative to document internal acronyms and business rules in Wiki format.",
             "technologies": [
                 "C#",
@@ -49,7 +40,7 @@
         {
             "company": "Com Hem",
             "years": "2015-2016",
-            "title": "Lead Developer Telecom",
+            "title": "Lead Developer",
             "description": "Responsible for a development team working with ITIL processes (network/customer incidents, field service integration, and more). I work closely with process leaders (business reps) to plan and coordinate projects and development tasks. I organize scrum meetings and effective development processes using JIRA. I am modernizing legacy platforms by moving from COM+ into modern .NET. I am establishing continuous deployment using WiX and MSI from what was previously manual copying steps. I introduced a common monitoring convention using Windows EventLog and Grafana. I am also coaching junior developers to get them started with TDD and basic database design principles.",
             "technologies": [
                 "C#",
@@ -66,7 +57,7 @@
         {
             "company": "H&M",
             "years": "2012-2015",
-            "title": "Software Developer Retail Clothing",
+            "title": "Software Developer",
             "description": "Development of internal web systems for a multinational retail company, with thousands of users. I have developed and maintained 8 distinct systems (4 from scratch). There is a large focus on usability and intuitive user interfaces coupled with performance requirements. Rapid application development is achieved using unit tests, code review, team work, automation, and close collaboration with product owners. I routinely perform code reviews, mentor other developers (Swedish and offshore), and work to create a highly productive environment. I am joint-organizer of and presenter in a JavaScript User Group, where we introduced and advocate AngularJS.",
             "technologies": [
                 "ASP.NET MVC/WebAPI",
@@ -85,7 +76,7 @@
         {
             "company": "Qall",
             "years": "2012",
-            "title": "Software Developer Telecom",
+            "title": "Software Developer",
             "description": "Responsible for migrating a customer base from a legacy system to a new provider. Tens of thousands of customers and various types of phone subscriptions were moved, using MySQL as an integration point. Implemented an automated process that was tuned with unit tests to secure intended behaviour. Dozens of business rules were identified by close collaboration with domain experts.",
             "technologies": [
                 "MySQL",
@@ -97,7 +88,7 @@
         {
             "company": "Softronic",
             "years": "2011-2012",
-            "title": "Software Developer Insurances",
+            "title": "Software Developer",
             "description": "Service oriented system architecture with integration to external IT systems. Delivered a new solution for customer address updates. This resulted in a fault tolerant daily-run batch service that communicates with a web service at InfoTorg. Delivered several integrations with 3rd party insurance systems. This was done by reading Excel documents and a large refactoring was necessary. Unit tests were written to ensure existing functionality. Designed and implemented an interface for administering insurance conditions and terms documents. Took over responsibility for a portal where partners can register and manage bugs, requirements, and other types of issues. Issues were stored as work items within Team Foundation Server. New functions included reporting and viewing of hierarchical work items as well as improving the web design.",
             "technologies": [
                 "ASP.NET",
@@ -110,7 +101,7 @@
         {
             "company": "GpsGate",
             "years": "2010-2011",
-            "title": "Software Developer Realtime GPS Tracking & Monitoring",
+            "title": "Software Developer",
             "description": "Developed a template based scripting language with support for conditional expressions to enabled rapid customisation to mobile tracking units with new communication protocols. Designed and implemented integration with an address and location service based in Singapore. Responsible for migrating the code base from CVS to more modern tools. After an initial study, the distributed version control system Mercurial was chosen and members of the development team were educated in the new way of working. The team was able to work productively with much faster operations due to the distributed nature of Mercurial. Implemented continuous integration using TeamCity which resulted in faster and improved building of daily deliverables with no need for manual work.",
             "technologies": [
                 "ASP.NET",
@@ -123,7 +114,7 @@
         {
             "company": "Hexagon Machine Control",
             "years": "2009-2010",
-            "title": "Technical Lead ",
+            "title": "Technical Lead",
             "description": "Embedded systems controlling heavy construction equipment for precise grade control. Worked in an international project, close with project management, developers, and testers. Performed pair programming, time estimates, and code reviews to be able to meet deadline. As a team effort, delivered 3-dimensional visualisation of AutoCAD road models, a new mathematical model of the blades of graders and integration with a number of 3rd party data formats. Daniel was appreciated by the team for his leadership, attitude, and positive mindset.",
             "technologies": [
                 "Linux",
@@ -135,7 +126,7 @@
         {
             "company": "Hexagon Machine Control",
             "years": "2007-2009",
-            "title": "Software Developer Software for surveying and machine control applications",
+            "title": "Software Developer",
             "description": "Responsible for a C++ code base shared between multiple platforms. Delivered a mathematical road model using test driven development; a necessity to ensure correct calculations on several platforms. A significant optimisation work was performed to enable continuous measurement and calculations on platforms with minimal computing resources. Likewise, complex data structures were optimised to fit within the memory of portable devices. Techniques were used to bridge platform independent code with APIs in Windows and Linux. This simplified development for the team and greatly simplified platform independent development. Daniel was part of the technical reference group were decisions were made regarding future development directions.",
             "technologies": [
                 "C++",
@@ -150,7 +141,7 @@
         {
             "company": "Svensk ByggnadsGeodesi",
             "years": "2006-2007",
-            "title": "Software Developer Making a compactor machine autonomous",
+            "title": "Software Developer",
             "description": "Part of a research project aimed at making an autonomous 8 ton compactor machine. Implemented a communications protocol and the steering and speed control of the compactor machine. After a couple of test runs the compactor machine was able to receive directions from an asphalt machine, drive backwards and forwards by itself, following a path, and make a small turn when changing directions. Project was cancelled after proof of concept completion.",
             "technologies": [
                 "C++",
@@ -163,7 +154,7 @@
         {
             "company": "Svensk ByggnadsGeodesi",
             "years": "2003-2007",
-            "title": "Software Developer Office tools for surveyors and field surveying software",
+            "title": "Software Developer",
             "description": "Responsible for developing functions for transmitting data to and from surveying instruments. Designed and implemented new features within the office suite. Parallel with development, took on a customer support role. Personal contact with key customers and the possibility to improve their working situation was both motivating and satisfying.",
             "technologies": [
                 "C++",
@@ -178,6 +169,15 @@
             "title": "LinkedIn",
             "items": [
                 "se.linkedin.com/in/daniellidstrom"
+            ]
+        },
+        {
+            "title": "Skills",
+            "items": [
+                "Leadership Qualities",
+                "Team & Culture",
+                "Software Development Methodologies",
+                "Software Architecture & Design Principles"
             ]
         },
         {

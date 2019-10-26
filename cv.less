@@ -7,6 +7,19 @@
     src: local('HK Grotesk Regular'), url('fonts/HKGrotesk-Regular.otf') format('woff');
 }
 
+@media print
+{
+    @page {
+      size: A4 portrait; /* DIN A4 standard, Europe */
+      margin: 0cm;
+      padding: 1cm;
+    }
+    body {
+        // padding-top:15mm;
+        font-size: 11px;
+    }
+}
+
 /* body */
 body {
     font-family: 'HK Grotesk Regular';
@@ -139,7 +152,6 @@ aside {
     li {
         position: relative;
         list-style-type: none;
-        // margin-left: 0.5rem;
         &:before {
             position: absolute;
             left: -0.5rem;
