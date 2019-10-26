@@ -51,6 +51,34 @@ header {
     h2 {
         font-size: 1.5rem;
     }
+    &.main {
+        section.left {
+            float: left;
+            h1 {
+                line-height: 1.5rem;
+            }
+            span.name {
+                display: block;
+            }
+            span.doc-title {
+                text-transform: uppercase;
+                font-weight: 500;
+                font-size: 1rem;
+            }
+        }
+        section.right {
+            float: right;
+            h2 {
+                text-align: right;
+                font-size: 1rem;
+            }
+        }
+        &::after {
+            content: '';
+            display: block;
+            clear: both;
+        }
+    }
 }
 
 footer {
@@ -78,10 +106,20 @@ hr.clear {
 .assignments-section {
     margin-top: 1rem;
 
-    article {
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    article.assignment {
         margin: 1rem 0;
         border-left: 4px solid lightgrey;
         padding-left: 1rem;
+        header {
+            margin-bottom: 0.5rem;
+            h2 {
+                font-size: 1.3rem;
+            }
+        }
     }
 
     .assignment-title {
@@ -106,7 +144,7 @@ hr.clear {
 
         ul.tech-list {
             display: block;
-            margin-left: 8rem;
+            // margin-left: 8rem;
             li {
                 width: auto;
                 list-style-type: none;

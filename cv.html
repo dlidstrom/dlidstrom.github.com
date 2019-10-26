@@ -22,8 +22,17 @@
         });
     </script>
     <script type="text/html" id="profileTemplate">
-        <header>
-            <h1>Daniel Lidström - Consultant Profile</h1>
+        <header class="main">
+            <section class="left">
+                <h1>
+                    <span class="name">Daniel Lidström</span>
+                    <span class="doc-title">Consultant Profile</span>
+                </h1>
+            </section>
+            <section class="right">
+                <h2>✉️ dlidstrom@gmail.com</h2>
+                <h2>📞 072-1581298</h2>
+            </section>
         </header>
         <aside>
             <% _.each(sidebarSections, sidebarSection => { %>
@@ -41,9 +50,9 @@
             <section>
                 <p><%= head %></p>
                 <section class="assignments-section">
-                    <h1>Assignments and Dates</h1>
+                    <h1>Assignments</h1>
                     <% _.each(assignments, assignment => { %>
-                        <article>
+                        <article class="assignment">
                             <header>
                                 <h2>
                                     <span class="assignment-role"><%= assignment.title %></span>
@@ -57,7 +66,6 @@
                                 <%= assignment.description %>
                             </p>
                             <div class="tech-list-container">
-                                <span class="tech-list-header">Technologies:</span>
                                 <ul class="tech-list">
                                     <% _.each(assignment.technologies, tech => { %>
                                     <li><%= tech %></li>

@@ -44,14 +44,12 @@
             "description": "Responsible for a development team working with ITIL processes (network/customer incidents, field service integration, and more). I work closely with process leaders (business reps) to plan and coordinate projects and development tasks. I organize scrum meetings and effective development processes using JIRA. I am modernizing legacy platforms by moving from COM+ into modern .NET. I am establishing continuous deployment using WiX and MSI from what was previously manual copying steps. I introduced a common monitoring convention using Windows EventLog and Grafana. I am also coaching junior developers to get them started with TDD and basic database design principles.",
             "technologies": [
                 "C#",
-                "Wpf",
-                "NUnit",
+                "WPF",
                 "Git",
                 "WiX",
                 "RabbitMq",
                 "ServiceNow",
-                "JavaScript",
-                "PowerShell"
+                "JavaScript"
             ]
         },
         {
@@ -63,14 +61,11 @@
                 "ASP.NET MVC/WebAPI",
                 "JavaScript/TypeScript",
                 "AngularJS",
-                "HTML5",
                 "MSMQ",
                 "TeamCity",
-                "PowerShell",
                 "WiX",
                 "CQRS",
-                "event sourcing",
-                "offshoring"
+                "event sourcing"
             ]
         },
         {
