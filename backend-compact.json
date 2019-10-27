@@ -1,0 +1,189 @@
+{
+    "head": "Daniel is an experienced consultant within software development. He has worked since 2003 with product development, from design, implementation, and deployment to production monitoring. Daniel combines leadership skills with deep knowledge of modern web development. He has created many exceedingly productive development environments by effective use of test-driven development, modern design patterns, code review, tooling, and by investing heavily in team members. This enables the team to continuously and predictably deliver working software, tested and on time. Daniel is regarded as dedicated, structured, and creative. He has great communication skills, written and spoken, and is a very valuable team member.",
+    "assignments": [
+        {
+            "company": "H&M",
+            "years": "2017-2019",
+            "title": "System Architect",
+            "description": "Technical responsibility of a business critical system used for planning the assortment. Responsible for leading and coaching of 15 developers through knowledge sharing, laying a technical foundation, and ensuring the solution is aligned with business needs (functional and non-functional). Documented and communicated technical solutions using PlantUML (ER and sequence diagrams, etc), developed defect heatmaps to guide enabler work, and developed Monte Carlo-based estimation method. Defined and implemented common logging format for end to end business process monitoring across several systems using Splunk Glass Tables.",
+            "technologies": [
+                "C#/F#", "Microservices", "Azure", "CQRS", "RabbitMq", "Angular", "Splunk"
+            ]
+        },
+        {
+            "company": "Transdev",
+            "years": "Feb 2017",
+            "title": "Technical Reviewer",
+            "description": "Performed a technical review of a booking system. The resulting report was intended to guide business with deciding on future feature requests and to strengthen their position when negotiating with the booking system software vendor.",
+            "technologies": [
+                "C#",
+                "ER Modeling",
+                "Code Review"
+            ]
+        },
+        {
+            "company": "Tradera",
+            "years": "2016-2017",
+            "title": "Software Developer",
+            "description": "Developed frontend and backend functionality for new major feature Klasskassan campaigns. Developed back office functionality for managing Klasskassan campaigns and related charities. Implemented responsive web components that scale appropriately from mobile to desktop screens. Improved team Kanban use to speed up delivery process. Presented effective Git usage in a large team setting with offshore coworkers. Presented software framework for business rules and logging for monitoring purpose. Investigated code search functionality of GitLab for navigating a large code base. Started initiative to document internal acronyms and business rules in Wiki format.",
+            "technologies": [
+                "C#",
+                "CQRS",
+                "Git",
+                "MongoDB",
+                "CSS",
+                "React",
+                "Redux",
+                "RiotJS"
+            ]
+        },
+        {
+            "company": "Com Hem",
+            "years": "2015-2016",
+            "title": "Lead Developer",
+            "description": "Responsible for a development team working with ITIL processes (network/customer incidents, field service integration, and more). Coordinated projects and development tasks with process owners. Organized scrum meetings and improved JIRA use. Replaced legacy COM+ by .NET. Established continuous deployment using WiX and MSI. Introduced a monitoring convention using Windows EventLog and Grafana. Coached junior developers to get them started with TDD and basic database design principles.",
+            "technologies": [
+                "C#",
+                "WPF",
+                "Git",
+                "WiX",
+                "RabbitMq",
+                "ServiceNow",
+                "JavaScript"
+            ]
+        },
+        {
+            "company": "H&M",
+            "years": "2012-2015",
+            "title": "Software Developer",
+            "description": "Development of internal web systems for a multinational retail company, with thousands of users. I have developed and maintained 8 distinct systems (4 from scratch). There is a large focus on usability and intuitive user interfaces coupled with performance requirements. Rapid application development is achieved using unit tests, code review, team work, automation, and close collaboration with product owners. I routinely perform code reviews, mentor other developers (Swedish and offshore), and work to create a highly productive environment. I am joint-organizer of and presenter in a JavaScript User Group, where we introduced and advocate AngularJS.",
+            "technologies": [
+                "ASP.NET MVC/WebAPI",
+                "JavaScript/TypeScript",
+                "AngularJS",
+                "MSMQ",
+                "TeamCity",
+                "WiX",
+                "CQRS",
+                "event sourcing"
+            ]
+        },
+        {
+            "company": "Qall",
+            "years": "2012",
+            "title": "Software Developer",
+            "description": "Responsible for migrating a customer base from a legacy system to a new provider. Tens of thousands of customers and various types of phone subscriptions were moved, using MySQL as an integration point. Implemented an automated process that was tuned with unit tests to secure intended behaviour. Dozens of business rules were identified by close collaboration with domain experts.",
+            "technologies": [
+                "MySQL",
+                "Git",
+                "TeamCity",
+                "NUnit"
+            ]
+        },
+        {
+            "company": "Softronic",
+            "years": "2011-2012",
+            "title": "Software Developer",
+            "description": "Service oriented system architecture with integration to external IT systems. Delivered a fault tolerant solution for customer address updates using InfoTorg. Delivered several integrations with 3rd party insurance systems. Designed and implemented an interface for administering insurance conditions and terms documents. Developed portal where partners can register and manage bugs, requirements, and other types of issues.",
+            "technologies": [
+                "ASP.NET",
+                "WCF",
+                "MS SQL Server",
+                "COM+",
+                "TFS"
+            ]
+        },
+        {
+            "company": "GpsGate",
+            "years": "2010-2011",
+            "title": "Software Developer",
+            "description": "Developed a template based scripting language with support for conditional expressions to enabled rapid customisation to mobile tracking units with new communication protocols. Designed and implemented integration with an address and location service based in Singapore. Migrated code base from CVS to Mercurial and implemented continuous integration using TeamCity.",
+            "technologies": [
+                "ASP.NET",
+                "MySQL",
+                "JavaScript",
+                "Mercurial",
+                "TeamCity"
+            ]
+        },
+        {
+            "company": "Hexagon Machine Control",
+            "years": "2003-2010",
+            "title": "Technical Lead / Developer",
+            "description": "Embedded system for heavy construction equipment. Lead team in international project to meet deadline. Lead development of platform independent codebase, optimized for memory constrained devices and runtime. Developed TCP/IP protocol and controls of autonomous compactor. Developed cross platform framework for dealing with XML. Daniel was appreciated by the team for his leadership, attitude, and positive mindset.",
+            "technologies": [
+                "Windows / Mobile / Linux",
+                "C++ / MFC / Boost",
+                "Algorithm & Data Structure Optimization"
+            ]
+        }
+    ],
+    "sidebarSections": [
+        {
+            "title": "LinkedIn",
+            "items": [
+                "se.linkedin.com/in/daniellidstrom"
+            ]
+        },
+        {
+            "title": "Skills",
+            "items": [
+                "Leadership Qualities",
+                "Team & Culture",
+                "Software Development Methodologies",
+                "Software Architecture & Design Principles"
+            ]
+        },
+        {
+            "title": "Educational Qualifications",
+            "items": [
+                "M.Sc. Computer Science",
+                "Upper Secondary Technical School"
+            ]
+        },
+        {
+            "title": "Software & Platforms",
+            "items": [
+                "Visual Studio 2017",
+                "ASP.NET MVC/WebAPI/Core",
+                "HTML5/JavaScript/CSS",
+                "T-SQL/EntityFramework",
+                "TeamCity, GitHub, GitLab, Octopus Deploy",
+                "C/C++ Boost/STL"
+            ]
+        },
+        {
+            "title": "Databases",
+            "items": [
+                "MS Sql Server 2016",
+                "MySQL/PostgreSQL",
+                "Oracle 11g",
+                "MongoDB/RavenDB"
+            ]
+        },
+        {
+            "title": "Pet Projects (Open Source)",
+            "items": [
+                "https://github.com/dlidstrom",
+                "https://snittlistan.se",
+                "https://minaglosor.se",
+                "https://krysshjälpen.se"
+            ]
+        },
+        {
+            "title": "Language Skills",
+            "items": [
+                "Swedish",
+                "English",
+                "Persian - beginner"
+            ]
+        },
+        {
+            "title": "Free Time",
+            "items": [
+                "League Bowling",
+                "Family Life"
+            ]
+        }
+    ]
+}
