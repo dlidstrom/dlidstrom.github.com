@@ -1,8 +1,90 @@
 #!fsharp
 
+open System.IO
+open System.Text.RegularExpressions
+
+type BetRow = {
+    Name : string
+    Guesses : string list
+    Winner : string
+}
+
+type ScoredRow = {
+    Name : string
+    Scores : float list
+}
+
+#!fsharp
+
+let results =
+    "resultat.txt"
+    |> File.ReadAllLines
+    |> Array.map (fun s -> string s[0])
+    |> Array.where (fun s -> s.Length > 0)
+    |> List.ofArray
+let betRows =
+    let createBetRow (a: string array) = {
+        Name = a[2]
+        Winner = a[51]
+        Guesses = a[3..50] |> List.ofArray
+    }
+    "tipset.2022.txt"
+    |> File.ReadAllLines
+    |> Seq.map (fun l -> Regex.Split(l, @"\s+"))
+    |> Seq.map createBetRow
+    |> Seq.toList
+let countCorrect i r =
+    let count =
+        betRows
+        |> Seq.where (fun br -> br.Guesses[i] = r)
+        |> Seq.length
+        |> double
+    let score =
+        if count > 0 then 6. / count
+        else 0
+    score, r
+let correctPerGame =
+    results |> List.mapi countCorrect
+
+let scoreGuesses (guesses: string list) =
+    let scoreGame i (fs: float * string) =
+        let f, s = fs
+        if s = guesses[i] then f
+        else 0
+    correctPerGame
+    |> List.mapi scoreGame
+let scoredRows =
+    let convertGuesses guesses =
+        let scores = scoreGuesses guesses
+        scores |> List.scan (+) 0.
+    betRows
+    |> List.map (fun br -> { Name = br.Name; Scores = convertGuesses br.Guesses })
+scoredRows
+
+#!fsharp
+
 #r "nuget: Plotly.NET.Interactive, 3.0.0"
+#r "nuget: Plotly.NET.ImageExport, 3.0.0"
+
+#!fsharp
+
 open Plotly.NET
-let xData = [0. .. 10.]
-let yData = [0. .. 10.]
-let myFirstChart = Chart.Point(xData,yData,Name="Line")
+open Plotly.NET.ImageExport
+
+//let description =
+//    ChartDescription.create "<h1>I am heading</h1>" "<ol><li>Hi</li><li>there</li></ol>"
+let createChart (sr: ScoredRow) =
+    let xData = [1..results.Length]
+    let sum = sr.Scores[results.Length - 1]
+    let chart = Chart.Spline(xData, sr.Scores, Name = $"%s{sr.Name} %.1f{sum}", ShowLegend = true)
+    (sum, sr.Name), chart
+let myFirstChart =
+    Chart.combine(
+        scoredRows
+        |> List.map createChart
+        |> List.sortByDescending fst
+        |> List.map snd
+    )
+    //|> Chart.withDescription(description)
+myFirstChart |> Chart.savePNG("chart", Width = 1400, Height = 1000)
 myFirstChart
