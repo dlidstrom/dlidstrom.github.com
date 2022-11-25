@@ -1,11 +1,24 @@
 {
-    "head": "Daniel is an experienced consultant within software development. He has worked since 2003 with product development, from design, implementation, and deployment to production monitoring. Daniel combines leadership skills with deep knowledge of modern web development. He has created many exceedingly productive development environments by effective use of test-driven development, modern design patterns, code review, tooling, and by investing heavily in team members. This enables the team to continuously and predictably deliver working software, tested and on time. Daniel is regarded as dedicated, structured, and creative. He has great communication skills, written and spoken, and is a very valuable team member.",
+    "head": "Daniel is an experienced consultant within software development. He has worked since 2003 with product development, from design, implementation, and deployment to production monitoring. Daniel combines leadership skills with deep knowledge of modern web development. He has created many exceedingly productive development environments by effective use of test-driven development, modern design patterns, code review, tooling, and by investing heavily in team members. This enables the team to continuously and predictably deliver working software, tested and on time. Daniel is regarded as dedicated, structured, and creative. He has great communication skills, written and spoken, and is ready to make a big difference on your team.",
     "assignments": [
+        {
+            "company": "Ticket",
+            "years": "2020-2021",
+            "title": "Software Developer",
+            "description": "Developed performance critical API for hotel searches, using spatial indexing for geolocation, distributed caching, response caching, database index and query tuning. Implemented optimizations from database through code layers to API endpoint design and client access patterns. Used Swagger and NSwag to generate statically typed API clients. Designed and implemented efficient batch processing for data integration with external partner. Introduced abstraction oriented programming for simplified architecture, architecture decision records for capturing technical discussions, and presented results to development teams.",
+            "technologies": [
+                "ASP.NET Core",
+                "Dapper",
+                "Microservices",
+                "Kubernetes (AWS)",
+                "MS SQL Server"
+            ]
+        },
         {
             "company": "H&M",
             "years": "2017-2019",
             "title": "System Architect",
-            "description": "Technical responsibility of a business critical system used for planning the assortment. Responsible for leading and coaching of 15 developers through knowledge sharing, laying a technical foundation, and ensuring the solution is aligned with business needs (functional and non-functional). Documented and communicated technical solutions using PlantUML (ER and sequence diagrams, etc), developed defect heatmaps to guide enabler work, and developed Monte Carlo-based estimation method. Defined and implemented common logging format for end to end business process monitoring across several systems using Splunk Glass Tables.",
+            "description": "Technical responsibility of a business critical system used for planning the assortment. Responsible for leading and coaching of 15 developers through knowledge sharing, planning technical backlog, and ensuring the solution is aligned with functional and non-functional business needs. Decomposed domain into capabilities then planned and executed migration of monolithic application into microservices architecture based on events and independently deployable APIs in Azure. Developed defect heatmaps to guide enabler work and developed Monte Carlo-based story estimation method. Defined and implemented common logging format for end to end business process monitoring across multiple systems using Splunk Glass Tables. Documented and communicated solutions using PlantUML (ER and sequence diagrams).",
             "technologies": [
                 "C#/F#", "Microservices", "Azure", "CQRS", "RabbitMq", "Angular", "Splunk"
             ]
@@ -29,7 +42,7 @@
             "technologies": [
                 "C#",
                 "CQRS",
-                "Git",
+                "Microservices",
                 "MongoDB",
                 "CSS",
                 "React",
@@ -131,7 +144,8 @@
                 "Leadership Qualities",
                 "Team & Culture",
                 "Software Development Methodologies",
-                "Software Architecture & Design Principles"
+                "Software Architecture & Design Principles",
+                "Data Structures & Algorithms"
             ]
         },
         {
@@ -144,12 +158,11 @@
         {
             "title": "Software & Platforms",
             "items": [
-                "Visual Studio 2017",
-                "ASP.NET MVC/WebAPI/Core",
+                "C/C++ Boost/STL",
+                "ASP.NET Core",
                 "HTML5/JavaScript/CSS",
                 "T-SQL/EntityFramework",
-                "TeamCity, GitHub, GitLab, Octopus Deploy",
-                "C/C++ Boost/STL"
+                "TeamCity, GitHub, Octopus Deploy"
             ]
         },
         {
@@ -162,7 +175,7 @@
             ]
         },
         {
-            "title": "Pet Projects (Open Source)",
+            "title": "Pet Projects",
             "items": [
                 "https://github.com/dlidstrom",
                 "https://snittlistan.se",
@@ -176,13 +189,6 @@
                 "Swedish",
                 "English",
                 "Persian - beginner"
-            ]
-        },
-        {
-            "title": "Free Time",
-            "items": [
-                "League Bowling",
-                "Family Life"
             ]
         }
     ]

@@ -7,16 +7,15 @@
     src: local('HK Grotesk Regular'), url('fonts/HKGrotesk-Regular.otf') format('woff');
 }
 
-@media print
-{
+@media print {
     @page {
       size: A4 portrait; /* DIN A4 standard, Europe */
-      margin: 0cm;
-      padding: 1cm;
     }
     body {
         // padding-top:15mm;
         font-size: 11px;
+        margin: 0.4cm 1cm;
+        // padding: 1cm;
     }
 }
 
