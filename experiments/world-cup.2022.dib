@@ -66,6 +66,7 @@ let scoredRows =
     betRows
     |> List.map createScoredRow
 scoredRows
+results
 
 #!fsharp
 
@@ -78,15 +79,15 @@ open Plotly.NET
 open Plotly.NET.ImageExport
 
 let createChart (sr: ScoredRow) =
-    let xData = [1..results.Length]
-    let sum = sr.Scores[results.Length - 1]
+    let xData = [0..results.Length]
+    let sum = sr.Scores[results.Length]
     let chart = Chart.Spline(
         xData,
         sr.Scores,
         Name = $"%s{sr.Name} %.1f{sum}",
         Smoothing = 0.6,
         ShowMarkers = true,
-        MultiText = sr.Guesses[0..results.Length - 2],
+        MultiText = (sr.Guesses[0..results.Length - 1]),
         TextPosition = StyleParam.TextPosition.BottomCenter,
         ShowLegend = true)
     (sum, sr.Name), chart
