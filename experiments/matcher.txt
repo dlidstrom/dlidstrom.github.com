@@ -22,3 +22,27 @@ X England - USA
 1 Polen - Saudi Arabien
 1 Frankrike - Danmark
 1 Argentina - Mexiko
+Japan - Costa Rica
+Belgien - Marocko
+Kroatien - Kanada
+Spanien - Tyskland
+Kamerun - Serbien
+Syd Korea - Ghana
+Brasilien - Schweiz
+Portugal - Uruguay
+Nederländerna - Qatar
+Ecuador - Senegal
+Wales - England
+Iran - USA
+Australien - Danmark
+Tunisien - Frankrike
+Polen - Argentina
+Saudi Arabien - Mexiko
+Kroatien - Belgien
+Kanada - Marocko
+Costa Rica - Tyskland
+Japan - Spanien
+Sydkorea - Portugal
+Ghana - Uruguay
+Serbien - Schweiz
+Kamerun - Brasilien

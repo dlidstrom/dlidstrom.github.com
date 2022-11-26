@@ -1,7 +1,12 @@
 #!fsharp
 
+#r "nuget: Plotly.NET.Interactive, 3.0.0"
+#r "nuget: Plotly.NET.ImageExport, 3.0.0"
+
 open System.IO
 open System.Text.RegularExpressions
+open Plotly.NET
+open Plotly.NET.ImageExport
 
 type BetRow = {
     Name : string
@@ -15,13 +20,20 @@ type ScoredRow = {
     Guesses : string list
 }
 
-#!fsharp
+type ScoredChart = {
+    Sum: float
+    Name: string
+}
 
 let results =
     "resultat.txt"
     |> File.ReadAllLines
     |> Array.map (fun s -> string s[0])
     |> Array.where (fun s -> s.Length > 0)
+    |> List.ofArray
+let matches =
+    "matcher.txt"
+    |> File.ReadAllLines
     |> List.ofArray
 let betRows =
     let createBetRow (a: string array) = {
@@ -65,18 +77,6 @@ let scoredRows =
           Guesses = br.Guesses }
     betRows
     |> List.map createScoredRow
-scoredRows
-results
-
-#!fsharp
-
-#r "nuget: Plotly.NET.Interactive, 3.0.0"
-#r "nuget: Plotly.NET.ImageExport, 3.0.0"
-
-#!fsharp
-
-open Plotly.NET
-open Plotly.NET.ImageExport
 
 let createChart (sr: ScoredRow) =
     let xData = [0..results.Length]
@@ -87,12 +87,30 @@ let createChart (sr: ScoredRow) =
         Name = $"%s{sr.Name} %.1f{sum}",
         Smoothing = 0.6,
         ShowMarkers = true,
-        MultiText = (sr.Guesses[0..results.Length - 1]),
+        MultiText = [""] @ (sr.Guesses[0..results.Length - 1]),
         TextPosition = StyleParam.TextPosition.BottomCenter,
         ShowLegend = true)
-    (sum, sr.Name), chart
-//let description =
-//    ChartDescription.create "<h1>I am heading</h1>" "<ol><li>Hi</li><li>there</li></ol>"
+    sum, chart
+let description =
+    let createHeading name (gs: string list) = seq {
+        yield "<div style='margin: 0; padding: 0;'>"
+        yield $"<span>%s{name}</span>"
+        yield "<ul style='display: inline-block; margin: 0; padding: 0;'>"
+        for g in gs do
+            yield $"<li style='display: inline-block; border: 1px solid; margin: 2px; padding: 2px;'>%s{g}</li>"
+        yield "</ul>"
+        yield "</div>"
+    }
+    let nextGuesses =
+        scoredRows
+        |> List.map (fun sr -> sr.Name, sr.Guesses[results.Length..results.Length + 3])
+        |> List.map (fun (n, gs) -> createHeading n gs)
+    let builder = StringBuilder()
+    for m in matches[results.Length..results.Length + 3] do
+        builder.AppendLine($"<h4>%s{m}</h4>") |> ignore
+    for x in nextGuesses do
+        builder.AppendLine(String.concat "" x) |> ignore
+    ChartDescription.create "<h3 style='margin:0'>Kommande matcher</h3>" (builder.ToString())
 let myFirstChart =
     Chart.combine(
         scoredRows
@@ -100,6 +118,6 @@ let myFirstChart =
         |> List.sortByDescending fst
         |> List.map snd
     )
-    //|> Chart.withDescription(description)
+    |> Chart.withDescription(description)
 myFirstChart |> Chart.savePNG("chart", Width = 1400, Height = 1000)
 myFirstChart
