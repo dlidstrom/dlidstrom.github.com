@@ -106,11 +106,15 @@ let description =
         |> List.map (fun sr -> sr.Name, sr.Guesses[results.Length..results.Length + 3])
         |> List.map (fun (n, gs) -> createHeading n gs)
     let builder = StringBuilder()
+    builder.AppendLine("<div style='float: left; margin-right: 2rem;'>") |> ignore
     for m in matches[results.Length..results.Length + 3] do
         builder.AppendLine($"<h4>%s{m}</h4>") |> ignore
+    builder.AppendLine("</div>") |> ignore
+    builder.AppendLine("<div>") |> ignore
     for x in nextGuesses do
         builder.AppendLine(String.concat "" x) |> ignore
-    ChartDescription.create "<h3 style='margin:0'>Kommande matcher</h3>" (builder.ToString())
+    builder.AppendLine("</div>") |> ignore
+    ChartDescription.create "<h3 style='margin:0'>Kommande matcher och våra tips</h3>" (builder.ToString())
 let myFirstChart =
     Chart.combine(
         scoredRows
