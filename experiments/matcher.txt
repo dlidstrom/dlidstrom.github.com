@@ -22,27 +22,27 @@ X England - USA
 1 Polen - Saudi Arabien
 1 Frankrike - Danmark
 1 Argentina - Mexiko
-Japan - Costa Rica
-Belgien - Marocko
-Kroatien - Kanada
-Spanien - Tyskland
-Kamerun - Serbien
-Syd Korea - Ghana
-Brasilien - Schweiz
-Portugal - Uruguay
-Nederländerna - Qatar
-Ecuador - Senegal
-Wales - England
-Iran - USA
-Australien - Danmark
-Tunisien - Frankrike
-Polen - Argentina
-Saudi Arabien - Mexiko
-Kroatien - Belgien
-Kanada - Marocko
-Costa Rica - Tyskland
-Japan - Spanien
-Sydkorea - Portugal
-Ghana - Uruguay
-Serbien - Schweiz
-Kamerun - Brasilien
+2 Japan - Costa Rica
+2 Belgien - Marocko
+1 Kroatien - Kanada
+X Spanien - Tyskland
+X Kamerun - Serbien
+2 Syd Korea - Ghana
+1 Brasilien - Schweiz
+1 Portugal - Uruguay
+1 Nederländerna - Qatar
+2 Ecuador - Senegal
+2 Wales - England
+2 Iran - USA
+1 Australien - Danmark
+1 Tunisien - Frankrike
+2 Polen - Argentina
+2 Saudi Arabien - Mexiko
+X Kroatien - Belgien
+2 Kanada - Marocko
+2 Costa Rica - Tyskland
+1 Japan - Spanien
+1 Sydkorea - Portugal
+2 Ghana - Uruguay
+2 Serbien - Schweiz
+1 Kamerun - Brasilien

@@ -3,6 +3,8 @@
 #r "nuget: Plotly.NET.Interactive, 3.0.0"
 #r "nuget: Plotly.NET.ImageExport, 3.0.0"
 
+#!fsharp
+
 open System.IO
 open System.Text.RegularExpressions
 open Plotly.NET
@@ -67,7 +69,7 @@ let scoreGuesses (guesses: string list) =
         else 0
     correctPerGame
     |> List.mapi scoreGame
-let scoredRows =
+let scoredRowsFirst =
     let convertGuesses guesses =
         let scores = scoreGuesses guesses
         scores |> List.scan (+) 0.
@@ -78,9 +80,17 @@ let scoredRows =
     betRows
     |> List.map createScoredRow
 
+let scoredRows =
+    let addWinnerPoints (sc: ScoredRow) =
+        { Name = sc.Name
+          Scores = sc.Scores @ [100.]
+          Guesses = sc.Guesses @ [ "F" ] }
+    scoredRowsFirst
+    |> List.map addWinnerPoints
+
 let createChart (sr: ScoredRow) =
-    let xData = [0..results.Length]
-    let sum = sr.Scores[results.Length]
+    let xData = [0..results.Length + 1]
+    let sum = sr.Scores[results.Length + 1]
     let chart = Chart.Spline(
         xData,
         sr.Scores,
@@ -106,15 +116,16 @@ let description =
         |> List.map (fun sr -> sr.Name, sr.Guesses[results.Length..results.Length + 3])
         |> List.map (fun (n, gs) -> createHeading n gs)
     let builder = StringBuilder()
-    builder.AppendLine("<div style='float: left; margin-right: 2rem;'>") |> ignore
+    let line (s: string) = builder.AppendLine(s) |> ignore
+    line "<div style='float: left; margin: 0 2rem;'>"
     for m in matches[results.Length..results.Length + 3] do
-        builder.AppendLine($"<h4>%s{m}</h4>") |> ignore
-    builder.AppendLine("</div>") |> ignore
-    builder.AppendLine("<div>") |> ignore
+        line $"<h4>%s{m}</h4>"
+    line "</div>"
+    line "<div>"
     for x in nextGuesses do
-        builder.AppendLine(String.concat "" x) |> ignore
-    builder.AppendLine("</div>") |> ignore
-    ChartDescription.create "<h3 style='margin:0'>Kommande matcher och våra tips</h3>" (builder.ToString())
+        line (String.concat "" x)
+    line "</div>"
+    ChartDescription.create "<h3 style='margin: 0 2rem;'>Kommande matcher och våra tips</h3>" (builder.ToString())
 let myFirstChart =
     Chart.combine(
         scoredRows
