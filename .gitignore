@@ -2,3 +2,5 @@
 _cache
 _site
 experiments/.local-chromium
+LevelCompiler/bin
+LevelCompiler/obj

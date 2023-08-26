@@ -1,0 +1,31 @@
+<Level width="8" height="6">
+  <Theseus col="2" row="4" />
+  <Minotaur col="8" row="6" />
+  <Goal col="8" row="6" />
+  <Restrictions>
+    <Restrict col="1" row="2" dir="right" />
+    <Restrict col="1" row="5" dir="right" />
+    <Restrict col="1" row="5" dir="down" />
+    <Restrict col="2" row="1" dir="right" />
+    <Restrict col="2" row="1" dir="down" />
+    <Restrict col="2" row="3" dir="down" />
+    <Restrict col="2" row="3" dir="right" />
+    <Restrict col="3" row="3" dir="right" />
+    <Restrict col="3" row="5" dir="up" />
+    <Restrict col="3" row="5" dir="down" />
+    <Restrict col="3" row="5" dir="left" />
+    <Restrict col="5" row="4" dir="left" />
+    <Restrict col="5" row="4" dir="up" />
+    <Restrict col="5" row="4" dir="down" />
+    <Restrict col="5" row="5" dir="left" />
+    <Restrict col="5" row="6" dir="right" />
+    <Restrict col="6" row="2" dir="down" />
+    <Restrict col="6" row="4" dir="right" />
+    <Restrict col="6" row="5" dir="right" />
+    <Restrict col="8" row="1" dir="down" />
+    <Restrict col="8" row="3" dir="down" />
+    <Restrict col="8" row="3" dir="left" />
+    <Restrict col="8" row="5" dir="left" />
+    <Restrict col="8" row="6" dir="left" />
+  </Restrictions>
+</Level>

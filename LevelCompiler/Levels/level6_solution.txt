@@ -1,0 +1,7 @@
+040
+690
+100
+theseus (1, 1)
+escape (1, 0)
+minotaur (1, -1)
+No solution found!

@@ -1,0 +1,10 @@
+<Level width="3" height="3">
+  <Theseus col="3" row="3" />
+  <Minotaur col="3" row="1" />
+  <Goal col="3" row="2" />
+  <Restrictions>
+    <Restrict col="2" row="1" dir="down" />
+    <Restrict col="1" row="2" dir="right" />
+    <Restrict col="1" row="2" dir="down" />
+  </Restrictions>
+</Level>
