@@ -19,5 +19,7 @@ python -m http.server
 then
 
 ```bash
-python Maze.py LevelCompiler/Levels/level91.txt > LevelCompiler/Levels/level91_solution.txt
+python Maze.py \
+  LevelCompiler/Levels/level91.txt \
+> LevelCompiler/Levels/level91_solution.txt
 ```
