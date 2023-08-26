@@ -1,9 +1,12 @@
 # Readme
 
 ```bash
-$ while true \
-do dotnet run `pwd`/Levels/level98.xml `pwd`/Levels/level98.html `pwd`/Levels/level98.txt \
-sleep 3 \
+$ while true
+do dotnet run \
+  `pwd`/Levels/level98.xml \
+  `pwd`/Levels/level98.html \
+  `pwd`/Levels/level98.txt
+sleep 3
 done
 --- done ---
 --- done ---
