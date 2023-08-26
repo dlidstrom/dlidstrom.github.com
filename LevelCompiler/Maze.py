@@ -1,17 +1,11 @@
 import sys
 from collections import deque
 
-# allowed directions
+# restricted directions
 # 1 up
 # 2 right
 # 4 down
 # 8 left
-# A left+up
-# B left up right
-# C left down
-# D left down up
-# E left down right
-# F all directions
 
 UP = 1
 RIGHT = 2
@@ -23,7 +17,6 @@ theseus = (int(mazeLines[0].split()[0]) - 1, int(mazeLines[0].split()[1]) - 1)
 minotaur = (int(mazeLines[1].split()[0]) - 1, int(mazeLines[1].split()[1]) - 1)
 escape = (int(mazeLines[2].split()[0]) - 1, int(mazeLines[2].split()[1]) - 1)
 maze = [[int(i, 16) for i in line[:-1]] for line in mazeLines[3:]]
-#print(len(maze[0]))
 
 def is_position_valid(of, to):
   x1, y1 = of
