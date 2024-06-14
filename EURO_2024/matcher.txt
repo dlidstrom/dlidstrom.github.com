@@ -1,48 +1,36 @@
-2 Qatar - Ecuador
-1 England - Iran
-2 Senegal - Nederländerna
-X USA - Wales
-2 Argentina - Saudi Arabien
-X Danmark - Tunisien
-X Mexiko - Polen
-1 Frankrike - Australien
-X Marocko - Kroatien
-2 Tyskland - Japan
-1 Spanien - Costa Rica
-1 Belgien - Kanada
-1 Schweiz - Kamerun
-X Uruguay - Korea
-1 Portugal - Ghana
-1 Brasilien - Serbien
-2 Wales - Iran
-2 Qatar - Senegal
-X Nederländerna - Ecuador
-X England - USA
-2 Tunisien - Australien
-1 Polen - Saudi Arabien
-1 Frankrike - Danmark
-1 Argentina - Mexiko
-2 Japan - Costa Rica
-2 Belgien - Marocko
-1 Kroatien - Kanada
-X Spanien - Tyskland
-X Kamerun - Serbien
-2 Syd Korea - Ghana
-1 Brasilien - Schweiz
-1 Portugal - Uruguay
-1 Nederländerna - Qatar
-2 Ecuador - Senegal
-2 Wales - England
-2 Iran - USA
-1 Australien - Danmark
-1 Tunisien - Frankrike
-2 Polen - Argentina
-2 Saudi Arabien - Mexiko
-X Kroatien - Belgien
-2 Kanada - Marocko
-2 Costa Rica - Tyskland
-1 Japan - Spanien
-1 Sydkorea - Portugal
-2 Ghana - Uruguay
-2 Serbien - Schweiz
-1 Kamerun - Brasilien
+Tyskland - Skottland
+Ungern - Schweiz
+Spanien - Kroatien
+Italien - Albanien
+Polen - Nederländerna
+Slovenien - Danmark
+Serbien - England
+Rumänien - Ukraina
+Belgien - Slovakien
+Österrike - Frankrike
+Turkiet - Georgien
+Portugal - Tjeckien
+Kroatien - Albanien
+Tyskland - Ungern
+Skottland - Schweiz
+Slovenien - Serbien
+Danmark - England
+Spanien - Italien
+Slovakien - Ukraina
+Polen - Österrike
+Nederländerna - Frankrike
+Georgien - Tjeckien
+Turkiet - Portugal
+Belgien - Rumänien
+Schweiz - Tyskland
+Skottland - Ungern
+Albanien - Spanien
+Kroatien - Italien
+Nederländerna - Österrike
+Frankrike - Polen
+England - Slovenien
+Danmark - Serbien
+Slovakien - Rumänien
+Ukraina - Belgien
+Georgien - Portugal
+Tjeckien - Turkiet

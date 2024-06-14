@@ -11,8 +11,10 @@
 
 open System.IO
 open System.Text.RegularExpressions
+open Giraffe.ViewEngine
 open Plotly.NET
 open Plotly.NET.ImageExport
+open Plotly.NET.Interactive
 
 type BetRow = {
     Name : string
@@ -53,9 +55,6 @@ let betRows =
     |> Seq.map (fun l -> Regex.Split(l, @"\s+"))
     |> Seq.map createBetRow
     |> Seq.toList
-printfn "Winner     : %s" betRows[0].Winner
-printfn "First Guess: %s" betRows[0].Guesses[0]
-printfn "Last Guess : %s" betRows[0].Guesses[betRows[0].Guesses.Length - 1]
 let countCorrect i r =
     let count =
         betRows
@@ -109,30 +108,41 @@ let createChart (sr: ScoredRow) =
         ShowLegend = true)
     sum, chart
 let description =
-    let createHeading name (gs: string list) = seq {
-        yield "<div style='margin: 0; padding: 0;'>"
-        yield $"<span>%s{name}</span>"
-        yield "<ul style='display: inline-block; margin: 0; padding: 0;'>"
-        for g in gs do
-            yield $"<li style='display: inline-block; border: 1px solid; margin: 2px; padding: 2px;'>%s{g}</li>"
-        yield "</ul>"
-        yield "</div>"
-    }
+    let createHeading name (gs: string list) =
+      div [_class "column"] [
+        span [] [str name]
+        ul [] [
+          for g in gs do
+            li [] [str g]
+        ]
+      ]
     let nextGuesses =
         scoredRows
-        |> List.map (fun sr -> sr.Name, sr.Guesses[results.Length..results.Length + 3])
-        |> List.map (fun (n, gs) -> createHeading n gs)
-    let builder = StringBuilder()
-    let line (s: string) = builder.AppendLine(s) |> ignore
-    line "<div style='float: left; margin: 0 2rem;'>"
-    for m in matches[results.Length..results.Length + 3] do
-        line $"<h4>%s{m}</h4>"
-    line "</div>"
-    line "<div>"
-    for x in nextGuesses do
-        line (String.concat "" x)
-    line "</div>"
-    //ChartDescription.create "<h3 style='margin: 0 2rem;'>Kommande matcher och våra tips</h3>" (builder.ToString())
+        |> List.map (fun sr -> createHeading sr.Name sr.Guesses[results.Length..results.Length + 3])
+    [
+      h3 [] [str "Kommande matcher och våra tips"]
+      table [] [
+        tr [] [
+          th [] []
+          for sr in scoredRows do
+            th [] [str sr.Name]
+        ]
+        for m = 0 to 3 do
+          let mtch = matches[results.Length + m]
+          tr [] [
+            td [] [str mtch]
+            for sr in scoredRows do
+              td [] [str sr.Guesses[results.Length + m]]
+          ]
+      ]
+      // for m in matches[results.Length..results.Length + 3] do
+      //   h4 [_class "title"] [str m]
+      // div [_class "hero is-primary is-bold"] [
+      //   for x in nextGuesses do
+      //     x
+      // ]
+    ]
+
 let myFirstChart =
     Chart.combine(
         scoredRows
@@ -140,6 +150,11 @@ let myFirstChart =
         |> List.sortByDescending fst
         |> List.map snd
     )
-    //|> Chart.withDescription(description)
+    |> Chart.withTitle "EURO 2024 ⚽️"
+    |> Chart.withAdditionalHeadTags
+        [ link
+              [ _rel "stylesheet"
+                _href "https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css" ] ]
+    |> Chart.withDescription(description)
 myFirstChart |> Chart.savePNG("chart", Width = 1400, Height = 1000)
 myFirstChart
