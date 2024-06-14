@@ -1,0 +1,145 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"name":"csharp"}]}}
+
+#!fsharp
+
+#r "nuget: Plotly.NET.Interactive"
+#r "nuget: Plotly.NET.ImageExport"
+
+#!fsharp
+
+open System.IO
+open System.Text.RegularExpressions
+open Plotly.NET
+open Plotly.NET.ImageExport
+
+type BetRow = {
+    Name : string
+    Guesses : string list
+    Winner : string
+}
+
+type ScoredRow = {
+    Name : string
+    Scores : float list
+    Guesses : string list
+}
+
+type ScoredChart = {
+    Sum: float
+    Name: string
+}
+
+let results =
+    "resultat.txt"
+    |> File.ReadAllLines
+    |> Array.map (fun s -> string s[0])
+    |> Array.where (fun s -> s.Length > 0)
+    |> List.ofArray
+let matches =
+    "matcher.txt"
+    |> File.ReadAllLines
+    |> List.ofArray
+let betRows =
+    let createBetRow (a: string array) = {
+        Name = a[2]
+        Winner = a[36 + 3] // 36 matches
+        Guesses = a[3..38] |> List.ofArray  // 36 + 3 (timestamp parts) - 1 (0-based indexing)
+    }
+    "tipset.2024.txt"
+    |> File.ReadAllLines
+    |> Seq.where (fun l -> l.StartsWith('#') = false)
+    |> Seq.map (fun l -> Regex.Split(l, @"\s+"))
+    |> Seq.map createBetRow
+    |> Seq.toList
+printfn "Winner     : %s" betRows[0].Winner
+printfn "First Guess: %s" betRows[0].Guesses[0]
+printfn "Last Guess : %s" betRows[0].Guesses[betRows[0].Guesses.Length - 1]
+let countCorrect i r =
+    let count =
+        betRows
+        |> Seq.where (fun br -> br.Guesses[i] = r)
+        |> Seq.length
+        |> double
+    let score =
+        if count > 0 then 10. / count // change this to number of participants
+        else 0
+    score, r
+let correctPerGame =
+    results |> List.mapi countCorrect
+
+let scoreGuesses (guesses: string list) =
+    let scoreGame i (fs: float * string) =
+        let f, s = fs
+        if s = guesses[i] then f
+        else 0
+    correctPerGame
+    |> List.mapi scoreGame
+let scoredRowsFirst =
+    let convertGuesses guesses =
+        let scores = scoreGuesses guesses
+        scores |> List.scan (+) 0.
+    let createScoredRow (br: BetRow) =
+        { Name = br.Name
+          Scores = convertGuesses br.Guesses
+          Guesses = br.Guesses }
+    betRows
+    |> List.map createScoredRow
+
+let scoredRows =
+    let addWinnerPoints (sc: ScoredRow) =
+        { Name = sc.Name
+          Scores = sc.Scores @ [100.]
+          Guesses = sc.Guesses @ [ "F" ] }
+    scoredRowsFirst
+    //|> List.map addWinnerPoints
+
+let createChart (sr: ScoredRow) =
+    let xData = [0..results.Length]
+    let sum = sr.Scores[results.Length]
+    let chart = Chart.Spline(
+        xData,
+        sr.Scores,
+        Name = $"%s{sr.Name} %.1f{sum}",
+        Smoothing = 0.3,
+        ShowMarkers = true,
+        MultiText = [""] @ (sr.Guesses[0..results.Length - 1]),
+        TextPosition = StyleParam.TextPosition.BottomCenter,
+        ShowLegend = true)
+    sum, chart
+let description =
+    let createHeading name (gs: string list) = seq {
+        yield "<div style='margin: 0; padding: 0;'>"
+        yield $"<span>%s{name}</span>"
+        yield "<ul style='display: inline-block; margin: 0; padding: 0;'>"
+        for g in gs do
+            yield $"<li style='display: inline-block; border: 1px solid; margin: 2px; padding: 2px;'>%s{g}</li>"
+        yield "</ul>"
+        yield "</div>"
+    }
+    let nextGuesses =
+        scoredRows
+        |> List.map (fun sr -> sr.Name, sr.Guesses[results.Length..results.Length + 3])
+        |> List.map (fun (n, gs) -> createHeading n gs)
+    let builder = StringBuilder()
+    let line (s: string) = builder.AppendLine(s) |> ignore
+    line "<div style='float: left; margin: 0 2rem;'>"
+    for m in matches[results.Length..results.Length + 3] do
+        line $"<h4>%s{m}</h4>"
+    line "</div>"
+    line "<div>"
+    for x in nextGuesses do
+        line (String.concat "" x)
+    line "</div>"
+    //ChartDescription.create "<h3 style='margin: 0 2rem;'>Kommande matcher och våra tips</h3>" (builder.ToString())
+let myFirstChart =
+    Chart.combine(
+        scoredRows
+        |> List.map createChart
+        |> List.sortByDescending fst
+        |> List.map snd
+    )
+    //|> Chart.withDescription(description)
+myFirstChart |> Chart.savePNG("chart", Width = 1400, Height = 1000)
+myFirstChart
