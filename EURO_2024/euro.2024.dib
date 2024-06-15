@@ -116,9 +116,6 @@ let description =
             li [] [str g]
         ]
       ]
-    let nextGuesses =
-        scoredRows
-        |> List.map (fun sr -> createHeading sr.Name sr.Guesses[results.Length..results.Length + 3])
     [
       h3 [] [str "Kommande matcher och våra tips"]
       table [] [
@@ -127,7 +124,7 @@ let description =
           for sr in scoredRows do
             th [] [str sr.Name]
         ]
-        for m = 0 to 3 do
+        for m = 0 to 2 do
           let mtch = matches[results.Length + m]
           tr [] [
             td [] [str mtch]
@@ -135,12 +132,6 @@ let description =
               td [] [str sr.Guesses[results.Length + m]]
           ]
       ]
-      // for m in matches[results.Length..results.Length + 3] do
-      //   h4 [_class "title"] [str m]
-      // div [_class "hero is-primary is-bold"] [
-      //   for x in nextGuesses do
-      //     x
-      // ]
     ]
 
 let myFirstChart =
