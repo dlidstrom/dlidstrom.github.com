@@ -10,3 +10,9 @@ X Slovenien - Danmark
 2 Österrike - Frankrike
 1 Turkiet - Georgien
 1 Portugal - Tjeckien
+X Kroatien - Albanien
+1 Tyskland - Ungern
+X Skottland - Schweiz
+X Slovenien - Serbien
+X Danmark - England
+1 Spanien - Italien
