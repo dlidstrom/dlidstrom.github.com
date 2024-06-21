@@ -16,3 +16,6 @@ X Skottland - Schweiz
 X Slovenien - Serbien
 X Danmark - England
 1 Spanien - Italien
+2 Slovakien - Ukraina
+2 Polen - Österrike
+X Nederländerna - Frankrike
