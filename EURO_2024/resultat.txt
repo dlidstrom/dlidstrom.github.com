@@ -22,3 +22,5 @@ X Nederländerna - Frankrike
 X Georgien - Tjeckien
 2 Turkiet - Portugal
 1 Belgien - Rumänien
+X Schweiz - Tyskland
+2 Skottland - Ungern

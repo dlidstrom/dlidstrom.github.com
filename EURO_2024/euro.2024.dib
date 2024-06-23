@@ -108,14 +108,6 @@ let createChart (sr: ScoredRow) =
         ShowLegend = true)
     sum, chart
 let description =
-    let createHeading name (gs: string list) =
-      div [_class "column"] [
-        span [] [str name]
-        ul [] [
-          for g in gs do
-            li [] [str g]
-        ]
-      ]
     [
       h3 [] [str "Kommande matcher och våra tips"]
       table [] [
