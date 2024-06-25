@@ -1,11 +1,11 @@
 #Timestamp                              TS  US SK IA PN SD SE RU BS ÖF TG PT KA TU SS SS DE SI SU PÖ NF GT TP BR ST SU AS KI NÖ FP ES DS SR UB GP TT Slutvinnaren 🤜🤛
 12/06/2024 22:01:00 Mohammad-o-Vanessa  1   2  1  1  2  2  2  X  1  2  X  1  X  1  X  1  2  X  2  X  X  2  2  2  X  2  2  X  1  1  1  1  2  2  2  1  England
-06/06/2024 10:43:17 Micke               1   2  X  1  2  X  2  2  1  2  1  1  1  1  X  2  2  1  2  X  2  X  2  1  2  1  2  2  1  1  1  1  1  2  2  2  Frankrike
-12/06/2024 16:53:43 Anna                1   2  1  1  1  2  1  1  2  2  1  X  1  1  X  2  1  1  1  X  2  X  2  X  2  X  2  2  X  1  1  1  X  2  2  X  Frankrike
-12/06/2024 23:01:54 Faranak             1   2  2  1  X  2  2  X  1  2  2  1  1  1  2  X  2  1  2  2  2  1  2  1  1  1  2  X  X  1  1  2  1  1  2  2  Portugal
 01/06/2024 14:37:19 Annelie             1   2  X  1  X  2  1  1  2  X  2  1  1  2  1  X  2  X  2  X  1  X  1  2  X  1  1  X  1  2  X  X  1  X  2  1  Frankrike
+06/06/2024 10:43:17 Micke               1   2  X  1  2  X  2  2  1  2  1  1  1  1  X  2  2  1  2  X  2  X  2  1  2  1  2  2  1  1  1  1  1  2  2  2  Frankrike
+12/06/2024 23:01:54 Faranak             1   2  2  1  X  2  2  X  1  2  2  1  1  1  2  X  2  1  2  2  2  1  2  1  1  1  2  X  X  1  1  2  1  1  2  2  Portugal
+12/06/2024 16:53:43 Anna                1   2  1  1  1  2  1  1  2  2  1  X  1  1  X  2  1  1  1  X  2  X  2  X  2  X  2  2  X  1  1  1  X  2  2  X  Frankrike
 02/06/2024 19:59:31 Arvin               1   2  1  1  2  2  2  2  1  2  1  1  1  1  2  X  2  1  2  1  2  2  2  1  2  X  2  2  1  1  1  X  1  X  2  1  England
 22/05/2024 19:06:02 Daniel              1   2  1  1  2  2  2  2  1  2  1  1  1  1  2  2  2  X  1  X  2  2  2  1  X  1  2  X  1  1  1  1  1  2  2  1  Frankrike
-03/06/2024 17:01:37 Christer            1   2  1  1  2  2  2  2  1  2  1  1  1  1  1  2  1  2  1  1  2  2  2  1  2  1  2  2  1  1  1  1  1  2  2  2  Tyskland
 14/06/2024 18:02:57 Shima               1   1  1  1  2  1  2  X  1  2  X  1  1  1  2  1  2  1  X  X  1  2  2  1  2  X  2  2  1  1  1  X  X  2  2  2  England
+03/06/2024 17:01:37 Christer            1   2  1  1  2  2  2  2  1  2  1  1  1  1  1  2  1  2  1  1  2  2  2  1  2  1  2  2  1  1  1  1  1  2  2  2  Tyskland
 14/06/2024 20:31:37 Jocke               1   X  X  1  1  2  2  2  1  2  1  1  1  1  X  2  2  X  X  1  2  2  2  1  2  1  2  2  1  1  1  1  X  2  2  2  Tyskland
