@@ -67,7 +67,6 @@ let countCorrect i r =
     score, r
 let correctPerGame =
     results |> List.mapi countCorrect
-
 let scoreGuesses (guesses: string list) =
     let scoreGame i (fs: float * string) =
         let f, s = fs
@@ -108,6 +107,7 @@ let createChart (sr: ScoredRow) =
         ShowLegend = true)
     sum, chart
 let description =
+  if matches.Length > results.Length then
     [
       h3 [] [str "Kommande matcher och våra tips"]
       table [] [
@@ -122,6 +122,21 @@ let description =
             td [] [str mtch]
             for sr in scoredRows do
               td [] [str sr.Guesses[results.Length + m]]
+          ]
+      ]
+    ]
+  else
+    [
+      h3 [] [str "Våra slutvinnare"]
+      table [] [
+        tr [] [
+          th [] [str "Namn"]
+          th [] [str "Slutvinnare"]
+        ]
+        for br in betRows do
+          tr [] [
+            td [] [str br.Name]
+            td [] [str br.Winner]
           ]
       ]
     ]
@@ -141,3 +156,44 @@ let myFirstChart =
     |> Chart.withDescription(description)
 myFirstChart |> Chart.savePNG("chart", Width = 1400, Height = 1000)
 myFirstChart
+
+#!fsharp
+
+let matchup teams =
+  let iseve x = x % 2 = 0
+  let isodd = not << iseve
+  let eve, odd =
+    teams
+    |> List.mapi (fun i x -> (i, x))
+    |> List.partition (fst >> iseve)
+  List.zip (eve |> List.map snd) (odd |> List.map snd)
+//let teams = ["ESP"; "GER"; "POR"; "FRA"; "NED"; "TUR"; "ENG"; "SUI"]
+let teams = ["ESP"; "GER"; "POR"; "FRA"]
+let matchups = matchup teams
+
+// from each match, select winner by choosing fst or snd
+matchups
+
+#!fsharp
+
+let outcomes matchups = seq {
+  let rec outcomes' matchups acc indent = seq {
+    printfn "%smatchups: %A acc: %A" (new string(' ', indent)) matchups acc
+    match matchups with
+    | (home, away) :: rest ->
+      printfn "%shome: %A away: %A rest: %A" (new string(' ', indent)) home away rest
+      let homeWins = outcomes' rest ([home] @ acc) (indent + 1) |> List.ofSeq
+      let awayWins = outcomes' rest ([away] @ acc) (indent + 1) |> List.ofSeq
+      printfn "%shomeWins: %A awayWins: %A" (new string(' ', indent)) homeWins awayWins
+      yield! homeWins
+      yield! awayWins
+    | [] ->
+      yield List.rev acc
+  }
+  yield! outcomes' matchups [] 0
+}
+let advances = outcomes matchups |> Seq.toList
+printfn "advances:"
+advances
+|> Seq.map (String.concat " ")
+|> Seq.map (printfn "%s")
