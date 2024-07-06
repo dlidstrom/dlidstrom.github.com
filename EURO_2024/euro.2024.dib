@@ -7,6 +7,29 @@
 #r "nuget: Plotly.NET.Interactive"
 #r "nuget: Plotly.NET.ImageExport"
 
+(*
+Till nästa mästerskap: på slutet nör det
+är dags för slutspel, då vill man veta
+sina vinstchanser. Man vill veta chans på
+1:a, 2:a och 3:e plats. En komplicerad
+uträkning minst sagt. Kolla påbörjad
+funktion längst ner.
+
+Det är också roligare om allas namn har
+landet dom tippat på som flagga i alla
+diagram.
+
+Det är också kul om det går att använda
+api football. Oklart hur men kanske går
+att hitta på nåt skoj?
+
+Sist så är det många mästerskap. Kör också
+dam-mästerskapen. Finns det andra? Mellan
+släkten är det bäst om Sverige är med eller
+om det är "kända" länder. Då kör vi inte
+asiatiska mästerskapen antar jag...
+*)
+
 #!fsharp
 
 open System.IO
