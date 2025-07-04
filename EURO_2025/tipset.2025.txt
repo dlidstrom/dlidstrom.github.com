@@ -1,0 +1,11 @@
+#.            IF SN BI SP DS TP WN FE NF SI SB PI TD PS EN FW FS NI IS PB ST PD NF EW Slutvinnare X
+X Y Daniel     X  2  2  1  2  1  2  X  1  1  1  2  1  2  1  1  X  1  X  X  X  2  2  1 Tyskland
+X Y Christer   X  1  2  1  2  1  2  2  1  X  1  2  1  2  1  1  2  1  2  2  1  2  2  1 Spanien
+X Y Vanessa    1  1  2  1  2  1  2  X  1  X  1  X  1  X  X  X  2  2  X  X  2  X  X  1 England
+X Y Shima      1  2  2  1  2  1  2  1  1  1  1  2  1  2  2  1  X  1  1  2  1  X  1  2 Tyskland
+X Y Faranak    1  X  2  1  2  1  2  X  1  1  1  2  1  2  X  1  2  1  2  2  2  X  2  1 England
+X Y Mohammad   1  2  2  1  2  1  2  2  1  2  1  1  1  2  1  1  X  2  1  1  2  1  1  1 Spanien
+X Y Mikael     1  2  2  1  2  1  2  X  1  1  1  2  1  2  X  1  2  X  2  1  X  2  2  1 Sverige
+X Y Arvin      1  X  2  1  2  1  2  X  X  1  1  2  1  2  1  1  X  X  2  X  1  X  X  1 Spanien
+X Y Livia      1  2  2  1  2  1  2  1  X  1  1  1  1  1  X  1  2  2  X  1  X  X  X  2 Spanien
+X Y Annelie    1  X  2  1  2  1  2  2  X  X  1  2  1  2  1  1  2  X  2  2  1  2  2  1 Spanien

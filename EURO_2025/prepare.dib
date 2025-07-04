@@ -1,0 +1,17 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"fsharp","items":[{"name":"csharp","languageName":"C#","aliases":["c#","cs"]},{"name":"fsharp","languageName":"fsharp"},{"name":"html","languageName":"HTML"},{"name":"http","languageName":"HTTP"},{"name":"javascript","languageName":"JavaScript","aliases":["js"]},{"name":"mermaid","languageName":"Mermaid"},{"name":"pwsh","languageName":"PowerShell","aliases":["powershell"]},{"name":"value"}]}}
+
+#!fsharp
+
+open System
+open System.IO
+
+let gamesStr = File.ReadAllLines "matcher.txt"
+let gs =
+  gamesStr
+  |> Seq.map (fun s ->
+      let parts = s.Split(' ')
+      $"{parts[0][0]}{parts[2][0]}")
+  |> String.concat " "
+gs

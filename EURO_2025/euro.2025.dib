@@ -1,0 +1,232 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"fsharp","items":[{"name":"csharp","languageName":"C#","aliases":["c#","cs"]},{"name":"fsharp","languageName":"fsharp"},{"name":"html","languageName":"HTML"},{"name":"http","languageName":"HTTP"},{"name":"javascript","languageName":"JavaScript","aliases":["js"]},{"name":"mermaid","languageName":"Mermaid"},{"name":"pwsh","languageName":"PowerShell","aliases":["powershell"]},{"name":"value"}]}}
+
+#!fsharp
+
+#r "nuget: Plotly.NET.Interactive"
+#r "nuget: Plotly.NET.ImageExport"
+
+(*
+Till nästa mästerskap: på slutet nör det
+är dags för slutspel, då vill man veta
+sina vinstchanser. Man vill veta chans på
+1:a, 2:a och 3:e plats. En komplicerad
+uträkning minst sagt. Kolla påbörjad
+funktion längst ner.
+
+Det är också roligare om allas namn har
+landet dom tippat på som flagga i alla
+diagram.
+
+Det är också kul om det går att använda
+api football. Oklart hur men kanske går
+att hitta på nåt skoj?
+
+Sist så är det många mästerskap. Kör också
+dam-mästerskapen. Finns det andra? Mellan
+släkten är det bäst om Sverige är med eller
+om det är "kända" länder. Då kör vi inte
+asiatiska mästerskapen antar jag...
+*)
+
+#!fsharp
+
+open System.IO
+open System.Text.RegularExpressions
+open Giraffe.ViewEngine
+open Plotly.NET
+open Plotly.NET.ImageExport
+open Plotly.NET.Interactive
+
+type BetRow = {
+    Name : string
+    Guesses : string list
+    Winner : string
+}
+
+type ScoredRow = {
+    Name : string
+    Scores : float list
+    Guesses : string list
+}
+
+type ScoredChart = {
+    Sum: float
+    Name: string
+}
+
+let results =
+    "resultat.txt"
+    |> File.ReadAllLines
+    |> Array.map (fun s -> string s[0])
+    |> Array.where (fun s -> s.Length > 0)
+    |> List.ofArray
+let matches =
+    "matcher.txt"
+    |> File.ReadAllLines
+    |> List.ofArray
+let betRows =
+    let createBetRow (a: string array) = {
+        Name = a[2]
+        Winner = a[24 + 3] // 24 matches
+        Guesses = a[3..26] |> List.ofArray  // 24 + 3 (timestamp parts) - 1 (0-based indexing)
+    }
+    "tipset.2025.txt"
+    |> File.ReadAllLines
+    |> Seq.where (fun l -> l.StartsWith('#') = false)
+    |> Seq.map (fun l -> Regex.Split(l, @"\s+"))
+    |> Seq.map createBetRow
+    |> Seq.toList
+let countCorrect i r =
+    let count =
+        betRows
+        |> Seq.where (fun br -> br.Guesses[i] = r)
+        |> Seq.length
+        |> double
+    let score =
+        if count > 0 then 10. / count // change this to number of participants
+        else 0
+    score, r
+let correctPerGame =
+    results |> List.mapi countCorrect
+let scoreGuesses (guesses: string list) =
+    let scoreGame i (fs: float * string) =
+        let f, s = fs
+        if s = guesses[i] then f
+        else 0
+    correctPerGame
+    |> List.mapi scoreGame
+let scoredRowsFirst =
+    let convertGuesses guesses =
+        let scores = scoreGuesses guesses
+        scores |> List.scan (+) 0.
+    let createScoredRow (br: BetRow) =
+        { Name = br.Name
+          Scores = convertGuesses br.Guesses
+          Guesses = br.Guesses }
+    betRows
+    |> List.map createScoredRow
+
+let scoredRows =
+    let addWinnerPoints (sc: ScoredRow) =
+        { Name = sc.Name
+          Scores = sc.Scores @ [100.]
+          Guesses = sc.Guesses @ [ "F" ] }
+    scoredRowsFirst
+    //|> List.map addWinnerPoints
+
+let createChart (sr: ScoredRow) =
+    let xData = [0..results.Length]
+    let sum = sr.Scores[results.Length]
+    let chart = Chart.Spline(
+        xData,
+        sr.Scores,
+        Name = $"%s{sr.Name} %.1f{sum}",
+        Smoothing = 0.3,
+        ShowMarkers = true,
+        MultiText = [""] @ (sr.Guesses[0..results.Length - 1]),
+        TextPosition = StyleParam.TextPosition.BottomCenter,
+        ShowLegend = true)
+    sum, chart
+let description =
+  if matches.Length > results.Length then
+    [
+      h3 [] [str "Kommande matcher och våra tips"]
+      table [] [
+        tr [] [
+          th [] []
+          for sr in scoredRows do
+            th [] [str sr.Name]
+        ]
+        for m = 0 to 3 do
+          let mtch = matches[results.Length + m]
+          tr [] [
+            td [] [str mtch]
+            for sr in scoredRows do
+              td [] [str sr.Guesses[results.Length + m]]
+          ]
+      ]
+    ]
+  else
+    [
+      h3 [] [str "Våra slutvinnare"]
+      table [] [
+        tr [] [
+          th [] [str "Namn"]
+          th [] [str "Slutvinnare"]
+        ]
+        for br in betRows do
+          tr [] [
+            td [] [str br.Name]
+            td [] [str br.Winner]
+          ]
+      ]
+    ]
+
+let myFirstChart =
+    Chart.combine(
+        scoredRows
+        |> List.map createChart
+        |> List.sortByDescending fst
+        |> List.map snd
+    )
+    |> Chart.withTitle "EURO 2025 ⚽️"
+    |> Chart.withAdditionalHeadTags
+        [ link
+              [ _rel "stylesheet"
+                _href "https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css" ] ]
+    |> Chart.withDescription(description)
+myFirstChart |> Chart.savePNG("chart", Width = 1400, Height = 1000)
+myFirstChart
+
+#!fsharp
+
+let matchup teams =
+  let iseve x = x % 2 = 0
+  let isodd = not << iseve
+  let eve, odd =
+    teams
+    |> List.mapi (fun i x -> (i, x))
+    |> List.partition (fst >> iseve)
+  List.zip (eve |> List.map snd) (odd |> List.map snd)
+//let teams = ["ESP"; "GER"; "POR"; "FRA"; "NED"; "TUR"; "ENG"; "SUI"]
+let teams = ["ESP"; "GER"; "POR"; "FRA"]
+let matchups = matchup teams
+
+// from each match, select winner by choosing fst or snd
+matchups
+
+#!fsharp
+
+printfn "matchups: %A" matchups
+let pad n = new string(' ', n)
+let outcomes matchups debug = seq {
+  let rec pairItems = function
+  | [] -> []
+  | [x] -> failwith "unexpected 1 element"
+  | x :: y :: rest -> (x, y) :: pairItems rest
+  let rec outcomes' matchups acc indent = seq {
+    if debug then printfn "%smatchups: %A acc: %A" (pad indent) matchups acc
+    match matchups with
+    | (home, away) :: rest ->
+      if debug then printfn "%shome: %A away: %A rest: %A" (pad indent) home away rest
+      let homeWins = outcomes' rest ([home] @ acc) (indent + 1) |> List.ofSeq
+      let awayWins = outcomes' rest ([away] @ acc) (indent + 1) |> List.ofSeq
+      if debug then printfn "%shomeWins: %A awayWins: %A" (pad indent) homeWins awayWins
+      yield! homeWins
+      yield! awayWins
+    | [] ->
+      if debug then printfn "%s final acc: %A" (pad indent) acc
+      yield List.rev acc
+  }
+  let result =
+    outcomes' matchups [] 0
+    |> Seq.collect id
+    |> Seq.toList
+    |> pairItems
+  yield! result
+}
+
+let advances = outcomes matchups false |> Seq.toList
+printfn "advances: %A" advances
