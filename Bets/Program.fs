@@ -1,6 +1,5 @@
 ﻿open System
 open MathNet.Numerics.LinearAlgebra.Double
-open MathNet.Numerics.LinearAlgebra
 
 type Team = {
   Id: int
@@ -132,57 +131,6 @@ let unknowns =
     Away = toId a
   })
 
-
-/// Solve team strengths by fixing one team's strength to 0
-let estimateTeamStrengths (matches: Match list) =
-    // 1. Collect all unique teams
-    let teams =
-        matches
-        |> List.collect (fun m -> [m.Pair.Home; m.Pair.Away])
-        |> Set.ofList
-        |> Set.toList
-
-    let anchorTeam = teams.Head // Fix first team to strength 0
-    let otherTeams = teams |> List.filter ((<>) anchorTeam)
-    let teamIndex = otherTeams |> List.mapi (fun i t -> t, i) |> dict
-
-    // 2. Build matrix A (excluding anchor team column) and vector b
-    let rows = matches.Length
-    let cols = otherTeams.Length
-
-    let A = DenseMatrix.Create(rows, cols, 0.0)
-    let b = DenseVector.Create(rows, 0.0)
-
-    for i, mtch in List.indexed matches do
-        let d = log (mtch.Loss / mtch.Win)
-        b.[i] <- d
-
-        match mtch.Pair.Home, mtch.Pair.Away with
-        | h, a when h = anchorTeam && a = anchorTeam -> () // shouldn't happen
-        | h, a when h = anchorTeam ->
-            let aIdx = teamIndex[a]
-            A.[i, aIdx] <- -1.0
-        | h, a when a = anchorTeam ->
-            let hIdx = teamIndex[h]
-            A.[i, hIdx] <- 1.0
-        | h, a ->
-            let hIdx = teamIndex[h]
-            let aIdx = teamIndex[a]
-            A.[i, hIdx] <- 1.0
-            A.[i, aIdx] <- -1.0
-
-    // 3. Solve for non-anchor team strengths
-    let solved = A.QR().Solve b
-
-    // 4. Combine all team strengths (anchor = 0)
-    let result =
-        [ anchorTeam, 0.0 ] @
-        (otherTeams
-         |> List.mapi (fun i t -> t, solved.[i]))
-
-    result |> dict
-
-
 /// Ridge regression version
 let estimateTeamStrengthsRidge (matches: Match list) (lambda: float) =
     // 1. Collect all unique teams
@@ -242,14 +190,25 @@ let estimateTeamStrengthsRidge (matches: Match list) (lambda: float) =
         (otherTeams |> List.mapi (fun i t -> t, solved.[i]))
     result |> dict
 
-//let strengths = estimateTeamStrengths matches
 let strengths = estimateTeamStrengthsRidge matches 0.1
+
+printfn "Estimated Team Strengths:"
 for KeyValue(team, s) in strengths do
-    printfn "%s: %.3f" teams[team] s
+    printfn $"%s{teams[team]}: %.3f{s}"
 
 let drawBias = -0.3
+
+let allMatches =
+  let knownPairs = matches |> List.map (fun m -> m.Pair.Home, m.Pair.Away)
+  let unknownPairs = unknowns |> List.map (fun m -> m.Home, m.Away)
+  // Combine and remove duplicates, preserving order: known first, then unknowns not already in known
+  let combinedPairs =
+    knownPairs @ (unknownPairs |> List.filter (fun x -> not (List.contains x knownPairs)))
+  combinedPairs
+  |> List.map (fun (h, a) -> { Home = h; Away = a })
+
 let probs =
-  unknowns
+  allMatches
   |> List.map (fun mtch ->
     let homeStrength = strengths[mtch.Home]
     let awayStrength = strengths[mtch.Away]
@@ -259,7 +218,7 @@ let probs =
     let lossE = Math.Exp -diff
     let softmax = winE + drawE + lossE
     let winProb = winE / softmax
-    let drawProb = 1.0 / softmax
+    let drawProb = drawE / softmax
     let lossProb = lossE / softmax
     (mtch.Home, mtch.Away), { WinP = winProb; DrawP = drawProb; LossP = lossProb })
   |> Map
@@ -270,10 +229,6 @@ let pickOutcome (p: Probs) (r: Random) =
   if n < p.WinP then '1'
   elif n < p.WinP + p.DrawP then 'X'
   else '2'
-
-let row = [
-  for KeyValue((h, a), p) in probs -> (h, a), pickOutcome p r
-]
 
 let riskOfRow (row: ((int * int) * char) list) (probs: Map<(int * int), Probs>) =
   row
@@ -287,20 +242,6 @@ let riskOfRow (row: ((int * int) * char) list) (probs: Map<(int * int), Probs>) 
         | _ -> failwith "Invalid pick"
       -log selectedProb
     )
-
-row |>
-Seq.iter (fun ((h, a), p) ->
-  printfn "%8s - %-8s - %c" teams[h] teams[a] p
-)
-for (h, a), pick in row do
-  let p = probs[(h, a)]
-  let prob =
-    match pick with '1' -> p.WinP | 'X' -> p.DrawP | '2' -> p.LossP | _ -> 0.0
-  printfn "%s-%s %c (%.2f%%)" teams[h] teams[a] pick (prob * 100.0)
-
-let risk = riskOfRow row probs
-printfn "Total risk: %.3f" risk
-
 
 let generateRow (r: Random) (probs: Map<(int * int), Probs>) =
   probs
@@ -326,8 +267,10 @@ let sorted = simulated |> List.sortBy fst
 // Print top 10 safest and 10 riskiest
 let printRow (risk, row) =
   printfn "Risk: %.2f" risk
-  for (h, a), pick in row do
-    printfn "  %8s - %-8s - %c" teams[h] teams[a] pick
+  let rowMap = row |> Map.ofList
+  for mtch in allMatches do
+    let pick = rowMap[(mtch.Home, mtch.Away)]
+    printfn "  %8s - %-8s - %c" teams[mtch.Home] teams[mtch.Away] pick
   printfn ""
 
 printfn "Top 10 Safest Rows:\n"
@@ -347,8 +290,6 @@ let averageDiversity (row: ((int * int) * char) list) (others: (((int * int) * c
   | _ ->
       others
       |> List.averageBy (hammingDistance row >> float)
-
-let candidates = simulateRows 10000 probs |> List.sortBy fst
 
 let selectMostDiverseRows
   (candidates: ((int * int) * char) list list)
@@ -387,9 +328,8 @@ printfn "Most Diverse Rows (10):\n"
 for i, row in List.indexed diverse10 do
   let risk = riskOfRow row probs
   printfn $"Row %d{i + 1} (Risk: %.3f{risk}):"
-  // Create a lookup for this row
   let rowMap = row |> Map.ofList
-  for mtch in unknowns do
+  for mtch in allMatches do
     let pick = rowMap[(mtch.Home, mtch.Away)]
     printfn $"  %8s{teams[mtch.Home]} - %-8s{teams[mtch.Away]} - %c{pick}"
   printfn ""
