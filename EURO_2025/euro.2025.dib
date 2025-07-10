@@ -78,6 +78,116 @@ let betRows =
     |> Seq.map (fun l -> Regex.Split(l, @"\s+"))
     |> Seq.map createBetRow
     |> Seq.toList
+let countryToFlag =
+    Map [
+        "Sverige", "🇸🇪"
+        "England", "🇬🇧"
+        "Frankrike", "🇫🇷"
+        "Tyskland", "🇩🇪"
+        "Spanien", "🇪🇸"
+        "Italien", "🇮🇹"
+        "Nederländerna", "🇳🇱"
+        "Portugal", "🇵🇹"
+        "Schweiz", "🇨🇭"
+        "Turkiet", "🇹🇷"
+        "Kroatien", "🇭🇷"
+        "Belgien", "🇧🇪"
+        "Danmark", "🇩🇰"
+        "Polen", "🇵🇱"
+        "Tjeckien", "🇨🇿"
+        "Serbien", "🇷🇸"
+        "Skottland", "🏴"
+        "Norge", "🇳🇴"
+        "Finland", "🇫🇮"
+        "Island", "🇮🇸"
+        "Ukraina", "🇺🇦"
+        "Ryssland", "🇷🇺"
+        "Österrike", "🇦🇹"
+        "Ungern", "🇭🇺"
+        "Rumänien", "🇷🇴"
+        "Slovakien", "🇸🇰"
+        "Slovenien", "🇸🇮"
+        "Grekland", "🇬🇷"
+        "Irland", "🇮🇪"
+        "Wales", "🏴"
+        "Albanien", "🇦🇱"
+        "Bulgarien", "🇧🇬"
+        "Bosnien", "🇧🇦"
+        "Nordmakedonien", "🇲🇰"
+        "Luxemburg", "🇱🇺"
+        "Georgien", "🇬🇪"
+        "Kosovo", "🇽🇰"
+        "Estland", "🇪🇪"
+        "Lettland", "🇱🇻"
+        "Litauen", "🇱🇹"
+        "Montenegro", "🇲🇪"
+        "Armenien", "🇦🇲"
+        "Azerbajdzjan", "🇦🇿"
+        "Israel", "🇮🇱"
+        "Malta", "🇲🇹"
+        "Cypern", "🇨🇾"
+        "Kazakstan", "🇰🇿"
+        "Liechtenstein", "🇱🇮"
+        "Andorra", "🇦🇩"
+        "San Marino", "🇸🇲"
+        "Färöarna", "🇫🇴"
+        "Gibraltar", "🇬🇮"
+        "Moldavien", "🇲🇩"
+        "Vitryssland", "🇧🇾"
+        "USA", "🇺🇸"
+        "Brasilien", "🇧🇷"
+        "Argentina", "🇦🇷"
+        "Mexiko", "🇲🇽"
+        "Japan", "🇯🇵"
+        "Sydkorea", "🇰🇷"
+        "Australien", "🇦🇺"
+        "Kanada", "🇨🇦"
+        "Kina", "🇨🇳"
+        // Lägg till fler vid
+    ]
+
+let nameWithFlag (name: string) =
+    // Handles names like "Sverige - Finland"
+    let parts = name.Split([| " - " |], System.StringSplitOptions.None)
+    parts
+    |> Array.map (fun n ->
+        match countryToFlag.TryFind n with
+        | Some flag -> $"{flag} {n}"
+        | None -> n)
+    |> String.concat " - "
+
+let colorPalette =
+  [ "#1f77b4"; // blue
+    "#ff7f0e"; // orange
+    "#2ca02c"; // green
+    "#d62728"; // red
+    "#9467bd"; // purple
+    "#8c564b"; // brown
+    "#e377c2"; // pink
+    "#7f7f7f"; // gray
+    "#bcbd22"; // olive
+    "#17becf"; // cyan
+    "#aec7e8"; // light blue
+    "#ffbb78"; // light orange
+    "#98df8a"; // light green
+    "#ff9896"; // light red
+    "#c5b0d5"; // light purple
+    "#c49c94"; // light brown
+    "#f7b6d2"; // light pink
+    "#c7c7c7"; // light gray
+    "#dbdb8d"; // light olive
+    "#9edae5"  // light cyan
+  ]
+  |> List.map Plotly.NET.Color.fromHex
+let getColorForName (name: string) =
+    let hash = abs (name.GetHashCode())
+    colorPalette[hash % colorPalette.Length]
+
+let nameToColor =
+    betRows
+    |> List.map (fun br -> br.Name, getColorForName br.Name)
+    |> Map.ofList
+
 let countCorrect i r =
     let count =
         betRows
@@ -85,7 +195,7 @@ let countCorrect i r =
         |> Seq.length
         |> double
     let score =
-        if count > 0 then 10. / count // change this to number of participants
+        if count > 0 then (float betRows.Length) / count
         else 0
     score, r
 let correctPerGame =
@@ -124,6 +234,8 @@ let createChart (sr: ScoredRow) =
         sr.Scores,
         Name = $"%s{sr.Name} %.1f{sum}",
         Smoothing = 0.3,
+        LineColor = nameToColor[sr.Name],
+        MarkerColor = nameToColor[sr.Name],
         ShowMarkers = true,
         MultiText = [""] @ (sr.Guesses[0..results.Length - 1]),
         TextPosition = StyleParam.TextPosition.BottomCenter,
@@ -142,7 +254,7 @@ let description =
         for m = 0 to 3 do
           let mtch = matches[results.Length + m]
           tr [] [
-            td [] [str mtch]
+            td [] [str (nameWithFlag mtch)]
             for sr in scoredRows do
               td [] [str sr.Guesses[results.Length + m]]
           ]
