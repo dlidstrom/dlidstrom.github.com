@@ -14,3 +14,5 @@ X Portugal - Italien
 2 Polen - Sverige
 1 England - Nederländerna
 1 Frankrike - Wales
+X Finland - Schweiz
+1 Norge - Island

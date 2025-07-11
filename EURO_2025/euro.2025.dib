@@ -167,26 +167,21 @@ let colorPalette =
     "#7f7f7f"; // gray
     "#bcbd22"; // olive
     "#17becf"; // cyan
-    "#aec7e8"; // light blue
-    "#ffbb78"; // light orange
-    "#98df8a"; // light green
-    "#ff9896"; // light red
-    "#c5b0d5"; // light purple
-    "#c49c94"; // light brown
-    "#f7b6d2"; // light pink
-    "#c7c7c7"; // light gray
-    "#dbdb8d"; // light olive
-    "#9edae5"  // light cyan
+    // "#aec7e8"; // light blue
+    // "#ffbb78"; // light orange
+    // "#98df8a"; // light green
+    // "#ff9896"; // light red
+    // "#c5b0d5"; // light purple
+    // "#c49c94"; // light brown
+    // "#f7b6d2"; // light pink
+    // "#c7c7c7"; // light gray
+    // "#dbdb8d"; // light olive
+    // "#9edae5"  // light cyan
   ]
   |> List.map Plotly.NET.Color.fromHex
 let getColorForName (name: string) =
     let hash = abs (name.GetHashCode())
     colorPalette[hash % colorPalette.Length]
-
-let nameToColor =
-    betRows
-    |> List.map (fun br -> br.Name, getColorForName br.Name)
-    |> Map.ofList
 
 let countCorrect i r =
     let count =
@@ -234,8 +229,8 @@ let createChart (sr: ScoredRow) =
         sr.Scores,
         Name = $"%s{sr.Name} %.1f{sum}",
         Smoothing = 0.3,
-        LineColor = nameToColor[sr.Name],
-        MarkerColor = nameToColor[sr.Name],
+        LineColor = getColorForName sr.Name,
+        MarkerColor = getColorForName sr.Name,
         ShowMarkers = true,
         MultiText = [""] @ (sr.Guesses[0..results.Length - 1]),
         TextPosition = StyleParam.TextPosition.BottomCenter,
