@@ -1,0 +1,22 @@
+[
+  {
+    "Name": "Alice",
+    "GroupPoints": 15,
+    "SelectedWinner": "Spanien"
+  },
+  {
+    "Name": "Bob",
+    "GroupPoints": 13,
+    "SelectedWinner": "Frankrike"
+  },
+  {
+    "Name": "Clara",
+    "GroupPoints": 17,
+    "SelectedWinner": "England"
+  },
+  {
+    "Name": "David",
+    "GroupPoints": 16,
+    "SelectedWinner": "Tyskland"
+  }
+]

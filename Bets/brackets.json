@@ -1,0 +1,51 @@
+[
+  {
+    "Stage": "Before QF",
+    "Bracket": [
+      [
+        {
+          "TeamA": "Spanien",
+          "TeamB": "Tyskland"
+        },
+        {
+          "TeamA": "Frankrike",
+          "TeamB": "Portugal"
+        },
+        {
+          "TeamA": "England",
+          "TeamB": "Italien"
+        },
+        {
+          "TeamA": "Belgien",
+          "TeamB": "Nederl\u00E4nderna"
+        }
+      ]
+    ]
+  },
+  {
+    "Stage": "Before SF",
+    "Bracket": [
+      [
+        {
+          "TeamA": "Spanien",
+          "TeamB": "Frankrike"
+        },
+        {
+          "TeamA": "England",
+          "TeamB": "Belgien"
+        }
+      ]
+    ]
+  },
+  {
+    "Stage": "Final",
+    "Bracket": [
+      [
+        {
+          "TeamA": "Spanien",
+          "TeamB": "Frankrike"
+        }
+      ]
+    ]
+  }
+]

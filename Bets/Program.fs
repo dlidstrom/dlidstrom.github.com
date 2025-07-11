@@ -19,6 +19,7 @@ let main argv =
         Odds.run oddsResults
         0
     | Knockout knockoutResults ->
+      Knockout.run knockoutResults
       0
   with
   | :? ArguParseException as ex ->
