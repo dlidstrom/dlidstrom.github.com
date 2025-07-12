@@ -1,6 +1,6 @@
 #!meta
 
-{"kernelInfo":{"defaultKernelName":"fsharp","items":[{"name":"csharp","languageName":"C#","aliases":["c#","cs"]},{"name":"fsharp","languageName":"fsharp"},{"name":"html","languageName":"HTML"},{"name":"http","languageName":"HTTP"},{"name":"javascript","languageName":"JavaScript","aliases":["js"]},{"name":"mermaid","languageName":"Mermaid"},{"name":"pwsh","languageName":"PowerShell","aliases":["powershell"]},{"name":"value"}]}}
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"name":"csharp","languageName":"C#","aliases":["c#","cs"]},{"name":"fsharp","languageName":"fsharp"},{"name":"html","languageName":"HTML"},{"name":"http","languageName":"HTTP"},{"name":"javascript","languageName":"JavaScript","aliases":["js"]},{"name":"mermaid","languageName":"Mermaid"},{"name":"pwsh","languageName":"PowerShell","aliases":["powershell"]},{"name":"value"}]}}
 
 #!fsharp
 
@@ -55,29 +55,6 @@ type ScoredChart = {
     Sum: float
     Name: string
 }
-
-let results =
-    "resultat.txt"
-    |> File.ReadAllLines
-    |> Array.map (fun s -> string s[0])
-    |> Array.where (fun s -> s.Length > 0)
-    |> List.ofArray
-let matches =
-    "matcher.txt"
-    |> File.ReadAllLines
-    |> List.ofArray
-let betRows =
-    let createBetRow (a: string array) = {
-        Name = a[2]
-        Winner = a[24 + 3] // 24 matches
-        Guesses = a[3..26] |> List.ofArray  // 24 + 3 (timestamp parts) - 1 (0-based indexing)
-    }
-    "tipset.2025.txt"
-    |> File.ReadAllLines
-    |> Seq.where (fun l -> l.StartsWith('#') = false)
-    |> Seq.map (fun l -> Regex.Split(l, @"\s+"))
-    |> Seq.map createBetRow
-    |> Seq.toList
 let countryToFlag =
     Map [
         "Sverige", "🇸🇪"
@@ -146,6 +123,7 @@ let countryToFlag =
         // Lägg till fler vid
     ]
 
+
 let nameWithFlag (name: string) =
     // Handles names like "Sverige - Finland"
     let parts = name.Split([| " - " |], System.StringSplitOptions.None)
@@ -155,6 +133,9 @@ let nameWithFlag (name: string) =
         | Some flag -> $"{flag} {n}"
         | None -> n)
     |> String.concat " - "
+
+let stableHash (s: string) =
+  s |> Seq.fold (fun acc c -> 33 * acc ^^^ int c) 5381
 
 let colorPalette =
   [ "#1f77b4"; // blue
@@ -180,8 +161,36 @@ let colorPalette =
   ]
   |> List.map Plotly.NET.Color.fromHex
 let getColorForName (name: string) =
-    let hash = abs (name.GetHashCode())
+    let hash = abs (stableHash name)
     colorPalette[hash % colorPalette.Length]
+
+#!fsharp
+
+let results =
+  "resultat.txt"
+  |> File.ReadAllLines
+  |> Array.map (fun s -> string s[0])
+  |> Array.where (fun s -> s.Length > 0)
+  |> List.ofArray
+
+let matches =
+    "matcher.txt"
+    |> File.ReadAllLines
+    |> List.ofArray
+
+let betRows =
+    let createBetRow (a: string array) = {
+        Name = a[2]
+        Winner = a[24 + 3] // 24 matches
+        Guesses = a[3..26] |> List.ofArray  // 24 + 3 (timestamp parts) - 1 (0-based indexing)
+    }
+    "tipset.2025.txt"
+    |> File.ReadAllLines
+    |> Seq.where (fun l -> l.StartsWith('#') = false)
+    |> Seq.map (fun l -> Regex.Split(l, @"\s+"))
+    |> Seq.map createBetRow
+    |> Seq.toList
+
 
 let countCorrect i r =
     let count =
@@ -193,6 +202,7 @@ let countCorrect i r =
         if count > 0 then (float betRows.Length) / count
         else 0
     score, r
+
 let correctPerGame =
     results |> List.mapi countCorrect
 let scoreGuesses (guesses: string list) =
@@ -213,6 +223,7 @@ let scoredRowsFirst =
     betRows
     |> List.map createScoredRow
 
+
 let scoredRows =
     let addWinnerPoints (sc: ScoredRow) =
         { Name = sc.Name
@@ -220,6 +231,7 @@ let scoredRows =
           Guesses = sc.Guesses @ [ "F" ] }
     scoredRowsFirst
     //|> List.map addWinnerPoints
+
 
 let createChart (sr: ScoredRow) =
     let xData = [0..results.Length]
@@ -236,6 +248,7 @@ let createChart (sr: ScoredRow) =
         TextPosition = StyleParam.TextPosition.BottomCenter,
         ShowLegend = true)
     sum, chart
+
 let description =
   if matches.Length > results.Length then
     [
@@ -246,7 +259,8 @@ let description =
           for sr in scoredRows do
             th [] [str sr.Name]
         ]
-        for m = 0 to 3 do
+        let stop = min 4 (matches.Length - results.Length)
+        for m = 0 to stop - 1 do
           let mtch = matches[results.Length + m]
           tr [] [
             td [] [str (nameWithFlag mtch)]

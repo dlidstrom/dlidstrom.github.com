@@ -18,3 +18,5 @@ X Finland - Schweiz
 1 Norge - Island
 2 Italien - Spanien
 2 Portugal - Belgien
+1 Sverige - Tyskland
+1 Polen - Danmark
