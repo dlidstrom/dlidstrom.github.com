@@ -33,6 +33,7 @@ asiatiska mästerskapen antar jag...
 #!fsharp
 
 open System.IO
+open System.Text.Json
 open System.Text.RegularExpressions
 open Giraffe.ViewEngine
 open Plotly.NET
@@ -40,99 +41,105 @@ open Plotly.NET.ImageExport
 open Plotly.NET.Interactive
 
 type BetRow = {
-    Name : string
-    Guesses : string list
-    Winner : string
+  Name : string
+  Guesses : string list
+  Winner : string
 }
 
 type ScoredRow = {
-    Name : string
-    Scores : float list
-    Guesses : string list
+  Name : string
+  Scores : float list
+  Guesses : string list
 }
 
 type ScoredChart = {
-    Sum: float
-    Name: string
+  Sum: float
+  Name: string
 }
-let countryToFlag =
-    Map [
-        "Sverige", "🇸🇪"
-        "England", "🇬🇧"
-        "Frankrike", "🇫🇷"
-        "Tyskland", "🇩🇪"
-        "Spanien", "🇪🇸"
-        "Italien", "🇮🇹"
-        "Nederländerna", "🇳🇱"
-        "Portugal", "🇵🇹"
-        "Schweiz", "🇨🇭"
-        "Turkiet", "🇹🇷"
-        "Kroatien", "🇭🇷"
-        "Belgien", "🇧🇪"
-        "Danmark", "🇩🇰"
-        "Polen", "🇵🇱"
-        "Tjeckien", "🇨🇿"
-        "Serbien", "🇷🇸"
-        "Skottland", "🏴󠁧󠁢󠁳󠁣󠁴󠁿"
-        "Norge", "🇳🇴"
-        "Finland", "🇫🇮"
-        "Island", "🇮🇸"
-        "Ukraina", "🇺🇦"
-        "Ryssland", "🇷🇺"
-        "Österrike", "🇦🇹"
-        "Ungern", "🇭🇺"
-        "Rumänien", "🇷🇴"
-        "Slovakien", "🇸🇰"
-        "Slovenien", "🇸🇮"
-        "Grekland", "🇬🇷"
-        "Irland", "🇮🇪"
-        "Wales", "🏴󠁧󠁢󠁷󠁬󠁳󠁿"
-        "Albanien", "🇦🇱"
-        "Bulgarien", "🇧🇬"
-        "Bosnien", "🇧🇦"
-        "Nordmakedonien", "🇲🇰"
-        "Luxemburg", "🇱🇺"
-        "Georgien", "🇬🇪"
-        "Kosovo", "🇽🇰"
-        "Estland", "🇪🇪"
-        "Lettland", "🇱🇻"
-        "Litauen", "🇱🇹"
-        "Montenegro", "🇲🇪"
-        "Armenien", "🇦🇲"
-        "Azerbajdzjan", "🇦🇿"
-        "Israel", "🇮🇱"
-        "Malta", "🇲🇹"
-        "Cypern", "🇨🇾"
-        "Kazakstan", "🇰🇿"
-        "Liechtenstein", "🇱🇮"
-        "Andorra", "🇦🇩"
-        "San Marino", "🇸🇲"
-        "Färöarna", "🇫🇴"
-        "Gibraltar", "🇬🇮"
-        "Moldavien", "🇲🇩"
-        "Vitryssland", "🇧🇾"
-        "USA", "🇺🇸"
-        "Brasilien", "🇧🇷"
-        "Argentina", "🇦🇷"
-        "Mexiko", "🇲🇽"
-        "Japan", "🇯🇵"
-        "Sydkorea", "🇰🇷"
-        "Australien", "🇦🇺"
-        "Kanada", "🇨🇦"
-        "Kina", "🇨🇳"
-        // Lägg till fler vid
-    ]
 
+type GroupPoint = {
+  Name: string
+  GroupPoints: float
+  SelectedWinner: string
+}
+
+let countryToFlag =
+  Map [
+    "Sverige", "🇸🇪"
+    "England", "🇬🇧"
+    "Frankrike", "🇫🇷"
+    "Tyskland", "🇩🇪"
+    "Spanien", "🇪🇸"
+    "Italien", "🇮🇹"
+    "Nederländerna", "🇳🇱"
+    "Portugal", "🇵🇹"
+    "Schweiz", "🇨🇭"
+    "Turkiet", "🇹🇷"
+    "Kroatien", "🇭🇷"
+    "Belgien", "🇧🇪"
+    "Danmark", "🇩🇰"
+    "Polen", "🇵🇱"
+    "Tjeckien", "🇨🇿"
+    "Serbien", "🇷🇸"
+    "Skottland", "🏴󠁧󠁢󠁳󠁣󠁴󠁿"
+    "Norge", "🇳🇴"
+    "Finland", "🇫🇮"
+    "Island", "🇮🇸"
+    "Ukraina", "🇺🇦"
+    "Ryssland", "🇷🇺"
+    "Österrike", "🇦🇹"
+    "Ungern", "🇭🇺"
+    "Rumänien", "🇷🇴"
+    "Slovakien", "🇸🇰"
+    "Slovenien", "🇸🇮"
+    "Grekland", "🇬🇷"
+    "Irland", "🇮🇪"
+    "Wales", "🏴󠁧󠁢󠁷󠁬󠁳󠁿"
+    "Albanien", "🇦🇱"
+    "Bulgarien", "🇧🇬"
+    "Bosnien", "🇧🇦"
+    "Nordmakedonien", "🇲🇰"
+    "Luxemburg", "🇱🇺"
+    "Georgien", "🇬🇪"
+    "Kosovo", "🇽🇰"
+    "Estland", "🇪🇪"
+    "Lettland", "🇱🇻"
+    "Litauen", "🇱🇹"
+    "Montenegro", "🇲🇪"
+    "Armenien", "🇦🇲"
+    "Azerbajdzjan", "🇦🇿"
+    "Israel", "🇮🇱"
+    "Malta", "🇲🇹"
+    "Cypern", "🇨🇾"
+    "Kazakstan", "🇰🇿"
+    "Liechtenstein", "🇱🇮"
+    "Andorra", "🇦🇩"
+    "San Marino", "🇸🇲"
+    "Färöarna", "🇫🇴"
+    "Gibraltar", "🇬🇮"
+    "Moldavien", "🇲🇩"
+    "Vitryssland", "🇧🇾"
+    "USA", "🇺🇸"
+    "Brasilien", "🇧🇷"
+    "Argentina", "🇦🇷"
+    "Mexiko", "🇲🇽"
+    "Japan", "🇯🇵"
+    "Sydkorea", "🇰🇷"
+    "Australien", "🇦🇺"
+    "Kanada", "🇨🇦"
+    "Kina", "🇨🇳"
+    // Lägg till fler vid behov
+  ]
 
 let nameWithFlag (name: string) =
-    // Handles names like "Sverige - Finland"
-    let parts = name.Split([| " - " |], System.StringSplitOptions.None)
-    parts
-    |> Array.map (fun n ->
-        match countryToFlag.TryFind n with
-        | Some flag -> $"{flag} {n}"
-        | None -> n)
-    |> String.concat " - "
+  // Handles names like "Sverige - Finland"
+  let parts = name.Split([| " - " |], System.StringSplitOptions.None)
+  parts
+  |> Array.map (fun n ->
+    match countryToFlag.TryFind n with
+    | Some flag -> $"{flag} {n}"
+    | None -> n)
+  |> String.concat " - "
 
 let stableHash (s: string) =
   s |> Seq.fold (fun acc c -> 33 * acc ^^^ int c) 5381
@@ -161,8 +168,8 @@ let colorPalette =
   ]
   |> List.map Plotly.NET.Color.fromHex
 let getColorForName (name: string) =
-    let hash = abs (stableHash name)
-    colorPalette[hash % colorPalette.Length]
+  let hash = abs (stableHash name)
+  colorPalette[hash % colorPalette.Length]
 
 #!fsharp
 
@@ -174,55 +181,69 @@ let results =
   |> List.ofArray
 
 let matches =
-    "matcher.txt"
-    |> File.ReadAllLines
-    |> List.ofArray
+  "matcher.txt"
+  |> File.ReadAllLines
+  |> List.ofArray
 
 let betRows =
-    let createBetRow (a: string array) = {
-        Name = a[2]
-        Winner = a[24 + 3] // 24 matches
-        Guesses = a[3..26] |> List.ofArray  // 24 + 3 (timestamp parts) - 1 (0-based indexing)
-    }
-    "tipset.2025.txt"
-    |> File.ReadAllLines
-    |> Seq.where (fun l -> l.StartsWith('#') = false)
-    |> Seq.map (fun l -> Regex.Split(l, @"\s+"))
-    |> Seq.map createBetRow
-    |> Seq.toList
-
+  let createBetRow (a: string array) = {
+    Name = a[2]
+    Winner = a[24 + 3] // 24 matches
+    Guesses = a[3..26] |> List.ofArray  // 24 + 3 (timestamp parts) - 1 (0-based indexing)
+  }
+  "tipset.2025.txt"
+  |> File.ReadAllLines
+  |> Seq.where (fun l -> l.StartsWith('#') = false)
+  |> Seq.map (fun l -> Regex.Split(l, @"\s+"))
+  |> Seq.map createBetRow
+  |> Seq.toList
 
 let countCorrect i r =
-    let count =
-        betRows
-        |> Seq.where (fun br -> br.Guesses[i] = r)
-        |> Seq.length
-        |> double
-    let score =
-        if count > 0 then (float betRows.Length) / count
-        else 0
-    score, r
+  let count =
+    betRows
+    |> Seq.where (fun br -> br.Guesses[i] = r)
+    |> Seq.length
+    |> double
+  let score =
+    if count > 0 then (float betRows.Length) / count
+    else 0
+  score, r
 
 let correctPerGame =
-    results |> List.mapi countCorrect
+  results |> List.mapi countCorrect
 let scoreGuesses (guesses: string list) =
-    let scoreGame i (fs: float * string) =
-        let f, s = fs
-        if s = guesses[i] then f
-        else 0
-    correctPerGame
-    |> List.mapi scoreGame
+  let scoreGame i (fs: float * string) =
+    let f, s = fs
+    if s = guesses[i] then f
+    else 0
+  correctPerGame
+  |> List.mapi scoreGame
 let scoredRowsFirst =
-    let convertGuesses guesses =
-        let scores = scoreGuesses guesses
-        scores |> List.scan (+) 0.
-    let createScoredRow (br: BetRow) =
-        { Name = br.Name
-          Scores = convertGuesses br.Guesses
-          Guesses = br.Guesses }
-    betRows
-    |> List.map createScoredRow
+  let convertGuesses guesses =
+    let scores = scoreGuesses guesses
+    scores |> List.scan (+) 0.
+  let createScoredRow (br: BetRow) =
+    { Name = br.Name
+      Scores = convertGuesses br.Guesses
+      Guesses = br.Guesses }
+  betRows
+  |> List.map createScoredRow
 
+let json =
+  let r =
+    scoredRowsFirst
+    |> List.map (fun sr ->
+      let sum = sr.Scores[results.Length]
+      { Name = sr.Name
+        SelectedWinner = betRows |> List.find (fun br -> br.Name = sr.Name) |> fun br -> br.Winner
+        GroupPoints = sum
+      }
+    )
+    |> List.sortByDescending _.GroupPoints
+  System.Text.Json.JsonSerializer.Serialize(r, Json.JsonSerializerOptions(WriteIndented = true))
+System.IO.File.WriteAllText("group-scores.json", json)
+
+#!fsharp
 
 let scoredRows =
     let addWinnerPoints (sc: ScoredRow) =

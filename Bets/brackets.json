@@ -1,49 +1,23 @@
 [
   {
-    "Stage": "Before QF",
+    "Stage": "Kvartsfinal",
     "Bracket": [
       [
         {
-          "TeamA": "Spanien",
-          "TeamB": "Tyskland"
-        },
-        {
-          "TeamA": "Frankrike",
-          "TeamB": "Portugal"
-        },
-        {
-          "TeamA": "England",
+          "TeamA": "Norge",
           "TeamB": "Italien"
         },
         {
-          "TeamA": "Belgien",
-          "TeamB": "Nederl\u00E4nderna"
-        }
-      ]
-    ]
-  },
-  {
-    "Stage": "Before SF",
-    "Bracket": [
-      [
-        {
-          "TeamA": "Spanien",
+          "TeamA": "Sverige",
           "TeamB": "Frankrike"
         },
         {
-          "TeamA": "England",
-          "TeamB": "Belgien"
-        }
-      ]
-    ]
-  },
-  {
-    "Stage": "Final",
-    "Bracket": [
-      [
-        {
           "TeamA": "Spanien",
-          "TeamB": "Frankrike"
+          "TeamB": "Schweiz"
+        },
+        {
+          "TeamA": "England",
+          "TeamB": "Tyskland"
         }
       ]
     ]

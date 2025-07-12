@@ -24,11 +24,11 @@ type BracketStage = {
 }
 type Participant = {
   Name: string
-  GroupPoints: int
+  GroupPoints: float
   SelectedWinner: string
 }
 
-let simulateBracket (initialBracket: Bracket) : Map<string, int> =
+let simulateBracket (initialBracket: Bracket) : Map<string, float> =
   let r = System.Random()
   let allTeams = System.Collections.Generic.HashSet<string>()
   let teamStages = System.Collections.Generic.Dictionary<string, int>()
@@ -63,12 +63,7 @@ let simulateBracket (initialBracket: Bracket) : Map<string, int> =
   allTeams
   |> Seq.map (fun team ->
       let stage = if teamStages.ContainsKey team then teamStages[team] else 0
-      let score =
-        match stage with
-        | s when s = roundNum + 1 -> 7  // winner
-        | s when s = roundNum -> 3     // finalist
-        | s when s > 0 -> 1            // semifinalist
-        | _ -> 0
+      let score = [0 .. stage - 1] |> List.sumBy (fun r -> pown 2.0 r)
       team, score)
   |> Map.ofSeq
 
@@ -88,7 +83,7 @@ let simulateTop3Generic
     let scores =
       participants
       |> List.map (fun p ->
-          let bonus = Map.tryFind p.SelectedWinner bonusMap |> Option.defaultValue 0
+          let bonus = Map.tryFind p.SelectedWinner bonusMap |> Option.defaultValue 0.0
           let total = p.GroupPoints + bonus
           p.Name, total)
       |> List.sortByDescending snd
@@ -128,15 +123,15 @@ let simulateEvolution (participants: Participant list) (brackets: BracketStage l
       let results = simulateTop3Generic participants bracketStage.Bracket samples
       bracketStage.Stage, results)
 
-let structureByParticipant (data: (string * (string * float * float * float * float) list) list) =
-  data
-  |> List.collect (fun (stage, results) ->
-      results |> List.map (fun (name, f, s, t, top3) ->
-        name, (stage, f, s, t, top3)))
-  |> Seq.groupBy fst
-  |> Seq.map (fun (name, rows) ->
-      name, rows |> Seq.map snd |> Seq.toList)
-  |> Map.ofSeq
+// let structureByParticipant (data: (string * (string * float * float * float * float) list) list) =
+//   data
+//   |> List.collect (fun (stage, results) ->
+//       results |> List.map (fun (name, f, s, t, top3) ->
+//         name, (stage, f, s, t, top3)))
+//   |> Seq.groupBy fst
+//   |> Seq.map (fun (name, rows) ->
+//       name, rows |> Seq.map snd |> Seq.toList)
+//   |> Map.ofSeq
 
 let run (results: ParseResults<Arguments>) =
   let filename = results.GetResult Brackets_filename
@@ -153,21 +148,32 @@ let run (results: ParseResults<Arguments>) =
     System.IO.File.ReadAllText bracketsFile
     |> JsonSerializer.Deserialize<BracketStage list>
 
-  let evolution = simulateEvolution participants brackets 10000
-  for ev in evolution do
-    printfn "Stage: %s" (fst ev)
-    for name, f, s, t, top3 in snd ev do
-      printfn "  %s: First: %-6.2f%%, Second: %-6.2f%%, Third: %-6.2f%%, Top 3: %-6.2f%%" name (100.0 * f) (100.0 * s) (100.0 * t) (100.0 * top3)
-  printfn "ev: %A" evolution
+  let (stage, ranks) = simulateEvolution participants brackets 10000 |> List.last
+  printfn "Stage: %s" stage
+  for ev in ranks |> Seq.sortByDescending (fun (_, _, _, _, f) -> f) do
+    let name, f, s, t, top3 = ev
+    printfn $"%s{name}"
+    printfn
+      "  Etta 🏅: %s%%"
+      $"%6.2f{100.0 * f}"
+    printfn
+      "  Tvåa 🥈: %s%%"
+      $"%6.2f{100.0 * s}"
+    printfn
+      "  Trea 🥉: %s%%"
+      $"%6.2f{100.0 * t}"
+    // printfn
+    //   "  Topp 3 : %s%%"
+    //   $"%6.2f{100.0 * top3}"
 
-  let structure = structureByParticipant evolution
-  printfn "Structure by participant:"
-  structure
-  |> Map.toList
-  |> List.sortByDescending (fun (_, lst) -> List.last lst |> fun (_, e, f, g, _) -> e, f, g)
-  |> List.iter (fun (name, stages) ->
-      printfn "Participant: %s" name
-      stages
-      |> List.iter (fun (stage, f, s, t, top3) ->
-        printfn "  Stage: %s, First: %.2f, Second: %.2f, Third: %.2f, Top 3: %.2f" stage f s t top3)
-  )
+  // let structure = structureByParticipant evolution
+  // printfn "Structure by participant:"
+  // structure
+  // |> Map.toList
+  // |> List.sortByDescending (fun (_, lst) -> List.last lst |> fun (_, e, f, g, _) -> e, f, g)
+  // |> List.iter (fun (name, stages) ->
+  //     printfn "Participant: %s" name
+  //     stages
+  //     |> List.iter (fun (stage, f, s, t, top3) ->
+  //       printfn "  Stage: %s, First: %.2f, Second: %.2f, Third: %.2f, Top 3: %.2f" stage f s t top3)
+  // )
