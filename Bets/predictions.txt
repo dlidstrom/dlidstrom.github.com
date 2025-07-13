@@ -1,0 +1,42 @@
+Running knockout analysis with file: brackets.json
+Stage: Kvartsfinal
+Shima
+  Etta 🏅:  87.52%
+  Tvåa 🥈:  12.48%
+  Trea 🥉:   0.00%
+Mohammad
+  Etta 🏅:  12.48%
+  Tvåa 🥈:  87.52%
+  Trea 🥉:   0.00%
+Christer
+  Etta 🏅:   0.00%
+  Tvåa 🥈:   0.00%
+  Trea 🥉:  49.63%
+Daniel
+  Etta 🏅:   0.00%
+  Tvåa 🥈:   0.00%
+  Trea 🥉:  37.64%
+Faranak
+  Etta 🏅:   0.00%
+  Tvåa 🥈:   0.00%
+  Trea 🥉:  12.73%
+Annelie
+  Etta 🏅:   0.00%
+  Tvåa 🥈:   0.00%
+  Trea 🥉:   0.00%
+Arvin
+  Etta 🏅:   0.00%
+  Tvåa 🥈:   0.00%
+  Trea 🥉:   0.00%
+Livia
+  Etta 🏅:   0.00%
+  Tvåa 🥈:   0.00%
+  Trea 🥉:   0.00%
+Mikael
+  Etta 🏅:   0.00%
+  Tvåa 🥈:   0.00%
+  Trea 🥉:   0.00%
+Vanessa
+  Etta 🏅:   0.00%
+  Tvåa 🥈:   0.00%
+  Trea 🥉:   0.00%
