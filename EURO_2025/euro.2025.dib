@@ -292,16 +292,18 @@ let description =
     ]
   else
     [
+      let dict = scoredRows |> List.map (fun sr -> sr.Name, List.last sr.Scores) |> Map.ofList
       h3 [] [str "Våra slutvinnare"]
       table [] [
         tr [] [
           th [] [str "Namn"]
           th [] [str "Slutvinnare"]
         ]
-        for br in betRows do
+        // sort betRows by points
+        for br in betRows |> Seq.sortByDescending (fun br -> dict[br.Name]) do
           tr [] [
             td [] [str br.Name]
-            td [] [str br.Winner]
+            td [] [str (nameWithFlag br.Winner)]
           ]
       ]
     ]

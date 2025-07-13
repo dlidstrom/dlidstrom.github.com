@@ -1,42 +1,42 @@
 Running knockout analysis with file: brackets.json
-Stage: Kvartsfinal
+Kvartsfinal: Chans att placera sig i topp 3:
 Shima
-  Etta 🏅:  87.52%
-  Tvåa 🥈:  12.48%
-  Trea 🥉:   0.00%
+  Etta 🏅:  60%
+  Tvåa 🥈:  25%
+  Trea 🥉:  15%
 Mohammad
-  Etta 🏅:  12.48%
-  Tvåa 🥈:  87.52%
-  Trea 🥉:   0.00%
+  Etta 🏅:  36%
+  Tvåa 🥈:  44%
+  Trea 🥉:  17%
 Christer
-  Etta 🏅:   0.00%
-  Tvåa 🥈:   0.00%
-  Trea 🥉:  49.63%
+  Etta 🏅:   -
+  Tvåa 🥈:  12%
+  Trea 🥉:  34%
 Daniel
-  Etta 🏅:   0.00%
-  Tvåa 🥈:   0.00%
-  Trea 🥉:  37.64%
+  Etta 🏅:   -
+  Tvåa 🥈:  16%
+  Trea 🥉:  19%
 Faranak
-  Etta 🏅:   0.00%
-  Tvåa 🥈:   0.00%
-  Trea 🥉:  12.73%
-Annelie
-  Etta 🏅:   0.00%
-  Tvåa 🥈:   0.00%
-  Trea 🥉:   0.00%
-Arvin
-  Etta 🏅:   0.00%
-  Tvåa 🥈:   0.00%
-  Trea 🥉:   0.00%
-Livia
-  Etta 🏅:   0.00%
-  Tvåa 🥈:   0.00%
-  Trea 🥉:   0.00%
+  Etta 🏅:   5%
+  Tvåa 🥈:   6%
+  Trea 🥉:   5%
 Mikael
-  Etta 🏅:   0.00%
-  Tvåa 🥈:   0.00%
-  Trea 🥉:   0.00%
+  Etta 🏅:   -
+  Tvåa 🥈:   -
+  Trea 🥉:   6%
+Annelie
+  Etta 🏅:   -
+  Tvåa 🥈:   -
+  Trea 🥉:   -
+Arvin
+  Etta 🏅:   -
+  Tvåa 🥈:   -
+  Trea 🥉:   -
+Livia
+  Etta 🏅:   -
+  Tvåa 🥈:   -
+  Trea 🥉:   -
 Vanessa
-  Etta 🏅:   0.00%
-  Tvåa 🥈:   0.00%
-  Trea 🥉:   0.00%
+  Etta 🏅:   -
+  Tvåa 🥈:   -
+  Trea 🥉:   -

@@ -33,10 +33,11 @@ let simulateBracket (initialBracket: Bracket) : Map<string, float> =
   let allTeams = System.Collections.Generic.HashSet<string>()
   let teamStages = System.Collections.Generic.Dictionary<string, int>()
 
-  // Flatten the first round
+  // Start with the first round (usually round of 8 or 16)
   let mutable current: Match list = initialBracket |> List.head
   let mutable roundNum = 0
 
+  // Simulate until only one match remains — the final
   while current.Length > 1 do
     let winners =
       current
@@ -59,7 +60,16 @@ let simulateBracket (initialBracket: Bracket) : Map<string, float> =
 
     roundNum <- roundNum + 1
 
-  // Assign scores
+  // ✅ Simulate the final match
+  match current with
+  | [finalMatch] ->
+      allTeams.Add finalMatch.TeamA |> ignore
+      allTeams.Add finalMatch.TeamB |> ignore
+      let winner = if r.NextDouble() < 0.5 then finalMatch.TeamA else finalMatch.TeamB
+      teamStages[winner] <- roundNum + 1
+  | _ -> failwithf "Invalid final state: %A" current
+
+  // Compute scores based on stage
   allTeams
   |> Seq.map (fun team ->
       let stage = if teamStages.ContainsKey team then teamStages[team] else 0
@@ -74,47 +84,73 @@ let simulateTop3Generic
 
   let stats =
     participants
-    |> List.map (fun p -> p.Name, (ref 0, ref 0, ref 0, ref 0))
+    |> List.map (fun p -> p.Name, (ref 0.0, ref 0.0, ref 0.0, ref 0.0))
     |> Map.ofList
 
   for _ in 1 .. numSimulations do
     let bonusMap = simulateBracket bracket
 
-    let scores =
+    // Step 1: Calculate each participant's total score (groupPoints + bonus)
+    let scored =
       participants
       |> List.map (fun p ->
           let bonus = Map.tryFind p.SelectedWinner bonusMap |> Option.defaultValue 0.0
-          let total = p.GroupPoints + bonus
-          p.Name, total)
-      |> List.sortByDescending snd
+          let score = p.GroupPoints + bonus
+          p.Name, score)
 
+    // Step 2: Sort by score, then groupPoints, then name
+    let ranked =
+      scored
+      |> List.sortByDescending (fun (name, score) ->
+          let gp = participants |> List.find (fun p -> p.Name = name) |> fun p -> p.GroupPoints
+          score, gp, name)
+
+    // Step 3: Group by combined score + groupPoints to define true ties
     let grouped =
-      scores
-      |> List.groupBy snd
-      |> List.sortByDescending fst
+      ranked
+      |> List.groupBy (fun (name, score) ->
+          let gp = participants |> List.find (fun p -> p.Name = name) |> fun p -> p.GroupPoints
+          score + gp)
       |> List.map (fun (_, group) -> group |> List.map fst)
 
-    let top3 = grouped |> List.truncate 3
+    // Step 4: Assign podium places
+    let mutable place = 0
 
-    for i, group in List.indexed top3 do
-      for name in group do
-        let first, second, third, top3ref = stats[name]
-        match i with
-        | 0 -> first.Value <- first.Value + 1
-        | 1 -> second.Value <- second.Value + 1
-        | 2 -> third.Value <- third.Value + 1
-        | _ -> ()
-        top3ref.Value <- top3ref.Value + 1
+    for group in grouped do
+      match place with
+      | 0 ->
+          for name in group do
+            let first, _, _, top3 = stats[name]
+            first.Value <- first.Value + 1.0
+            top3.Value <- top3.Value + 1.0
+          place <- if group.Length = 1 then 1 elif group.Length = 2 then 2 else 3
 
+      | 1 ->
+          for name in group do
+            let _, second, _, top3 = stats[name]
+            second.Value <- second.Value + 1.0
+            top3.Value <- top3.Value + 1.0
+          place <- if group.Length = 1 then 2 else 3
+
+      | 2 ->
+          for name in group do
+            let _, _, third, top3 = stats[name]
+            third.Value <- third.Value + 1.0
+            top3.Value <- top3.Value + 1.0
+          place <- 3
+
+      | _ -> () // ignore any more places
+
+  // Step 5: Convert to percentages
   stats
   |> Map.toList
   |> List.map (fun (name, (f, s, t, top3)) ->
       let total = float numSimulations
       name,
-      float f.Value / total,
-      float s.Value / total,
-      float t.Value / total,
-      float top3.Value / total)
+      f.Value / total,
+      s.Value / total,
+      t.Value / total,
+      top3.Value / total)
   |> List.sortByDescending (fun (_, f, _, _, _) -> f)
 
 let simulateEvolution (participants: Participant list) (brackets: BracketStage list) (samples: int) =
@@ -122,16 +158,6 @@ let simulateEvolution (participants: Participant list) (brackets: BracketStage l
   |> List.map (fun bracketStage ->
       let results = simulateTop3Generic participants bracketStage.Bracket samples
       bracketStage.Stage, results)
-
-// let structureByParticipant (data: (string * (string * float * float * float * float) list) list) =
-//   data
-//   |> List.collect (fun (stage, results) ->
-//       results |> List.map (fun (name, f, s, t, top3) ->
-//         name, (stage, f, s, t, top3)))
-//   |> Seq.groupBy fst
-//   |> Seq.map (fun (name, rows) ->
-//       name, rows |> Seq.map snd |> Seq.toList)
-//   |> Map.ofSeq
 
 let run (results: ParseResults<Arguments>) =
   let filename = results.GetResult Brackets_filename
@@ -148,32 +174,17 @@ let run (results: ParseResults<Arguments>) =
     System.IO.File.ReadAllText bracketsFile
     |> JsonSerializer.Deserialize<BracketStage list>
 
-  let (stage, ranks) = simulateEvolution participants brackets 10000 |> List.last
-  printfn "Stage: %s" stage
+  let stage, ranks = simulateEvolution participants brackets 50000 |> List.last
+  printfn "%s: Chans att placera sig i topp 3:" stage
   for ev in ranks |> Seq.sortByDescending (fun (_, _, _, _, f) -> f) do
     let name, f, s, t, top3 = ev
     printfn $"%s{name}"
     printfn
-      "  Etta 🏅: %s%%"
-      $"%6.2f{100.0 * f}"
+      "  Etta 🏅: %s"
+      (if f = 0.0 then "  -" else $"%3.0f{100.0 * f}%%")
     printfn
-      "  Tvåa 🥈: %s%%"
-      $"%6.2f{100.0 * s}"
+      "  Tvåa 🥈: %s"
+      (if s = 0.0 then "  -" else $"%3.0f{100.0 * s}%%")
     printfn
-      "  Trea 🥉: %s%%"
-      $"%6.2f{100.0 * t}"
-    // printfn
-    //   "  Topp 3 : %s%%"
-    //   $"%6.2f{100.0 * top3}"
-
-  // let structure = structureByParticipant evolution
-  // printfn "Structure by participant:"
-  // structure
-  // |> Map.toList
-  // |> List.sortByDescending (fun (_, lst) -> List.last lst |> fun (_, e, f, g, _) -> e, f, g)
-  // |> List.iter (fun (name, stages) ->
-  //     printfn "Participant: %s" name
-  //     stages
-  //     |> List.iter (fun (stage, f, s, t, top3) ->
-  //       printfn "  Stage: %s, First: %.2f, Second: %.2f, Third: %.2f, Top 3: %.2f" stage f s t top3)
-  // )
+      "  Trea 🥉: %s"
+      (if t = 0.0 then "  -" else $"%3.0f{100.0 * t}%%")

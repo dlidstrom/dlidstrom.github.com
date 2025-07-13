@@ -6,47 +6,47 @@
   },
   {
     "Name": "Mohammad",
-    "GroupPoints": 27.289682539682538,
+    "GroupPoints": 28.539682539682538,
     "SelectedWinner": "Spanien"
   },
   {
     "Name": "Christer",
-    "GroupPoints": 22.289682539682538,
+    "GroupPoints": 25.539682539682538,
     "SelectedWinner": "Spanien"
   },
   {
     "Name": "Daniel",
-    "GroupPoints": 21.456349206349206,
+    "GroupPoints": 24.706349206349206,
     "SelectedWinner": "Tyskland"
   },
   {
-    "Name": "Arvin",
-    "GroupPoints": 20.02777777777778,
-    "SelectedWinner": "Spanien"
-  },
-  {
     "Name": "Faranak",
-    "GroupPoints": 19.456349206349206,
-    "SelectedWinner": "England"
-  },
-  {
-    "Name": "Vanessa",
-    "GroupPoints": 18.42857142857143,
+    "GroupPoints": 22.706349206349206,
     "SelectedWinner": "England"
   },
   {
     "Name": "Annelie",
-    "GroupPoints": 18.36111111111111,
+    "GroupPoints": 21.61111111111111,
     "SelectedWinner": "Spanien"
+  },
+  {
+    "Name": "Arvin",
+    "GroupPoints": 21.27777777777778,
+    "SelectedWinner": "Spanien"
+  },
+  {
+    "Name": "Mikael",
+    "GroupPoints": 19.706349206349206,
+    "SelectedWinner": "Sverige"
+  },
+  {
+    "Name": "Vanessa",
+    "GroupPoints": 19.67857142857143,
+    "SelectedWinner": "England"
   },
   {
     "Name": "Livia",
     "GroupPoints": 16.77777777777778,
     "SelectedWinner": "Spanien"
-  },
-  {
-    "Name": "Mikael",
-    "GroupPoints": 16.456349206349206,
-    "SelectedWinner": "Sverige"
   }
 ]
