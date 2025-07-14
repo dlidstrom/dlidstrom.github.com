@@ -73,7 +73,7 @@ let simulateBracket (initialBracket: Bracket) : Map<string, float> =
   allTeams
   |> Seq.map (fun team ->
       let stage = if teamStages.ContainsKey team then teamStages[team] else 0
-      let score = [0 .. stage - 1] |> List.sumBy (fun r -> pown 2.0 r)
+      let score = [1 .. stage] |> List.sumBy (fun r -> pown 2.0 r)
       team, score)
   |> Map.ofSeq
 
@@ -156,8 +156,8 @@ let simulateTop3Generic
 let simulateEvolution (participants: Participant list) (brackets: BracketStage list) (samples: int) =
   brackets
   |> List.map (fun bracketStage ->
-      let results = simulateTop3Generic participants bracketStage.Bracket samples
-      bracketStage.Stage, results)
+    let results = simulateTop3Generic participants bracketStage.Bracket samples
+    bracketStage.Stage, results)
 
 let run (results: ParseResults<Arguments>) =
   let filename = results.GetResult Brackets_filename
@@ -188,3 +188,6 @@ let run (results: ParseResults<Arguments>) =
     printfn
       "  Trea 🥉: %s"
       (if t = 0.0 then "  -" else $"%3.0f{100.0 * t}%%")
+    printfn
+      "  Åka ut: %s"
+      $"%3.0f{100.0 * (1.0 - top3)}%%"

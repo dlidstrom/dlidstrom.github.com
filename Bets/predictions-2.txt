@@ -1,0 +1,52 @@
+Running knockout analysis with file: brackets.json
+Kvartsfinal: Chans att placera sig i topp 3:
+Mohammad
+  Etta 🏅:  31%
+  Tvåa 🥈:  28%
+  Trea 🥉:  26%
+  Åka ut:  14%
+Shima
+  Etta 🏅:  50%
+  Tvåa 🥈:  17%
+  Trea 🥉:  13%
+  Åka ut:  20%
+Christer
+  Etta 🏅:   -
+  Tvåa 🥈:  19%
+  Trea 🥉:  24%
+  Åka ut:  58%
+Daniel
+  Etta 🏅:   -
+  Tvåa 🥈:  20%
+  Trea 🥉:  11%
+  Åka ut:  69%
+Faranak
+  Etta 🏅:  12%
+  Tvåa 🥈:   5%
+  Trea 🥉:   6%
+  Åka ut:  77%
+Mikael
+  Etta 🏅:   6%
+  Tvåa 🥈:   6%
+  Trea 🥉:   3%
+  Åka ut:  84%
+Vanessa
+  Etta 🏅:   -
+  Tvåa 🥈:   6%
+  Trea 🥉:   6%
+  Åka ut:  88%
+Annelie
+  Etta 🏅:   -
+  Tvåa 🥈:   -
+  Trea 🥉:  12%
+  Åka ut:  88%
+Arvin
+  Etta 🏅:   -
+  Tvåa 🥈:   -
+  Trea 🥉:   -
+  Åka ut: 100%
+Livia
+  Etta 🏅:   -
+  Tvåa 🥈:   -
+  Trea 🥉:   -
+  Åka ut: 100%
