@@ -49,4 +49,18 @@ Livia 🇪🇸
   Etta 🏅:   -
   Tvåa 🥈:   -
   Trea 🥉:   -
+<<<<<<< HEAD
   Åker ut: 100%
+=======
+  Åka ut: 100%
+Mikael
+  Etta 🏅:   -
+  Tvåa 🥈:   -
+  Trea 🥉:   -
+  Åka ut: 100%
+Vanessa
+  Etta 🏅:   -
+  Tvåa 🥈:   -
+  Trea 🥉:   -
+  Åka ut: 100%
+>>>>>>> dda834c (fix: update brackets and predictions files for accuracy)
