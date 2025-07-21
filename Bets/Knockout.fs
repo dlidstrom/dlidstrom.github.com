@@ -25,6 +25,7 @@ type BracketStage = {
 type Participant = {
   Name: string
   GroupPoints: float
+  KnockoutPoints: int
   SelectedWinner: string
 }
 
@@ -175,10 +176,14 @@ let run (results: ParseResults<Arguments>) =
     participants
     |> List.map (fun p -> p.Name, p.SelectedWinner)
     |> Map.ofList
+  let pointsByName =
+    participants
+    |> List.map (fun p -> p.Name, p.GroupPoints + float p.KnockoutPoints)
+    |> Map.ofList
   printfn "%s: Chans att placera sig i topp 3:" stage
-  for ev in ranks |> Seq.sortByDescending (fun (_, e, f, g, _) -> e, f, g) do
+  for ev in ranks |> Seq.sortByDescending (fun (n, e, f, g, _) -> pointsByName[n], e, f, g) do
     let name, f, s, t, top3 = ev
-    printfn $"%s{name} %s{CountryFlags.countryToFlag[countryByName[name]]}"
+    printfn $"%s{name} %s{CountryFlags.countryToFlag[countryByName[name]]} (%.1f{pointsByName[name]} poäng)"
     printfn
       "  Etta 🏅: %s"
       (if f = 0.0 then "  -" else $"%3.0f{100.0 * f}%%")

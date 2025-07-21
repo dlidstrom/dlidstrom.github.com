@@ -1,5 +1,28 @@
 [
   {
+    "Stage": "Kvartsfinal",
+    "Bracket": [
+      [
+        {
+          "TeamA": "Norge",
+          "TeamB": "Italien"
+        },
+        {
+          "TeamA": "Sverige",
+          "TeamB": "England"
+        },
+        {
+          "TeamA": "Spanien",
+          "TeamB": "Schweiz"
+        },
+        {
+          "TeamA": "Frankrike",
+          "TeamB": "Tyskland"
+        }
+      ]
+    ]
+  },
+  {
     "Stage": "Semifinal",
     "Bracket": [
       [
