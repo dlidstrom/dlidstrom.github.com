@@ -1,52 +1,51 @@
-Running knockout analysis with file: brackets.json
-Kvartsfinal: Chans att placera sig i topp 3:
-Shima
-  Etta 🏅:  59%
+Semifinal: Chans att placera sig i topp 3:
+Shima 🇩🇪
+  Etta 🏅:  50%
   Tvåa 🥈:  25%
-  Trea 🥉:  16%
-  Åka ut:   0%
-Mohammad
-  Etta 🏅:  36%
-  Tvåa 🥈:  44%
-  Trea 🥉:  17%
-  Åka ut:   3%
-Christer
-  Etta 🏅:   -
+  Trea 🥉:  25%
+ Åka ut  ፡   0%
+Mohammad 🇪🇸
+  Etta 🏅:  50%
   Tvåa 🥈:  13%
-  Trea 🥉:  34%
-  Åka ut:  53%
-Daniel
+  Trea 🥉:  25%
+ Åka ut  ፡  12%
+Daniel 🇩🇪
   Etta 🏅:   -
-  Tvåa 🥈:  16%
-  Trea 🥉:  19%
-  Åka ut:  66%
-Faranak
-  Etta 🏅:   5%
-  Tvåa 🥈:   6%
-  Trea 🥉:   5%
-  Åka ut:  84%
-Mikael
+  Tvåa 🥈:  37%
+  Trea 🥉:  13%
+ Åka ut  ፡  50%
+Christer 🇪🇸
   Etta 🏅:   -
-  Tvåa 🥈:   -
-  Trea 🥉:   6%
-  Åka ut:  94%
-Annelie
+  Tvåa 🥈:  25%
+  Trea 🥉:  13%
+ Åka ut  ፡  62%
+Faranak 🇬🇧
   Etta 🏅:   -
-  Tvåa 🥈:   -
-  Trea 🥉:   -
-  Åka ut: 100%
-Arvin
+  Tvåa 🥈:  12%
+  Trea 🥉:  12%
+ Åka ut  ፡  75%
+Annelie 🇪🇸
   Etta 🏅:   -
   Tvåa 🥈:   -
   Trea 🥉:   -
-  Åka ut: 100%
-Livia
+ Åka ut  ፡ 100%
+Arvin 🇪🇸
   Etta 🏅:   -
   Tvåa 🥈:   -
   Trea 🥉:   -
-  Åka ut: 100%
-Vanessa
+ Åka ut  ፡ 100%
+Livia 🇪🇸
   Etta 🏅:   -
   Tvåa 🥈:   -
   Trea 🥉:   -
-  Åka ut: 100%
+ Åka ut  ፡ 100%
+Mikael 🇸🇪
+  Etta 🏅:   -
+  Tvåa 🥈:   -
+  Trea 🥉:   -
+ Åka ut  ፡ 100%
+Vanessa 🇬🇧
+  Etta 🏅:   -
+  Tvåa 🥈:   -
+  Trea 🥉:   -
+ Åka ut  ፡ 100%

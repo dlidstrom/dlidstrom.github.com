@@ -159,26 +159,94 @@ let simulateEvolution (participants: Participant list) (brackets: BracketStage l
     let results = simulateTop3Generic participants bracketStage.Bracket samples
     bracketStage.Stage, results)
 
+let countryToFlag =
+  Map [
+    "Sverige", "🇸🇪"
+    "England", "🇬🇧"
+    "Frankrike", "🇫🇷"
+    "Tyskland", "🇩🇪"
+    "Spanien", "🇪🇸"
+    "Italien", "🇮🇹"
+    "Nederländerna", "🇳🇱"
+    "Portugal", "🇵🇹"
+    "Schweiz", "🇨🇭"
+    "Turkiet", "🇹🇷"
+    "Kroatien", "🇭🇷"
+    "Belgien", "🇧🇪"
+    "Danmark", "🇩🇰"
+    "Polen", "🇵🇱"
+    "Tjeckien", "🇨🇿"
+    "Serbien", "🇷🇸"
+    "Skottland", "🏴󠁧󠁢󠁳󠁣󠁴󠁿"
+    "Norge", "🇳🇴"
+    "Finland", "🇫🇮"
+    "Island", "🇮🇸"
+    "Ukraina", "🇺🇦"
+    "Ryssland", "🇷🇺"
+    "Österrike", "🇦🇹"
+    "Ungern", "🇭🇺"
+    "Rumänien", "🇷🇴"
+    "Slovakien", "🇸🇰"
+    "Slovenien", "🇸🇮"
+    "Grekland", "🇬🇷"
+    "Irland", "🇮🇪"
+    "Wales", "🏴󠁧󠁢󠁷󠁬󠁳󠁿"
+    "Albanien", "🇦🇱"
+    "Bulgarien", "🇧🇬"
+    "Bosnien", "🇧🇦"
+    "Nordmakedonien", "🇲🇰"
+    "Luxemburg", "🇱🇺"
+    "Georgien", "🇬🇪"
+    "Kosovo", "🇽🇰"
+    "Estland", "🇪🇪"
+    "Lettland", "🇱🇻"
+    "Litauen", "🇱🇹"
+    "Montenegro", "🇲🇪"
+    "Armenien", "🇦🇲"
+    "Azerbajdzjan", "🇦🇿"
+    "Israel", "🇮🇱"
+    "Malta", "🇲🇹"
+    "Cypern", "🇨🇾"
+    "Kazakstan", "🇰🇿"
+    "Liechtenstein", "🇱🇮"
+    "Andorra", "🇦🇩"
+    "San Marino", "🇸🇲"
+    "Färöarna", "🇫🇴"
+    "Gibraltar", "🇬🇮"
+    "Moldavien", "🇲🇩"
+    "Vitryssland", "🇧🇾"
+    "USA", "🇺🇸"
+    "Brasilien", "🇧🇷"
+    "Argentina", "🇦🇷"
+    "Mexiko", "🇲🇽"
+    "Japan", "🇯🇵"
+    "Sydkorea", "🇰🇷"
+    "Australien", "🇦🇺"
+    "Kanada", "🇨🇦"
+    "Kina", "🇨🇳"
+    // Lägg till fler vid behov
+  ]
+
 let run (results: ParseResults<Arguments>) =
-  let filename = results.GetResult Brackets_filename
-  // Here you would read the file and parse the matches
-  // For now, we will just print the filename
-  printfn "Running knockout analysis with file: %s" filename
   let participantsFile = results.GetResult Participants_file
   let participants =
-    System.IO.File.ReadAllText participantsFile
+    File.ReadAllText participantsFile
     |> JsonSerializer.Deserialize<Participant list>
 
   let bracketsFile = results.GetResult Brackets_filename
   let brackets =
-    System.IO.File.ReadAllText bracketsFile
+    File.ReadAllText bracketsFile
     |> JsonSerializer.Deserialize<BracketStage list>
 
   let stage, ranks = simulateEvolution participants brackets 50000 |> List.last
+  let countryByName =
+    participants
+    |> List.map (fun p -> p.Name, p.SelectedWinner)
+    |> Map.ofList
   printfn "%s: Chans att placera sig i topp 3:" stage
-  for ev in ranks |> Seq.sortByDescending (fun (_, _, _, _, f) -> f) do
+  for ev in ranks |> Seq.sortByDescending (fun (_, e, f, g, _) -> e, f, g) do
     let name, f, s, t, top3 = ev
-    printfn $"%s{name}"
+    printfn $"%s{name} %s{countryToFlag[countryByName[name]]}"
     printfn
       "  Etta 🏅: %s"
       (if f = 0.0 then "  -" else $"%3.0f{100.0 * f}%%")
@@ -189,5 +257,5 @@ let run (results: ParseResults<Arguments>) =
       "  Trea 🥉: %s"
       (if t = 0.0 then "  -" else $"%3.0f{100.0 * t}%%")
     printfn
-      "  Åka ut: %s"
+      " Åka ut  ፡ %s"
       $"%3.0f{100.0 * (1.0 - top3)}%%"
