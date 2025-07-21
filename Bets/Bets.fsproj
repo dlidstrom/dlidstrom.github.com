@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="CountryFlags.fs" />
     <Compile Include="Odds.fs" />
     <Compile Include="Knockout.fs" />
     <Compile Include="Program.fs" />
