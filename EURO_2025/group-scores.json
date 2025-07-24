@@ -3,60 +3,60 @@
     "Name": "Shima",
     "GroupPoints": 29.456349206349206,
     "SelectedWinner": "Tyskland",
-    "KnockoutPoints": 1
+    "KnockoutPoints": [1]
   },
   {
     "Name": "Mohammad",
     "GroupPoints": 28.539682539682538,
     "SelectedWinner": "Spanien",
-    "KnockoutPoints": 1
+    "KnockoutPoints": [1,2]
   },
   {
     "Name": "Christer",
     "GroupPoints": 25.539682539682538,
     "SelectedWinner": "Spanien",
-    "KnockoutPoints": 1
+    "KnockoutPoints": [1,2]
   },
   {
     "Name": "Daniel",
     "GroupPoints": 24.706349206349206,
     "SelectedWinner": "Tyskland",
-    "KnockoutPoints": 1
+    "KnockoutPoints": [1]
   },
   {
     "Name": "Faranak",
     "GroupPoints": 22.706349206349206,
     "SelectedWinner": "England",
-    "KnockoutPoints": 1
+    "KnockoutPoints": [1,2]
   },
   {
     "Name": "Annelie",
     "GroupPoints": 21.61111111111111,
     "SelectedWinner": "Spanien",
-    "KnockoutPoints": 1
+    "KnockoutPoints": [1,2]
   },
   {
     "Name": "Arvin",
     "GroupPoints": 21.27777777777778,
     "SelectedWinner": "Spanien",
-    "KnockoutPoints": 1
+    "KnockoutPoints": [1,2]
   },
   {
     "Name": "Mikael",
     "GroupPoints": 19.706349206349206,
     "SelectedWinner": "Sverige",
-    "KnockoutPoints": 0
+    "KnockoutPoints": [0]
   },
   {
     "Name": "Vanessa",
     "GroupPoints": 19.67857142857143,
     "SelectedWinner": "England",
-    "KnockoutPoints": 1
+    "KnockoutPoints": [1,2]
   },
   {
     "Name": "Livia",
     "GroupPoints": 16.77777777777778,
     "SelectedWinner": "Spanien",
-    "KnockoutPoints": 1
+    "KnockoutPoints": [1,2]
   }
 ]

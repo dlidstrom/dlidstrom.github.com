@@ -20,22 +20,26 @@ type Match = {
 type Bracket = Match list list
 type BracketStage = {
   Stage: string
+  BonusExponent: int
   Bracket: Bracket
 }
 type Participant = {
   Name: string
   GroupPoints: float
-  KnockoutPoints: int
+  KnockoutPoints: int[]
   SelectedWinner: string
 }
+with
+  member this.TotalPoints =
+    this.GroupPoints + float (Array.sum this.KnockoutPoints)
 
-let simulateBracket (initialBracket: Bracket) : Map<string, float> =
+let simulateBracket (initialBracketStage: BracketStage) : Map<string, float> =
   let r = System.Random()
   let allTeams = System.Collections.Generic.HashSet<string>()
   let teamStages = System.Collections.Generic.Dictionary<string, int>()
 
   // Start with the first round (usually round of 8 or 16)
-  let mutable current: Match list = initialBracket |> List.head
+  let mutable current: Match list = initialBracketStage.Bracket |> List.head
   let mutable roundNum = 0
 
   // Simulate until only one match remains — the final
@@ -74,13 +78,13 @@ let simulateBracket (initialBracket: Bracket) : Map<string, float> =
   allTeams
   |> Seq.map (fun team ->
       let stage = if teamStages.ContainsKey team then teamStages[team] else 0
-      let score = [1 .. stage] |> List.sumBy (fun r -> pown 2.0 r)
+      let score = [0 .. stage - 1] |> List.sumBy (fun r -> pown 2.0 (initialBracketStage.BonusExponent + r))
       team, score)
   |> Map.ofSeq
 
 let simulateTop3Generic
   (participants: Participant list)
-  (bracket: Bracket)
+  (bracketStage: BracketStage)
   (numSimulations: int) =
 
   let stats =
@@ -89,29 +93,25 @@ let simulateTop3Generic
     |> Map.ofList
 
   for _ in 1 .. numSimulations do
-    let bonusMap = simulateBracket bracket
+    let bonusMap = simulateBracket bracketStage
 
-    // Step 1: Calculate each participant's total score (groupPoints + bonus)
+    // Step 1: Calculate each participant's total score (TotalPoints + bonus)
     let scored =
       participants
       |> List.map (fun p ->
-          let bonus = Map.tryFind p.SelectedWinner bonusMap |> Option.defaultValue 0.0
-          let score = p.GroupPoints + bonus
-          p.Name, score)
+        let bonus = Map.tryFind p.SelectedWinner bonusMap |> Option.defaultValue 0.0
+        let score = p.TotalPoints + bonus
+        p.Name, score)
 
-    // Step 2: Sort by score, then groupPoints, then name
+    // Step 2: Sort by score, then name
     let ranked =
       scored
-      |> List.sortByDescending (fun (name, score) ->
-          let gp = participants |> List.find (fun p -> p.Name = name) |> fun p -> p.GroupPoints
-          score, gp, name)
+      |> List.sortByDescending (fun (name, score) -> score, name)
 
-    // Step 3: Group by combined score + groupPoints to define true ties
+    // Step 3: Group by total points to define true ties
     let grouped =
       ranked
-      |> List.groupBy (fun (name, score) ->
-          let gp = participants |> List.find (fun p -> p.Name = name) |> fun p -> p.GroupPoints
-          score + gp)
+      |> List.groupBy snd
       |> List.map (fun (_, group) -> group |> List.map fst)
 
     // Step 4: Assign podium places
@@ -154,11 +154,9 @@ let simulateTop3Generic
       top3.Value / total)
   |> List.sortByDescending (fun (_, f, _, _, _) -> f)
 
-let simulateEvolution (participants: Participant list) (brackets: BracketStage list) (samples: int) =
-  brackets
-  |> List.map (fun bracketStage ->
-    let results = simulateTop3Generic participants bracketStage.Bracket samples
-    bracketStage.Stage, results)
+let simulateEvolution (participants: Participant list) (bracketStage: BracketStage) (samples: int) =
+  let results = simulateTop3Generic participants bracketStage samples
+  bracketStage.Stage, results
 
 let run (results: ParseResults<Arguments>) =
   let participantsFile = results.GetResult Participants_file
@@ -167,18 +165,18 @@ let run (results: ParseResults<Arguments>) =
     |> JsonSerializer.Deserialize<Participant list>
 
   let bracketsFile = results.GetResult Brackets_filename
-  let brackets =
+  let bracketStage =
     File.ReadAllText bracketsFile
-    |> JsonSerializer.Deserialize<BracketStage list>
+    |> JsonSerializer.Deserialize<BracketStage>
 
-  let stage, ranks = simulateEvolution participants brackets 50000 |> List.last
+  let stage, ranks = simulateEvolution participants bracketStage 50000
   let countryByName =
     participants
     |> List.map (fun p -> p.Name, p.SelectedWinner)
     |> Map.ofList
   let pointsByName =
     participants
-    |> List.map (fun p -> p.Name, p.GroupPoints + float p.KnockoutPoints)
+    |> List.map (fun p -> p.Name, p.TotalPoints)
     |> Map.ofList
   printfn "%s: Chans att placera sig i topp 3:" stage
   for ev in ranks |> Seq.sortByDescending (fun (n, e, f, g, _) -> pointsByName[n], e, f, g) do

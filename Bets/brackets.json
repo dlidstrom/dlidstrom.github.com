@@ -1,40 +1,12 @@
-[
-  {
-    "Stage": "Kvartsfinal",
-    "Bracket": [
-      [
-        {
-          "TeamA": "Norge",
-          "TeamB": "Italien"
-        },
-        {
-          "TeamA": "Sverige",
-          "TeamB": "England"
-        },
-        {
-          "TeamA": "Spanien",
-          "TeamB": "Schweiz"
-        },
-        {
-          "TeamA": "Frankrike",
-          "TeamB": "Tyskland"
-        }
-      ]
+{
+  "Stage": "Final",
+  "BonusExponent": 2,
+  "Bracket": [
+    [
+      {
+        "TeamA": "England",
+        "TeamB": "Spanien"
+      }
     ]
-  },
-  {
-    "Stage": "Semifinal",
-    "Bracket": [
-      [
-        {
-          "TeamA": "England",
-          "TeamB": "Italien"
-        },
-        {
-          "TeamA": "Tyskland",
-          "TeamB": "Spanien"
-        }
-      ]
-    ]
-  }
-]
+  ]
+}
