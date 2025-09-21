@@ -7,17 +7,6 @@ open System
 open System.IO
 open System.Text.RegularExpressions
 
-type ParserState =
-  | Meta
-  | Moves
-
-let createTagPattern tagName f =
-  let regex = Regex($@"\[{tagName} ""([^""]+)""\]", RegexOptions.Compiled)
-  function
-  | (input: string) when regex.IsMatch(input) ->
-      Some (f (regex.Match(input).Groups.[1].Value))
-  | _ -> None
-
 type Termination =
   | Normal
   | TimeForfeit
@@ -29,6 +18,19 @@ with
     | "Time forfeit" -> TimeForfeit
     | "Abandoned" -> Abandoned
     | s -> failwith $"Unknown termination: %s{s}"
+
+let createTagPattern tagName f =
+  let regex = Regex($@"\[{tagName} ""([^""]+)""\]", RegexOptions.Compiled)
+  function
+  | (input: string) when regex.IsMatch(input) ->
+      Some (f (regex.Match(input).Groups.[1].Value))
+  | _ -> None
+
+type ValidationError =
+  | Event
+let validateGeneric = function
+| Some s -> Ok s
+| None -> Error [Event]
 
 let (|Event|_|) = createTagPattern "Event" id
 let (|Site|_|) = createTagPattern "Site" id
@@ -47,7 +49,7 @@ let (|TimeControl|_|) = createTagPattern "TimeControl" id
 let (|Termination|_|) = createTagPattern "Termination" Termination.parse
 
 type ChessGame = {
-  Event: string option
+  Event: Result<string, ValidationError list>
   Site: string option
   White: string option
   Black: string option
@@ -65,7 +67,7 @@ type ChessGame = {
 }
 with
   static member Empty = {
-    Event = None
+    Event = Error [Event]
     Site = None
     White = None
     Black = None
@@ -89,7 +91,7 @@ with
       | ln :: lns ->
         let game' =
           match ln with
-          | Event e -> { game with Event = Some e }
+          | Event e -> { game with Event = Ok e }
           | White e -> { game with White = Some e }
           | Black e -> { game with Black = Some e }
           | Result e -> { game with Result = Some e }
@@ -108,23 +110,21 @@ with
       | [] -> game
     parseLines lines game
 
-type ValidationError =
-  | Event
-let validateGeneric = function
-| Some s -> Ok s
-| None -> Error [Event]
-
 type ValidatedChessGame = {
   Event: string
 }
 with
   static member validate (game: ChessGame): Result<ValidatedChessGame, ValidationError list> = result {
-    let! event = validateGeneric game.Event
+    let! event = game.Event
     return {
       Event = event
     }
   }
-    
+
+type ParserState =
+  | Meta
+  | Moves
+
 let extractGames (linesReader: StreamReader): seq<ChessGame> =
   let rec parseLines state currentGame = seq {
     match linesReader.ReadLine() with
