@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Umix Emulator</title>
+    <!-- xterm.js from CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xterm/xterm@6.0.0/css/xterm.min.css" />
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #111;
+            color: #eee;
+            height: 100vh;
+            box-sizing: border-box;
+            font-family: monospace;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            max-width: 800px;
+            margin: 0 auto;
+            height: 100%;
+        }
+
+        #terminal-container {
+            flex: 1;
+            border: 1px solid #555;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        #scanline-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            /* Let clicks pass through to terminal */
+            z-index: 10;
+        }
+
+        #terminal-container {
+            filter: drop-shadow(0 0 2px #00ff00) brightness(1.1);
+        }
+
+        #effects-toggle {
+            align-self: flex-end;
+            margin-top: 4px;
+            padding: 4px 10px;
+            background: #222;
+            color: #bbb;
+            border: 1px solid #333;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        #effects-toggle:hover {
+            color: #00ff00;
+            border-color: #00ff00;
+        }
+
+        #challenge-link {
+            align-self: flex-end;
+            font-family: monospace;
+            font-size: 12px;
+            color: #bbb;
+            text-decoration: none;
+        }
+
+        #challenge-link:hover {
+            color: #00ff00;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div id="terminal-container">
+            <canvas id="scanline-canvas"></canvas>
+        </div>
+        <button id="effects-toggle">Effects: ON</button>
+        <a id="challenge-link" href="https://boundvariable.org/task.shtml" target="_blank">ICFP 2006 Challenge</a>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@xterm/xterm@6.0.0/lib/xterm.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@xterm/addon-fit@0.11.0/lib/addon-fit.min.js"></script>
+    <script src="wrapper.js"></script>
+</body>
+
+</html>
