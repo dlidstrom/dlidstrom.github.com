@@ -49,6 +49,7 @@ terminal.onData((data) => {
         inputBuffer = inputBuffer.slice(0, -1);
         terminal.write('\b \b');
       }
+
       break;
     case '\x1b[A': // Up arrow
     case '\x1b[B': // Down arrow
@@ -71,6 +72,7 @@ terminal.onData((data) => {
         runCycle();
         inputBuffer = '';
       }
+
       break;
     }
 
@@ -92,6 +94,7 @@ terminal.onData((data) => {
         inputBuffer += data;
         terminal.write(data);
       }
+
       break;
   }
 });
@@ -104,10 +107,11 @@ function handlePaste(text) {
     if (i >= lines.length) return;
     const printable = lines[i].replace(/[^\x20-\x7e]/g, '');
     i++;
+    inputBuffer += printable;  // append like typing
     terminal.write(printable);
     if (i < lines.length) {
       terminal.write('\r\n');
-      inputBuffer = printable + '\n';
+      inputBuffer += '\n';
       inputIndex = 0;
       onPausedCallback = feedNext;
       if (paused) {
@@ -195,6 +199,7 @@ function step() {
           onPausedCallback = null;
           setTimeout(cb, 0); // defer so runBatch fully exits first
         }
+
         return false;
       }
       break;
@@ -202,6 +207,7 @@ function step() {
       if (reg[b] !== 0) {
         mem[0] = new Uint32Array(mem[reg[b]]);
       }
+
       programCounter = Number(reg[c]);
       break;
     case 13: // Literal
@@ -289,6 +295,10 @@ terminal.attachCustomKeyEventHandler((e) => {
     return false;
   }
   if ((e.ctrlKey || e.metaKey) && e.key === 'v' && e.type === 'keydown') {
+    return false;
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'c' && e.type === 'keydown' && terminal.hasSelection()) {
+    navigator.clipboard.writeText(terminal.getSelection());
     return false;
   }
   return true;
