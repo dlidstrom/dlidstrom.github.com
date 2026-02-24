@@ -8,6 +8,7 @@ let programCounter = 0; // Tracks current instruction pointer
 let isPasting = false;
 let pasteBuffer = '';
 let effectsEnabled = localStorage.getItem('effectsEnabled') !== 'false';;
+let onPausedCallback = null;
 
 document.getElementById('effects-toggle').textContent =
   `Effects: ${effectsEnabled ? 'ON' : 'OFF'}`;
@@ -97,24 +98,27 @@ terminal.onData((data) => {
 
 function handlePaste(text) {
   const lines = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
-  for (let i = 0; i < lines.length; i++) {
+  let i = 0;
+
+  function feedNext() {
+    if (i >= lines.length) return;
     const printable = lines[i].replace(/[^\x20-\x7e]/g, '');
-    inputBuffer += printable;
-    terminal.write(printable); // Echo so user can see it
-    if (i < lines.length - 1) {
+    i++;
+    terminal.write(printable);
+    if (i < lines.length) {
       terminal.write('\r\n');
-      const line = inputBuffer;
-      inputBuffer = line + '\n';
+      inputBuffer = printable + '\n';
+      inputIndex = 0;
+      onPausedCallback = feedNext;
       if (paused) {
-        inputIndex = 0;
         resume();
-        inputBuffer = '';
       } else if (mem.length > 0) {
         runCycle();
-        inputBuffer = '';
       }
     }
   }
+
+  feedNext();
 }
 
 // Execute a single instruction and return whether to continue
@@ -179,13 +183,18 @@ function step() {
       }
 
       break;
-    case 11: // Input
+    case 11:
       if (inputIndex < inputBuffer.length) {
         reg[c] = inputBuffer.charCodeAt(inputIndex);
         inputIndex++;
         programCounter++;
       } else {
-        paused = true; // Pause for input
+        paused = true;
+        if (onPausedCallback) {
+          const cb = onPausedCallback;
+          onPausedCallback = null;
+          setTimeout(cb, 0); // defer so runBatch fully exits first
+        }
         return false;
       }
       break;
@@ -279,11 +288,7 @@ terminal.attachCustomKeyEventHandler((e) => {
   if (e.key === 'Tab') {
     return false;
   }
-  if (e.ctrlKey && e.key === 'v' && e.type === 'keydown') {
-    return false;
-  }
-  if (e.ctrlKey && e.key === 'c' && e.type === 'keydown' && terminal.hasSelection()) {
-    document.execCommand('copy');
+  if ((e.ctrlKey || e.metaKey) && e.key === 'v' && e.type === 'keydown') {
     return false;
   }
   return true;
@@ -314,7 +319,6 @@ function initScanlines() {
         precision mediump float;
         uniform float u_width;
         uniform float u_height;
-        uniform float u_time;
 
         void main() {
             vec2 uv = gl_FragCoord.xy / vec2(u_width, u_height);
