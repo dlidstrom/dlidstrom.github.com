@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Countdown Timer</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0a;
+    --fg: #f0ece0;
+    --accent: #e8432d;
+    --dim: #333;
+    --tick: #1a1a1a;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'IBM Plex Mono', monospace;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--tick) 1px, transparent 1px),
+      linear-gradient(90deg, var(--tick) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 2rem;
+    transition: color 0.3s;
+  }
+
+  .timer-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* SVG ring */
+  .ring-svg {
+    position: absolute;
+    width: 340px;
+    height: 340px;
+    transform: rotate(-90deg);
+  }
+
+  .ring-bg {
+    fill: none;
+    stroke: var(--dim);
+    stroke-width: 3;
+  }
+
+  .ring-progress {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 3;
+    stroke-linecap: butt;
+    stroke-dasharray: 942; /* 2π × 150 */
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1s linear, stroke 0.3s;
+  }
+
+  .display {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 9rem;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+    width: 260px;
+    text-align: center;
+    transition: color 0.3s;
+    position: relative;
+    z-index: 1;
+  }
+
+  .display.danger { color: var(--accent); }
+
+  .display.zero {
+    animation: pulse 0.4s ease-out 3;
+    color: var(--accent);
+  }
+
+  @keyframes pulse {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.12); }
+    100% { transform: scale(1); }
+  }
+
+  .controls {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2.5rem;
+    z-index: 1;
+  }
+
+  button {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    border: 1px solid var(--dim);
+    background: transparent;
+    color: var(--fg);
+    padding: 0.6rem 1.6rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  button:hover {
+    border-color: var(--fg);
+    background: var(--fg);
+    color: var(--bg);
+  }
+
+  button.primary {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  button.primary:hover {
+    background: var(--accent);
+    color: var(--fg);
+  }
+
+  .status {
+    margin-top: 1.5rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--dim);
+    min-height: 1em;
+    transition: color 0.3s;
+  }
+
+  .status.active { color: var(--accent); }
+
+  /* Flash overlay on beep */
+  .flash {
+    position: fixed;
+    inset: 0;
+    background: var(--accent);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .flash.go {
+    animation: flash 0.4s ease-out forwards;
+  }
+
+  @keyframes flash {
+    0%   { opacity: 0.35; }
+    100% { opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="label">Countdown Timer</div>
+
+<div class="timer-wrap">
+  <svg class="ring-svg" viewBox="0 0 340 340">
+    <circle class="ring-bg" cx="170" cy="170" r="150"/>
+    <circle class="ring-progress" id="ring" cx="170" cy="170" r="150"/>
+  </svg>
+  <div class="display" id="display">20</div>
+</div>
+
+<div class="controls">
+  <button class="primary" id="startBtn" onclick="startStop()">Start</button>
+  <button onclick="reset()">Reset</button>
+</div>
+
+<div class="status" id="status">Ready</div>
+<div class="flash" id="flash"></div>
+
+<script>
+  const TOTAL = 20;
+  const CIRCUMFERENCE = 2 * Math.PI * 150; // ≈ 942.48
+
+  let remaining = TOTAL;
+  let running = false;
+  let interval = null;
+  let audioCtx = null;
+
+  const display = document.getElementById('display');
+  const ring = document.getElementById('ring');
+  const startBtn = document.getElementById('startBtn');
+  const status = document.getElementById('status');
+  const flash = document.getElementById('flash');
+
+  function getAudioCtx() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    return audioCtx;
+  }
+
+  function beep() {
+    const ctx = getAudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(880, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.6);
+    gain.gain.setValueAtTime(0.6, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.7);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.7);
+  }
+
+  function tick(duration) {
+    const osc = getAudioCtx().createOscillator();
+    const gain = getAudioCtx().createGain();
+    osc.connect(gain);
+    gain.connect(getAudioCtx().destination);
+    osc.type = 'square';
+    osc.frequency.value = 1200;
+    gain.gain.setValueAtTime(0.08, getAudioCtx().currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, getAudioCtx().currentTime + 0.05);
+    osc.start(getAudioCtx().currentTime);
+    osc.stop(getAudioCtx().currentTime + 0.05);
+  }
+
+  function updateDisplay() {
+    display.textContent = remaining;
+    ring.style.strokeDashoffset = CIRCUMFERENCE * (1 - remaining / TOTAL);
+
+    display.classList.remove('danger', 'zero');
+    status.classList.remove('active');
+
+    if (remaining === 0) {
+      display.classList.add('zero');
+    } else if (remaining <= 5) {
+      display.classList.add('danger');
+      ring.style.stroke = 'var(--accent)';
+      status.classList.add('active');
+    } else {
+      ring.style.stroke = 'var(--accent)';
+    }
+  }
+
+  function startStop() {
+    // Resume AudioContext on first gesture
+    getAudioCtx().resume();
+
+    if (remaining === 0) return;
+
+    running = !running;
+
+    if (running) {
+      startBtn.textContent = 'Pause';
+      status.textContent = 'Running';
+      status.classList.add('active');
+
+      interval = setInterval(() => {
+        remaining--;
+        updateDisplay();
+
+        if (remaining <= 5 && remaining > 0) tick();
+
+        if (remaining === 0) {
+          clearInterval(interval);
+          running = false;
+          startBtn.textContent = 'Start';
+          status.textContent = 'Time\'s up!';
+          status.classList.add('active');
+          beep();
+          flash.classList.remove('go');
+          void flash.offsetWidth; // reflow
+          flash.classList.add('go');
+        }
+      }, 1000);
+    } else {
+      clearInterval(interval);
+      startBtn.textContent = 'Resume';
+      status.textContent = 'Paused';
+      status.classList.remove('active');
+    }
+  }
+
+  function reset() {
+    clearInterval(interval);
+    running = false;
+    remaining = TOTAL;
+    startBtn.textContent = 'Start';
+    status.textContent = 'Ready';
+    status.classList.remove('active');
+    display.classList.remove('danger', 'zero');
+    ring.style.strokeDashoffset = 0;
+    ring.style.stroke = 'var(--accent)';
+    updateDisplay();
+    display.textContent = TOTAL;
+  }
+
+  // Init ring
+  ring.style.strokeDasharray = CIRCUMFERENCE;
+  ring.style.strokeDashoffset = 0;
+</script>
+</body>
+</html>
