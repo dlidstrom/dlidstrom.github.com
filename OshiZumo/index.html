@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>OshiZumo — play the solved game</title>
+<style>
+  :root {
+    --cell: #3b6ea5;
+    --cell-edge: #24517e;
+    --paper: #f4efe4;
+    --ink: #2b2b2b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: linear-gradient(#2c3a4d, #1d2634);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  #app {
+    background: var(--paper);
+    border-radius: 18px;
+    padding: 28px 32px 24px;
+    width: min(560px, 94vw);
+    box-shadow: 0 24px 60px rgba(0,0,0,.45);
+  }
+  h1 { margin: 0 0 4px; font-size: 24px; letter-spacing: .5px; }
+  .subtitle { margin: 0 0 18px; color: #6a6154; font-size: 13px; }
+  .rules {
+    background: #eae2cf;
+    border: 1.5px solid #d3c6a8;
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin: 6px 0 18px;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: #4a4437;
+  }
+  .rules b { color: #333; }
+  .board {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    gap: 6px;
+    margin: 18px 0 12px;
+  }
+  .cell {
+    flex: 1;
+    aspect-ratio: 1 / 1;
+    background: var(--cell);
+    border: 2px solid var(--cell-edge);
+    border-radius: 10px;
+    font-size: 13px;
+    color: rgba(255,255,255,.75);
+    transition: background .25s;
+  }
+  .cell.goal { background: #c33c2e; border-color: #8c2720; }
+  .cell.winCell { animation: pulse .5s ease; }
+  @keyframes pulse { 0% { filter: brightness(1); } 50% { filter: brightness(1.8); } 100% { filter: brightness(1); } }
+  .tok {
+    position: absolute;
+    /* ~a cell is 100/7% of the board wide; 10% ≈ a nice puck */
+    width: 10%;
+    aspect-ratio: 1 / 1;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #fff2c9, #d98e12 70%);
+    border: 3px solid #a86a07;
+    box-shadow: 0 3px 7px rgba(0,0,0,.4);
+    transform: translate(-50%, -50%);
+    transition: left .45s cubic-bezier(.25,.8,.3,1);
+    will-change: left;
+  }
+  .tok.shove { animation: shove .35s ease; }
+  @keyframes shove {
+    0% { transform: translate(-50%, -50%) scale(1); }
+    40% { transform: translate(-50%, -50%) scale(1.25); }
+    100% { transform: translate(-50%, -50%) scale(1); }
+  }
+  .info { display: flex; justify-content: space-between; margin: 6px 0; font-size: 15px; }
+  .info b { font-variant-numeric: tabular-nums; }
+  .bids { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+  .bids .bid {
+    flex: 1;
+    min-width: 44px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1.5px solid #b8ae9c;
+    background: #fff;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--ink);
+  }
+  .bids .bid:hover { background: #efe6d2; }
+  .bids .bid.selected { background: var(--cell-edge); border-color: var(--cell-edge); color: #fff; }
+  .bids .bid:disabled { opacity: .35; cursor: not-allowed; }
+  .controls { display: flex; align-items: center; margin-top: 12px; }
+  .controls button { flex: 1; }
+  select, input {
+    font: inherit;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1.5px solid #b8ae9c;
+    background: #fff;
+    flex: 1;
+  }
+  button {
+    font: inherit;
+    font-weight: 600;
+    border-radius: 10px;
+    border: none;
+    padding: 11px 18px;
+    background: var(--cell-edge);
+    color: #fff;
+    cursor: pointer;
+  }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+  button.secondary { background: #b8ae9c; }
+  .log {
+    margin-top: 16px;
+    min-height: 64px;
+    background: #fffcf3;
+    border: 1.5px solid #d9cbb2;
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .banner {
+    margin-top: 14px;
+    padding: 11px 14px;
+    border-radius: 12px;
+    font-weight: 700;
+    text-align: center;
+    display: none;
+  }
+  .banner.win { display: block; background: #cbe7c5; color: #24521b; }
+  .banner.lose { display: block; background: #f2cfca; color: #77211b; }
+  .banner.draw { display: block; background: #e4dfd1; color: #5b4f33; }
+  .hint { margin-top: 10px; font-size: 13px; color: #6a6154; }
+  .hintToggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    user-select: none;
+    font-weight: 600;
+    color: var(--cell-edge);
+  }
+  .hintToggle input { cursor: pointer; }
+  .hintVal:empty { display: none; }
+</style>
+</head>
+<body>
+<div id="app">
+  <h1>OshiZumo</h1>
+  <p class="subtitle">You vs. the perfect minimax AI (solved game-theoretically at N=50, K=3).</p>
+
+  <div class="rules">
+    <b>How it works:</b> You and the AI each secretly spend some coins each
+    round. The higher bid wins the round and shoves the puck one cell toward
+    <i>your own</i> side; a tie shoves nobody. First to push the puck off the
+    far end of the board wins. Spend wisely &mdash; every coin you bid is gone
+    for good, so bidding high buys momentum but drains your stash.
+  </div>
+
+  <div class="info">
+    <div>You: <b id="hCoins">—</b> coins</div>
+    <div>AI: <b id="aCoins">—</b> coins</div>
+    <div>Win chance: <b id="winPct">—</b></div>
+  </div>
+
+  <div class="board" id="board"></div>
+  <div class="info"><span>push to right to win</span><span>push to left to win</span></div>
+
+  <div class="bids" id="bidBtns"></div>
+  <div class="hint">
+    <label class="hintToggle"><input type="checkbox" id="hintCb" /><span>Show optimal play</span></label>
+    <div class="hintVal" id="hint"></div>
+  </div>
+
+  <div class="log" id="log">Loading strategy-50-3.json&hellip;</div>
+
+  <div class="banner" id="banner"></div>
+
+  <p class="subtitle" style="margin-top:14px;margin-bottom:0" id="gameoverLine"></p>
+</div>
+
+<script>
+"use strict";
+
+// ---- game constants -----------------------------------------------------
+const STASH = 50;
+const K = 3;                 // board has 2K+1 = 7 cells, positions -K..K
+const WINS_AT = K + 1;       // reach +4 -> you win, -4 -> AI wins
+const MINE = 0;              // index of human's token
+const AI = 1;
+
+// ---- state --------------------------------------------------------------
+const strat = { stash: 0, track: 0, index: new Map() };
+let humanCoins = STASH;
+let aiCoins = STASH;
+let pos = 0;                 // + = you pushed toward your goal (right)
+let ended = false;
+
+// ---- strategy table -----------------------------------------------------
+function key(n, m, k) { return n * 10000 + m * 100 + (k + 100); }
+function indexStrategy(sf) {
+  const m = new Map();
+  for (const s of sf.States) m.set(key(s.N, s.M, s.K), s);
+  strat.index = m;
+}
+function loadStrategy(url) {
+  return fetch(url)
+    .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); });
+}
+// Returns the oppponent's optimal bid distribution for a state, or null.
+function aiDist(humanNow, aiNow, posFromAi) {
+  const s = strat.index.get(key(aiNow, humanNow, posFromAi));
+  if (!s) return null;
+  // We treat the strategy file as the row player's table; the AI wants to
+  // push the other way, so sample with the AI as "mine" and mirrored pos.
+  const bids = s.Bids, probs = s.Probs;
+  return () => {
+    const roll = Math.random();
+    let acc = 0;
+    for (let i = 0; i < bids.length; i++) {
+      acc += probs[i];
+      if (roll <= acc) return bids[i];
+    }
+    return bids[bids.length - 1];
+  };
+}
+// Optional: what the OPTIMAL human bid would be here (for the hint line).
+function optimalHumanDist(humanNow, aiNow, pos) {
+  const s = strat.index.get(key(humanNow, aiNow, pos));
+  if (!s) return null;
+  const maxP = Math.max(...s.Probs);
+  const idx = s.Probs.indexOf(maxP);
+  return s.Bids[idx];
+}
+// The solved game value of the current position from your (row player)
+// perspective: +1 = guaranteed win, -1 = guaranteed loss, 0 = draw.
+function currentValue() {
+  const s = strat.index.get(key(humanCoins, aiCoins, pos));
+  if (!s) return null;
+  return s.Value;
+}
+// Maps the [-1,1] game value to an intuitive win %.
+function winPercent() {
+  const v = currentValue();
+  if (v == null) return null;
+  return Math.round((v + 1) / 2 * 100);
+}
+
+// ---- board rendering ----------------------------------------------------
+const boardEl = document.getElementById("board");
+const tok = document.createElement("div");
+tok.className = "tok";
+
+function cellLeft(cell) {
+  // column centre as a percentage of the board width (7 equal cells + 6 gaps)
+  const total = 2 * K + 1;
+  return (((cell + K) + 0.5) / total) * 100;
+}
+
+function initBoard() {
+  for (let cell = -K; cell <= K; cell++) {
+    const div = document.createElement("div");
+    div.className = "cell";
+    div.dataset.cell = cell;
+    boardEl.appendChild(div);
+  }
+  boardEl.appendChild(tok);
+}
+
+function positionTokens() {
+  tok.style.left = cellLeft(pos) + "%";
+}
+
+function shove() {
+  tok.classList.remove("shove");
+  void tok.offsetWidth; // restart animation
+  tok.classList.add("shove");
+}
+
+function renderBoard() {
+  positionTokens();
+  const match = boardEl.querySelector(".cell.winCell");
+  if (match) match.classList.remove("winCell");
+  if (pos >= WINS_AT) boardEl.querySelector('[data-cell="' + K + '"]').classList.add("winCell");
+  if (pos <= -WINS_AT) boardEl.querySelector('[data-cell="' + -K + '"]').classList.add("winCell");
+  document.getElementById("hCoins").textContent = humanCoins;
+  document.getElementById("aCoins").textContent = aiCoins;
+  const pct = winPercent();
+  document.getElementById("winPct").textContent = pct != null ? pct + "%" : "—";
+  const hint = showHint ? optimalHumanDist(humanCoins, aiCoins, pos) : null;
+  document.getElementById("hint").textContent =
+    hint != null ? `Ideal play here: bid ${hint}.` : "";
+}
+
+// ---- controls -----------------------------------------------------------
+const bidBtnsEl = document.getElementById("bidBtns");
+let showHint = false;
+document.getElementById("hintCb").addEventListener("change", e => {
+  showHint = e.target.checked;
+  renderBoard();
+});
+
+function refreshBidButtons() {
+  bidBtnsEl.innerHTML = "";
+  const hi = Math.max(humanCoins, 0);
+  for (let n = 0; n <= hi; n++) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "bid";
+    b.textContent = n;
+    b.addEventListener("click", () => go(n));
+    bidBtnsEl.appendChild(b);
+  }
+}
+
+// ---- game flow ----------------------------------------------------------
+const logEl = document.getElementById("log");
+const bannerEl = document.getElementById("banner");
+function write(msg) { logEl.innerHTML = msg; }
+function setBusy(busy) {
+  for (const b of bidBtnsEl.querySelectorAll("button")) b.disabled = busy;
+}
+
+function resolveRound(hbid, abid) {
+  humanCoins -= hbid;
+  aiCoins -= abid;
+  if (hbid > abid) { pos++; return "you won the bid and shoved the puck toward your side"; }
+  if (abid > hbid) { pos--; return "AI won the bid and shoved the puck back"; }
+  return "tie — nobody moved";
+}
+
+function afterRound() {
+  renderBoard();
+  if (pos >= WINS_AT) return win("win");
+  if (pos <= -WINS_AT) return win("lose");
+  if (humanCoins === 0 && aiCoins === 0)
+    return win(pos > 0 ? "win" : pos < 0 ? "lose" : "draw");
+  refreshBidButtons();
+}
+
+// Out of coins but AI can still push: each round the AI bids 1 (you bid 0),
+// so it advances one cell at a time, animated.
+function cruise() {
+  setBusy(true);
+  const step = () => {
+    if (aiCoins <= 0 || pos <= -WINS_AT) {
+      renderBoard();
+      if (pos <= -WINS_AT) win("lose");
+      return;
+    }
+    aiCoins--; pos--;
+    shove();
+    renderBoard();
+    write(`You're out of coins. AI bids 1, shoves -1 to ${pos} (AI: ${aiCoins} left).`);
+    setTimeout(step, 480);
+  };
+  setTimeout(step, 480);
+}
+
+function win(result) {
+  ended = true;
+  const map = {
+    win: ["You win — you drove the AI off the board!", "win"],
+    lose: ["The AI drove you off the board.", "lose"],
+    draw: ["Both of you ran out of coins at the center. Draw.", "draw"],
+  };
+  bannerEl.className = "banner " + map[result][1];
+  bannerEl.textContent = map[result][0];
+  setBusy(true);
+  document.getElementById("gameoverLine").textContent = "Refreshing restarts a new game.";
+}
+
+function go(hbid) {
+  if (ended) return;
+  setBusy(true);
+
+  const sample = aiDist(humanCoins, aiCoins, -pos);
+  const abid = sample ? Math.min(sample(), aiCoins) : 1;
+
+  write(`You commit <b>${hbid} coins</b>&hellip; AI commits&hellip;`);
+
+  setTimeout(() => {
+    const step = resolveRound(hbid, abid);
+    if (hbid !== abid) shove();
+    renderBoard();
+    write(
+      `You bid <b>${hbid}</b>, AI bid <b>${abid}</b> &rarr; ${step} (position ${pos}).` +
+      `<br>You: ${humanCoins} left &middot; AI: ${aiCoins} left.`
+    );
+    setTimeout(() => {
+      afterRound();
+      if (!ended) {
+        if (humanCoins === 0 && aiCoins > 0) cruise();
+        else setBusy(false);
+      }
+    }, 480);
+  }, 520);
+}
+
+// ---- boot ---------------------------------------------------------------
+function boot() {
+  document.getElementById("hintCb").checked = false;
+  showHint = false;
+  initBoard();
+  renderBoard();
+  refreshBidButtons();
+  write(
+    `Solved OshiZumo loaded (N=${strat.stash} coins, K=${strat.track}). ` +
+    `You have ${humanCoins} coins, board is ${2 * K + 1} cells. Click a bid to play.`
+  );
+}
+
+loadStrategy("strategy-50-3.json")
+  .then(sf => {
+    strat.stash = sf.Stash;
+    strat.track = sf.Track;
+    indexStrategy(sf);
+    boot();
+  })
+  .catch(e => {
+    logEl.textContent = "Failed to load strategy-50-3.json: " + e.message +
+      ". Make sure the file is next to this HTML page (or serve it via a local server).";
+  });
+</script>
+</body>
+</html>
