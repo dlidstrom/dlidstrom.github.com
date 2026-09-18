@@ -61,7 +61,14 @@
     color: rgba(255,255,255,.75);
     transition: background .25s;
   }
-  .cell.goal { background: #c33c2e; border-color: #8c2720; }
+  .cell.goalYou { background: #38804f; border-color: #22542f; }
+  .cell.goalAi { background: #b3452f; border-color: #7d2c1c; }
+  .dot { position: relative; top: -1px; display: inline-block; width: 11px; height: 11px; border-radius: 50%; vertical-align: middle; }
+  .dot.you { background: #38804f; }
+  .dot.ai { background: #b3452f; }
+  .sides span { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; }
+  .sides .youGoal { color: #2c6b3d; font-weight: 700; }
+  .sides .aiGoal { color: #a33a25; font-weight: 700; }
   .cell.winCell { animation: pulse .5s ease; }
   @keyframes pulse { 0% { filter: brightness(1); } 50% { filter: brightness(1.8); } 100% { filter: brightness(1); } }
   .tok {
@@ -85,8 +92,11 @@
     40% { transform: translate(-50%, -50%) scale(1.25); }
     100% { transform: translate(-50%, -50%) scale(1); }
   }
-  .info { display: flex; justify-content: space-between; margin: 6px 0; font-size: 15px; }
+  .info { display: flex; align-items: center; justify-content: space-between; margin: 6px 0; font-size: 15px; }
+  .info div:first-child { flex: 1; text-align: left; }
+  .info div:last-child { flex: 1; text-align: right; }
   .info b { font-variant-numeric: tabular-nums; }
+  .info .winrow { flex: 0 0 auto; font-weight: 600; text-align: center; }
   .bids { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
   .bids .bid {
     flex: 1;
@@ -159,29 +169,45 @@
   }
   .hintToggle input { cursor: pointer; }
   .hintVal:empty { display: none; }
+  .about {
+    margin-top: 18px;
+    padding: 12px 14px;
+    background: #fffcf3;
+    border: 1.5px solid #d9cbb2;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #4a4437;
+  }
+  .about summary { cursor: pointer; font-weight: 700; color: var(--cell-edge); }
+  .about p { margin: 10px 0 0; }
+  .about p:first-of-type { margin-top: 8px; }
 </style>
 </head>
 <body>
 <div id="app">
   <h1>OshiZumo</h1>
-  <p class="subtitle">You vs. the perfect minimax AI (solved game-theoretically at N=50, K=3).</p>
 
   <div class="rules">
     <b>How it works:</b> You and the AI each secretly spend some coins each
     round. The higher bid wins the round and shoves the puck one cell toward
-    <i>your own</i> side; a tie shoves nobody. First to push the puck off the
-    far end of the board wins. Spend wisely &mdash; every coin you bid is gone
-    for good, so bidding high buys momentum but drains your stash.
+    <i>your opponent's</i> side off to your left; a tie shoves nobody. Be the
+    first to push the puck out of the far side past your opponent and you win.
+    Spend wisely &mdash; every coin you bid is gone for good, so bidding high
+    buys momentum but drains your stash.
   </div>
 
   <div class="info">
-    <div>You: <b id="hCoins">—</b> coins</div>
-    <div>AI: <b id="aCoins">—</b> coins</div>
-    <div>Win chance: <b id="winPct">—</b></div>
+    <div><span class="dot you"></span>You: <b id="hCoins">—</b> coins</div>
+    <div class="winrow">Win chance: <b id="winPct">—</b></div>
+    <div>AI: <b id="aCoins">—</b> coins<span class="dot ai"></span></div>
   </div>
 
   <div class="board" id="board"></div>
-  <div class="info"><span>push to right to win</span><span>push to left to win</span></div>
+  <div class="info sides">
+    <span class="aiGoal"><span class="dot ai"></span>&larr; AI goal</span>
+    <span class="youGoal">your goal &rarr; <span class="dot you"></span></span>
+  </div>
 
   <div class="bids" id="bidBtns"></div>
   <div class="hint">
@@ -194,6 +220,35 @@
   <div class="banner" id="banner"></div>
 
   <p class="subtitle" style="margin-top:14px;margin-bottom:0" id="gameoverLine"></p>
+
+  <details class="about">
+    <summary>About this game &amp; how it was solved</summary>
+    <p>
+      Oshi-Zumo is a perfect-information, zero-sum bidding game by
+      <b>Michael Buro</b>. Each round both players secretly bid some of their
+      coins; the higher bidder wins the round and pushes a shared puck one
+      cell toward their own side of the board, and the first to push it off
+      the far end wins.
+    </p>
+    <p>
+      The AI here plays the <b>true game-theoretic optimum</b>, not a
+      heuristic. Every position in the game (the two players' remaining coin
+      counts plus the puck's location) is a separate finite zero-sum matrix
+      game, solved with the simplex method. Because each bid is an action and
+      the resolver knows every possible resulting position, the whole game was
+      computed by backward induction &mdash; solving states in an order so each
+      one's outcome depends only on already-solved states (this is the
+      approach described in Buro's paper). The stored <i>strategy</i> records,
+      for every state, the equilibrium probabilities of each legal bid, so the
+      AI can sample from an optimal distribution. This page was solved for
+      <b>N=50</b> starting coins per player on a track of half-width
+      <b>K=3</b> (a 7-cell board).
+    </p>
+    <p>
+      Reference: <i>Buro, M. Solving the Oshi-Zumo game. In Advances in
+      Computer Games (ACG-10).</i>
+    </p>
+  </details>
 </div>
 
 <script>
@@ -293,7 +348,7 @@ function cellLeft(cell) {
 function initBoard() {
   for (let cell = -K; cell <= K; cell++) {
     const div = document.createElement("div");
-    div.className = "cell";
+    div.className = "cell" + (cell === K ? " goalYou" : cell === -K ? " goalAI" : "");
     div.dataset.cell = cell;
     boardEl.appendChild(div);
   }
