@@ -101,7 +101,8 @@
     color: var(--ink);
   }
   .bids .bid:hover { background: #efe6d2; }
-  .bids .bid.selected { background: var(--cell-edge); border-color: var(--cell-edge); color: #fff; }
+  .bids .bid.suggest { background: #e0b23a; border-color: #b5870a; color: #fff; animation: suggest .6s ease infinite alternate; }
+  @keyframes suggest { from { box-shadow: 0 0 0 0 rgba(224,178,58,.5); } to { box-shadow: 0 0 0 6px rgba(224,178,58,0); } }
   .bids .bid:disabled { opacity: .35; cursor: not-allowed; }
   .controls { display: flex; align-items: center; margin-top: 12px; }
   .controls button { flex: 1; }
@@ -240,13 +241,29 @@ function aiDist(humanNow, aiNow, posFromAi) {
     return bids[bids.length - 1];
   };
 }
-// Optional: what the OPTIMAL human bid would be here (for the hint line).
-function optimalHumanDist(humanNow, aiNow, pos) {
+// The OPTIMAL human bids for the current state: every bid played with
+// positive probability in the solved equilibrium, as (bid, probability %).
+function optimalPlay(humanNow, aiNow, pos) {
   const s = strat.index.get(key(humanNow, aiNow, pos));
   if (!s) return null;
-  const maxP = Math.max(...s.Probs);
-  const idx = s.Probs.indexOf(maxP);
-  return s.Bids[idx];
+  const moves = [];
+  for (let i = 0; i < s.Bids.length; i++) {
+    const pct = Math.round(s.Probs[i] * 100);
+    if (pct >= 1) moves.push([s.Bids[i], pct]);
+  }
+  return moves.sort((a, b) => b[1] - a[1]);
+}
+// Draws one optimal bid from the state's equilibrium distribution.
+function optimalSuggested() {
+  const s = strat.index.get(key(humanCoins, aiCoins, pos));
+  if (!s) return null;
+  const roll = Math.random();
+  let acc = 0;
+  for (let i = 0; i < s.Bids.length; i++) {
+    acc += s.Probs[i];
+    if (roll <= acc) return s.Bids[i];
+  }
+  return s.Bids[s.Bids.length - 1];
 }
 // The solved game value of the current position from your (row player)
 // perspective: +1 = guaranteed win, -1 = guaranteed loss, 0 = draw.
@@ -303,9 +320,11 @@ function renderBoard() {
   document.getElementById("aCoins").textContent = aiCoins;
   const pct = winPercent();
   document.getElementById("winPct").textContent = pct != null ? pct + "%" : "—";
-  const hint = showHint ? optimalHumanDist(humanCoins, aiCoins, pos) : null;
+  const moves = showHint ? optimalPlay(humanCoins, aiCoins, pos) : null;
   document.getElementById("hint").textContent =
-    hint != null ? `Ideal play here: bid ${hint}.` : "";
+    moves && moves.length
+      ? `Optimal play: ` + moves.map(m => `bid ${m[0]} (${m[1]}%)`).join(", ") + "."
+      : "";
 }
 
 // ---- controls -----------------------------------------------------------
@@ -314,15 +333,17 @@ let showHint = false;
 document.getElementById("hintCb").addEventListener("change", e => {
   showHint = e.target.checked;
   renderBoard();
+  refreshBidButtons();
 });
 
 function refreshBidButtons() {
   bidBtnsEl.innerHTML = "";
   const hi = Math.max(humanCoins, 0);
+  const suggested = showHint ? optimalSuggested() : null;
   for (let n = 0; n <= hi; n++) {
     const b = document.createElement("button");
     b.type = "button";
-    b.className = "bid";
+    b.className = "bid" + (n === suggested ? " suggest" : "");
     b.textContent = n;
     b.addEventListener("click", () => go(n));
     bidBtnsEl.appendChild(b);
