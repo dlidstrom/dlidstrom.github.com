@@ -553,7 +553,11 @@ function cruise() {
   const step = () => {
     if (aiCoins <= 0 || pos <= -WINS_AT) {
       renderBoard();
-      if (pos <= -WINS_AT) win("lose");
+      // The AI may run out of coins before actually pushing the puck to the
+      // edge; both stashes are then empty, so fall back to the same
+      // coin-exhaustion tie-break used elsewhere: the side pos favors wins.
+      if (pos <= -WINS_AT) return win("lose");
+      if (aiCoins <= 0) return win(pos < 0 ? "lose" : pos > 0 ? "win" : "draw");
       return;
     }
     aiCoins--; pos--;
