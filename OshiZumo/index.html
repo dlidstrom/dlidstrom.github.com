@@ -97,6 +97,32 @@
   .info div:last-child { flex: 1; text-align: right; }
   .info b { font-variant-numeric: tabular-nums; }
   .info .winrow { flex: 0 0 auto; font-weight: 600; text-align: center; }
+  select.reel {
+    -webkit-appearance: none;
+    appearance: none;
+    min-width: 42px;
+    padding: 2px 6px;
+    border-radius: 6px;
+    border: 1.5px solid #b8ae9c;
+    background: linear-gradient(#fffdf6, #f1e9d6);
+    color: var(--ink);
+    font: inherit;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+    text-align-last: center;
+    opacity: 1;
+    cursor: default;
+  }
+  select.reel:disabled { opacity: 1; -webkit-text-fill-color: var(--ink); }
+  select.reel::-ms-expand { display: none; }
+  select.reel.spinning { filter: blur(.5px); }
+  select.reel.land { animation: reelLand .28s ease; }
+  @keyframes reelLand {
+    0% { transform: scale(1.18); }
+    60% { transform: scale(.94); }
+    100% { transform: scale(1); }
+  }
   .bids { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
   .bids .bid {
     flex: 1;
@@ -198,9 +224,9 @@
   </div>
 
   <div class="info">
-    <div><span class="dot you"></span>You: <b id="hCoins">—</b> coins</div>
+    <div><span class="dot you"></span>You: <select id="hCoins" class="reel" disabled aria-readonly="true"></select> coins</div>
     <div class="winrow">Win chance: <b id="winPct">—</b></div>
-    <div>AI: <b id="aCoins">—</b> coins<span class="dot ai"></span></div>
+    <div>AI: <select id="aCoins" class="reel" disabled aria-readonly="true"></select> coins<span class="dot ai"></span></div>
   </div>
 
   <div class="board" id="board"></div>
@@ -267,6 +293,8 @@ let humanCoins = STASH;
 let aiCoins = STASH;
 let pos = 0;                 // + = you pushed toward your goal (right)
 let ended = false;
+let shownHuman = STASH;      // last value drawn into the coin reels
+let shownAi = STASH;
 
 // ---- strategy table -----------------------------------------------------
 function key(n, m, k) { return n * 10000 + m * 100 + (k + 100); }
@@ -334,6 +362,45 @@ function winPercent() {
   return Math.round((v + 1) / 2 * 100);
 }
 
+// ---- coin reels ----------------------------------------------------------
+// Coin counts live in disabled <select> elements: readonly, but their
+// changing value is animated like a slot-machine reel counting down.
+const hCoinsEl = document.getElementById("hCoins");
+const aCoinsEl = document.getElementById("aCoins");
+
+function populateCoinReel(el) {
+  for (let n = 0; n <= STASH; n++) {
+    const opt = document.createElement("option");
+    opt.value = n;
+    opt.textContent = n;
+    el.appendChild(opt);
+  }
+}
+
+function spinCoinReel(el, from, to) {
+  if (from === to) { el.value = to; return; }
+  const token = (el._spinToken = (el._spinToken || 0) + 1);
+  el.classList.add("spinning");
+  el.classList.remove("land");
+  const start = performance.now();
+  const duration = 550;
+  function frame(now) {
+    if (el._spinToken !== token) return; // superseded by a newer spin
+    const t = Math.min(1, (now - start) / duration);
+    const eased = 1 - Math.pow(1 - t, 3); // ease-out: fast start, gentle landing
+    el.value = String(Math.round(from + (to - from) * eased));
+    if (t < 1) {
+      requestAnimationFrame(frame);
+    } else {
+      el.value = String(to);
+      el.classList.remove("spinning");
+      el.classList.add("land");
+      setTimeout(() => el.classList.remove("land"), 280);
+    }
+  }
+  requestAnimationFrame(frame);
+}
+
 // ---- board rendering ----------------------------------------------------
 const boardEl = document.getElementById("board");
 const tok = document.createElement("div");
@@ -371,8 +438,10 @@ function renderBoard() {
   if (match) match.classList.remove("winCell");
   if (pos >= WINS_AT) boardEl.querySelector('[data-cell="' + K + '"]').classList.add("winCell");
   if (pos <= -WINS_AT) boardEl.querySelector('[data-cell="' + -K + '"]').classList.add("winCell");
-  document.getElementById("hCoins").textContent = humanCoins;
-  document.getElementById("aCoins").textContent = aiCoins;
+  spinCoinReel(hCoinsEl, shownHuman, humanCoins);
+  shownHuman = humanCoins;
+  spinCoinReel(aCoinsEl, shownAi, aiCoins);
+  shownAi = aiCoins;
   const pct = winPercent();
   document.getElementById("winPct").textContent = pct != null ? pct + "%" : "—";
   const moves = showHint ? optimalPlay(humanCoins, aiCoins, pos) : null;
@@ -493,6 +562,8 @@ function go(hbid) {
 function boot() {
   document.getElementById("hintCb").checked = false;
   showHint = false;
+  populateCoinReel(hCoinsEl);
+  populateCoinReel(aCoinsEl);
   initBoard();
   renderBoard();
   refreshBidButtons();
