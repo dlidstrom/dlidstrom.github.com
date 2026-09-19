@@ -107,7 +107,6 @@
     stroke: var(--ink);
     stroke-width: 3;
     stroke-linecap: round;
-    transition: x2 .4s ease, y2 .4s ease;
   }
   #gaugePct {
     font: 700 13px system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -405,13 +404,38 @@ const gaugePctEl = document.getElementById("gaugePct");
 
 // Points the speedometer-style needle at the given win %, sweeping from the
 // "lose" zone (left) to the "win" zone (right); null shows a neutral pointer.
+// x2/y2 on an SVG <line> aren't CSS-animatable (unlike cx/cy/r), so the
+// sweep is tweened by hand with requestAnimationFrame instead of relying
+// on a CSS transition, which would otherwise just snap instantly.
+const GAUGE_LEN = 32;
+let gaugeTheta = Math.PI / 2; // current needle angle, radians; PI/2 = straight up
+let gaugeAnimToken = 0;
+
+function drawGaugeNeedle(theta) {
+  gaugeNeedleEl.setAttribute("x2", (50 + GAUGE_LEN * Math.cos(theta)).toFixed(1));
+  gaugeNeedleEl.setAttribute("y2", (50 - GAUGE_LEN * Math.sin(theta)).toFixed(1));
+}
+
 function setGauge(pct) {
-  const p = pct == null ? 50 : pct;
-  const theta = Math.PI * (1 - p / 100);
-  const L = 32;
-  gaugeNeedleEl.setAttribute("x2", (50 + L * Math.cos(theta)).toFixed(1));
-  gaugeNeedleEl.setAttribute("y2", (50 - L * Math.sin(theta)).toFixed(1));
   gaugePctEl.textContent = pct != null ? pct + "%" : "—";
+  const p = pct == null ? 50 : pct;
+  const target = Math.PI * (1 - p / 100);
+  const start = gaugeTheta;
+  const token = ++gaugeAnimToken;
+  const t0 = performance.now();
+  const duration = 450;
+  function frame(now) {
+    if (token !== gaugeAnimToken) return; // superseded by a newer move
+    const t = Math.min(1, (now - t0) / duration);
+    const eased = 1 - Math.pow(1 - t, 3); // ease-out
+    drawGaugeNeedle(start + (target - start) * eased);
+    if (t < 1) {
+      requestAnimationFrame(frame);
+    } else {
+      gaugeTheta = target;
+    }
+  }
+  requestAnimationFrame(frame);
 }
 
 function populateCoinReel(el) {
