@@ -92,21 +92,24 @@
     40% { transform: translate(-50%, -50%) scale(1.25); }
     100% { transform: translate(-50%, -50%) scale(1); }
   }
-  .info { display: flex; align-items: center; justify-content: space-between; margin: 6px 0; font-size: 15px; }
-  .info div:first-child { flex: 1; text-align: left; }
-  .info div:last-child { flex: 1; text-align: right; }
+  .info { display: flex; align-items: center; justify-content: space-between; margin: 6px 0; font-size: 15px; gap: 4px; }
+  .info div:first-child { flex: 1; text-align: left; min-width: 0; white-space: nowrap; }
+  .info div:last-child { flex: 1; text-align: right; min-width: 0; white-space: nowrap; }
   .info b { font-variant-numeric: tabular-nums; }
-  .info .winrow { flex: 0 0 auto; font-weight: 600; text-align: center; }
+  .info .winrow { flex: 0 0 auto; font-weight: 600; text-align: center; white-space: nowrap; }
   select.reel {
     -webkit-appearance: none;
     appearance: none;
-    min-width: 42px;
-    padding: 2px 6px;
+    box-sizing: content-box;
+    width: 2ch;
+    min-width: 0;
+    padding: 1px 4px;
     border-radius: 6px;
     border: 1.5px solid #b8ae9c;
     background: linear-gradient(#fffdf6, #f1e9d6);
     color: var(--ink);
     font: inherit;
+    font-size: .95em;
     font-weight: 700;
     font-variant-numeric: tabular-nums;
     text-align: center;
@@ -116,12 +119,15 @@
   }
   select.reel:disabled { opacity: 1; -webkit-text-fill-color: var(--ink); }
   select.reel::-ms-expand { display: none; }
-  select.reel.spinning { filter: blur(.5px); }
-  select.reel.land { animation: reelLand .28s ease; }
+  select.reel.land { animation: reelLand .22s ease; }
   @keyframes reelLand {
-    0% { transform: scale(1.18); }
-    60% { transform: scale(.94); }
+    0% { transform: scale(1.15); }
+    60% { transform: scale(.95); }
     100% { transform: scale(1); }
+  }
+  @media (max-width: 400px) {
+    .info { font-size: 12.5px; }
+    .coinsLabel { display: none; }
   }
   .bids { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
   .bids .bid {
@@ -224,9 +230,9 @@
   </div>
 
   <div class="info">
-    <div><span class="dot you"></span>You: <select id="hCoins" class="reel" disabled aria-readonly="true"></select> coins</div>
+    <div><span class="dot you"></span>You: <select id="hCoins" class="reel" disabled aria-readonly="true"></select><span class="coinsLabel"> coins</span></div>
     <div class="winrow">Win chance: <b id="winPct">—</b></div>
-    <div>AI: <select id="aCoins" class="reel" disabled aria-readonly="true"></select> coins<span class="dot ai"></span></div>
+    <div>AI: <select id="aCoins" class="reel" disabled aria-readonly="true"></select><span class="coinsLabel"> coins</span><span class="dot ai"></span></div>
   </div>
 
   <div class="board" id="board"></div>
@@ -377,28 +383,30 @@ function populateCoinReel(el) {
   }
 }
 
+// Cumulative ms for each write, spaced out (ease-out deceleration) so the
+// reel only touches the native <select> a handful of times — rewriting a
+// select's value every animation frame is expensive on mobile Safari and
+// was causing jank/freezing there.
+const SPIN_SCHEDULE = [0, 40, 95, 170, 270, 400, 565];
+
 function spinCoinReel(el, from, to) {
   if (from === to) { el.value = to; return; }
   const token = (el._spinToken = (el._spinToken || 0) + 1);
-  el.classList.add("spinning");
   el.classList.remove("land");
-  const start = performance.now();
-  const duration = 550;
-  function frame(now) {
-    if (el._spinToken !== token) return; // superseded by a newer spin
-    const t = Math.min(1, (now - start) / duration);
-    const eased = 1 - Math.pow(1 - t, 3); // ease-out: fast start, gentle landing
-    el.value = String(Math.round(from + (to - from) * eased));
-    if (t < 1) {
-      requestAnimationFrame(frame);
-    } else {
-      el.value = String(to);
-      el.classList.remove("spinning");
-      el.classList.add("land");
-      setTimeout(() => el.classList.remove("land"), 280);
-    }
-  }
-  requestAnimationFrame(frame);
+  const lastStep = SPIN_SCHEDULE.length - 1;
+  SPIN_SCHEDULE.forEach((at, i) => {
+    setTimeout(() => {
+      if (el._spinToken !== token) return; // superseded by a newer spin
+      if (i === lastStep) {
+        el.value = String(to);
+        el.classList.add("land");
+        setTimeout(() => el.classList.remove("land"), 220);
+        return;
+      }
+      const eased = 1 - Math.pow(1 - i / lastStep, 3); // fast start, gentle landing
+      el.value = String(Math.round(from + (to - from) * eased));
+    }, at);
+  });
 }
 
 // ---- board rendering ----------------------------------------------------
