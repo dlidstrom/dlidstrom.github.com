@@ -96,7 +96,25 @@
   .info div:first-child { flex: 1; text-align: left; min-width: 0; white-space: nowrap; }
   .info div:last-child { flex: 1; text-align: right; min-width: 0; white-space: nowrap; }
   .info b { font-variant-numeric: tabular-nums; }
-  .winrow { margin: 2px 0 6px; font-weight: 600; text-align: center; font-size: 15px; }
+  .gauge { flex: 0 0 auto; display: flex; align-items: flex-end; justify-content: center; padding: 0 4px; }
+  .gauge svg { display: block; overflow: visible; }
+  .gauge .zone { fill: none; stroke-width: 9; stroke-linecap: round; }
+  .gauge .zone.lose { stroke: #b3452f; }
+  .gauge .zone.even { stroke: #d9b23a; }
+  .gauge .zone.win { stroke: #38804f; }
+  .gauge .pivot { fill: var(--ink); }
+  #gaugeNeedle {
+    stroke: var(--ink);
+    stroke-width: 3;
+    stroke-linecap: round;
+    transition: x2 .4s ease, y2 .4s ease;
+  }
+  #gaugePct {
+    font: 700 13px system-ui, -apple-system, "Segoe UI", sans-serif;
+    fill: var(--ink);
+    text-anchor: middle;
+    font-variant-numeric: tabular-nums;
+  }
   select.reel {
     -webkit-appearance: none;
     appearance: none;
@@ -231,6 +249,16 @@
 
   <div class="info">
     <div><span class="dot you"></span>You: <select id="hCoins" class="reel" disabled aria-readonly="true"></select><span class="coinsLabel"> coins</span></div>
+    <div class="gauge" role="img" aria-label="Win chance">
+      <svg viewBox="0 0 100 64" width="72" height="46">
+        <path d="M10,50 A40,40 0 0 1 30,15.36" class="zone lose"></path>
+        <path d="M30,15.36 A40,40 0 0 1 70,15.36" class="zone even"></path>
+        <path d="M70,15.36 A40,40 0 0 1 90,50" class="zone win"></path>
+        <line id="gaugeNeedle" x1="50" y1="50" x2="50" y2="18"></line>
+        <circle cx="50" cy="50" r="4" class="pivot"></circle>
+        <text id="gaugePct" x="50" y="63">—</text>
+      </svg>
+    </div>
     <div>AI: <select id="aCoins" class="reel" disabled aria-readonly="true"></select><span class="coinsLabel"> coins</span><span class="dot ai"></span></div>
   </div>
 
@@ -239,7 +267,6 @@
     <span class="aiGoal"><span class="dot ai"></span>&larr; AI goal</span>
     <span class="youGoal">your goal &rarr; <span class="dot you"></span></span>
   </div>
-  <div class="winrow">Win chance: <b id="winPct">—</b></div>
 
   <div class="bids" id="bidBtns"></div>
   <div class="hint">
@@ -373,6 +400,19 @@ function winPercent() {
 // changing value is animated like a slot-machine reel counting down.
 const hCoinsEl = document.getElementById("hCoins");
 const aCoinsEl = document.getElementById("aCoins");
+const gaugeNeedleEl = document.getElementById("gaugeNeedle");
+const gaugePctEl = document.getElementById("gaugePct");
+
+// Points the speedometer-style needle at the given win %, sweeping from the
+// "lose" zone (left) to the "win" zone (right); null shows a neutral pointer.
+function setGauge(pct) {
+  const p = pct == null ? 50 : pct;
+  const theta = Math.PI * (1 - p / 100);
+  const L = 32;
+  gaugeNeedleEl.setAttribute("x2", (50 + L * Math.cos(theta)).toFixed(1));
+  gaugeNeedleEl.setAttribute("y2", (50 - L * Math.sin(theta)).toFixed(1));
+  gaugePctEl.textContent = pct != null ? pct + "%" : "—";
+}
 
 function populateCoinReel(el) {
   for (let n = 0; n <= STASH; n++) {
@@ -450,8 +490,7 @@ function renderBoard() {
   shownHuman = humanCoins;
   spinCoinReel(aCoinsEl, shownAi, aiCoins);
   shownAi = aiCoins;
-  const pct = winPercent();
-  document.getElementById("winPct").textContent = pct != null ? pct + "%" : "—";
+  setGauge(winPercent());
   const moves = showHint ? optimalPlay(humanCoins, aiCoins, pos) : null;
   document.getElementById("hint").textContent =
     moves && moves.length
@@ -514,7 +553,11 @@ function cruise() {
   const step = () => {
     if (aiCoins <= 0 || pos <= -WINS_AT) {
       renderBoard();
-      if (pos <= -WINS_AT) win("lose");
+      // The AI may run out of coins before actually pushing the puck to the
+      // edge; both stashes are then empty, so fall back to the same
+      // coin-exhaustion tie-break used elsewhere: the side pos favors wins.
+      if (pos <= -WINS_AT) return win("lose");
+      if (aiCoins <= 0) return win(pos < 0 ? "lose" : pos > 0 ? "win" : "draw");
       return;
     }
     aiCoins--; pos--;
