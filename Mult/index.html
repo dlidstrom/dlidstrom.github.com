@@ -82,6 +82,55 @@
     width: 100%;
   }
   button:hover { background: #1d3f60; }
+  button.secondary { background: #6a6154; }
+  button.secondary:hover { background: #4f483e; }
+  .actions { display: flex; gap: 10px; }
+  .actions button { flex: 1; }
+  .history { text-align: left; }
+  .history h2 { text-align: center; margin: 0 0 12px; font-size: 20px; }
+  .history .summary {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .history .summary .box {
+    flex: 1;
+    background: #fff;
+    border: 1.5px solid #d8d0bd;
+    border-radius: 10px;
+    padding: 8px 6px;
+  }
+  .history .summary .box span {
+    display: block;
+    font-size: 11px;
+    color: #6a6154;
+    margin-bottom: 3px;
+  }
+  .history .summary .box b {
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+  }
+  .history ul {
+    list-style: none;
+    margin: 0 0 6px;
+    padding: 0 2px;
+    max-height: 240px;
+    overflow-y: auto;
+  }
+  .history li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+    padding: 7px 0;
+    border-top: 1px solid #e0d9c8;
+    font-size: 14px;
+    color: #6a6154;
+  }
+  .history li.best b { color: #2c7a4b; }
+  .history li.empty { justify-content: center; color: #8a8170; font-style: italic; }
+  .history li b { font-variant-numeric: tabular-nums; color: var(--ink); }
 </style>
 </head>
 <body>
@@ -101,7 +150,23 @@
     <div class="stat"><span>Frågor</span><b id="statCount"></b></div>
     <div class="stat"><span>Total tid</span><b id="statTotal"></b></div>
     <div class="stat"><span>Medeltid / fråga</span><b id="statAvg"></b></div>
-    <button id="restartBtn" type="button">Träna igen</button>
+    <div class="actions">
+      <button id="restartBtn" type="button">Träna igen</button>
+      <button id="showHistoryBtn" type="button" class="secondary">Historik</button>
+    </div>
+  </div>
+
+  <div class="history" id="history" style="display:none">
+    <h2>Historik</h2>
+    <div class="summary">
+      <div class="box"><span>Bästa medeltid</span><b id="historyBest"></b></div>
+      <div class="box"><span>Träningar</span><b id="historyCount"></b></div>
+      <div class="box"><span>Snitt, alla</span><b id="historyOverall"></b></div>
+    </div>
+    <ul id="historyList"></ul>
+    <div class="actions">
+      <button id="backBtn" type="button" class="secondary">Tillbaka</button>
+    </div>
   </div>
 </div>
 
@@ -118,6 +183,11 @@ const questionEl = document.getElementById("question");
 const answerEl = document.getElementById("answer");
 const hintEl = document.getElementById("hint");
 const resultsEl = document.getElementById("results");
+const historyEl = document.getElementById("history");
+const historyListEl = document.getElementById("historyList");
+
+const HISTORY_KEY = "mult-history";
+let viewBeforeHistory = "quiz";
 
 let index = 0;
 let current = { a: 0, b: 0 };
@@ -151,6 +221,72 @@ function showResults() {
   document.getElementById("statCount").textContent = String(TOTAL_QUESTIONS);
   document.getElementById("statTotal").textContent = formatSeconds(total);
   document.getElementById("statAvg").textContent = formatSeconds(total / TOTAL_QUESTIONS);
+  recordSession(total);
+}
+
+function loadHistory() {
+  try {
+    const raw = localStorage.getItem(HISTORY_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveHistory(entries) {
+  try {
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(entries));
+  } catch (e) {}
+}
+
+function formatDate(ts) {
+  return new Date(ts).toLocaleString("sv-SE", {
+    year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit"
+  });
+}
+
+function recordSession(total) {
+  const entries = loadHistory();
+  entries.push({ ts: Date.now(), total: total, avg: total / TOTAL_QUESTIONS, count: TOTAL_QUESTIONS });
+  saveHistory(entries);
+}
+
+function renderHistory() {
+  const entries = loadHistory();
+  document.getElementById("historyCount").textContent = String(entries.length);
+  if (entries.length === 0) {
+    document.getElementById("historyBest").textContent = "\u2014";
+    document.getElementById("historyOverall").textContent = "\u2014";
+    historyListEl.innerHTML = "<li class=\"empty\">Inga resultat ännu — klara en träning först!</li>";
+    return;
+  }
+  const best = Math.min(...entries.map(e => e.avg));
+  const overall = entries.reduce((sum, e) => sum + e.avg, 0) / entries.length;
+  document.getElementById("historyBest").textContent = formatSeconds(best);
+  document.getElementById("historyOverall").textContent = formatSeconds(overall);
+  const sorted = [...entries].reverse();
+  historyListEl.innerHTML = sorted.map(e =>
+    `<li${e.avg <= best ? " class=\"best\"" : ""}><span>${formatDate(e.ts)}</span>` +
+    `<span><b>${formatSeconds(e.avg)}</b> / fråga</span></li>`
+  ).join("");
+}
+
+function showHistory() {
+  viewBeforeHistory = resultsEl.style.display === "block" ? "results" : "quiz";
+  quizEl.style.display = "none";
+  resultsEl.style.display = "none";
+  historyEl.style.display = "block";
+  renderHistory();
+}
+
+function hideHistory() {
+  historyEl.style.display = "none";
+  if (viewBeforeHistory === "results") {
+    resultsEl.style.display = "block";
+  } else {
+    quizEl.style.display = "block";
+    answerEl.focus();
+  }
 }
 
 function start() {
@@ -185,6 +321,8 @@ answerEl.addEventListener("keydown", e => {
 });
 
 document.getElementById("restartBtn").addEventListener("click", start);
+document.getElementById("showHistoryBtn").addEventListener("click", showHistory);
+document.getElementById("backBtn").addEventListener("click", hideHistory);
 
 start();
 </script>
