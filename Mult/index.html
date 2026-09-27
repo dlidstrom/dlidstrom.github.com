@@ -297,12 +297,11 @@ function start() {
   nextQuestion();
 }
 
-answerEl.addEventListener("keydown", e => {
-  if (e.key !== "Enter") return;
+answerEl.addEventListener("input", () => {
   const value = answerEl.value.trim();
   if (value === "") return;
-  const given = Number(value);
   const correct = current.a * current.b;
+  const given = Number(value);
   if (given === correct) {
     times.push(performance.now() - questionStart);
     index++;
@@ -311,7 +310,9 @@ answerEl.addEventListener("keydown", e => {
     } else {
       nextQuestion();
     }
-  } else {
+    return;
+  }
+  if (value.length >= String(correct).length) {
     answerEl.value = "";
     answerEl.classList.remove("wrong");
     void answerEl.offsetWidth;
