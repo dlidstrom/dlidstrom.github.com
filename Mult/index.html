@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mult — multiplication practice</title>
+<style>
+  :root {
+    --cell-edge: #24517e;
+    --paper: #f4efe4;
+    --ink: #2b2b2b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: linear-gradient(#2c3a4d, #1d2634);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  #app {
+    background: var(--paper);
+    border-radius: 18px;
+    padding: 28px 32px 24px;
+    width: min(420px, 94vw);
+    box-shadow: 0 24px 60px rgba(0,0,0,.45);
+    text-align: center;
+  }
+  h1 { margin: 0 0 4px; font-size: 24px; letter-spacing: .5px; }
+  .subtitle { margin: 0 0 18px; color: #6a6154; font-size: 13px; }
+  .progress { font-size: 13px; color: #6a6154; margin-bottom: 8px; font-variant-numeric: tabular-nums; }
+  .question {
+    font-size: 44px;
+    font-weight: 700;
+    margin: 18px 0 20px;
+    font-variant-numeric: tabular-nums;
+  }
+  input#answer {
+    font: inherit;
+    font-size: 28px;
+    text-align: center;
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1.5px solid #b8ae9c;
+    background: #fff;
+    color: var(--ink);
+  }
+  input#answer.wrong {
+    animation: shake .3s ease;
+    border-color: #b3452f;
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
+  }
+  .hint { margin-top: 10px; font-size: 13px; color: #b3452f; min-height: 1.4em; }
+  .results h2 { margin: 0 0 12px; font-size: 20px; }
+  .stat {
+    display: flex;
+    justify-content: space-between;
+    font-size: 15px;
+    margin: 6px 0;
+  }
+  .stat b { font-variant-numeric: tabular-nums; }
+  button {
+    font: inherit;
+    font-weight: 600;
+    border-radius: 10px;
+    border: none;
+    padding: 11px 18px;
+    background: var(--cell-edge);
+    color: #fff;
+    cursor: pointer;
+    margin-top: 18px;
+    width: 100%;
+  }
+  button:hover { background: #1d3f60; }
+</style>
+</head>
+<body>
+<div id="app">
+  <h1>Mult</h1>
+  <p class="subtitle">Multiplication practice, 2&ndash;10 &times; 2&ndash;10</p>
+
+  <div id="quiz">
+    <div class="progress" id="progress"></div>
+    <div class="question" id="question"></div>
+    <input id="answer" type="text" inputmode="numeric" autocomplete="off" autocapitalize="off" />
+    <div class="hint" id="hint"></div>
+  </div>
+
+  <div class="results" id="results" style="display:none">
+    <h2>Done!</h2>
+    <div class="stat"><span>Questions</span><b id="statCount"></b></div>
+    <div class="stat"><span>Total time</span><b id="statTotal"></b></div>
+    <div class="stat"><span>Average time / question</span><b id="statAvg"></b></div>
+    <button id="restartBtn" type="button">Practice again</button>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+const TOTAL_QUESTIONS = 10;
+const MIN_FACTOR = 2;
+const MAX_FACTOR = 10;
+
+const quizEl = document.getElementById("quiz");
+const progressEl = document.getElementById("progress");
+const questionEl = document.getElementById("question");
+const answerEl = document.getElementById("answer");
+const hintEl = document.getElementById("hint");
+const resultsEl = document.getElementById("results");
+
+let index = 0;
+let current = { a: 0, b: 0 };
+let times = [];
+let questionStart = 0;
+
+function randomFactor() {
+  return MIN_FACTOR + Math.floor(Math.random() * (MAX_FACTOR - MIN_FACTOR + 1));
+}
+
+function nextQuestion() {
+  current.a = randomFactor();
+  current.b = randomFactor();
+  questionEl.textContent = `${current.a} × ${current.b}`;
+  progressEl.textContent = `Question ${index + 1} of ${TOTAL_QUESTIONS}`;
+  hintEl.textContent = "";
+  answerEl.value = "";
+  answerEl.classList.remove("wrong");
+  answerEl.focus();
+  questionStart = performance.now();
+}
+
+function formatSeconds(ms) {
+  return (ms / 1000).toFixed(2) + " s";
+}
+
+function showResults() {
+  quizEl.style.display = "none";
+  resultsEl.style.display = "block";
+  const total = times.reduce((sum, t) => sum + t, 0);
+  document.getElementById("statCount").textContent = String(TOTAL_QUESTIONS);
+  document.getElementById("statTotal").textContent = formatSeconds(total);
+  document.getElementById("statAvg").textContent = formatSeconds(total / TOTAL_QUESTIONS);
+}
+
+function start() {
+  index = 0;
+  times = [];
+  resultsEl.style.display = "none";
+  quizEl.style.display = "block";
+  nextQuestion();
+}
+
+answerEl.addEventListener("keydown", e => {
+  if (e.key !== "Enter") return;
+  const value = answerEl.value.trim();
+  if (value === "") return;
+  const given = Number(value);
+  const correct = current.a * current.b;
+  if (given === correct) {
+    times.push(performance.now() - questionStart);
+    index++;
+    if (index >= TOTAL_QUESTIONS) {
+      showResults();
+    } else {
+      nextQuestion();
+    }
+  } else {
+    answerEl.value = "";
+    answerEl.classList.remove("wrong");
+    void answerEl.offsetWidth;
+    answerEl.classList.add("wrong");
+    hintEl.textContent = "Not quite — try again.";
+  }
+});
+
+document.getElementById("restartBtn").addEventListener("click", start);
+
+start();
+</script>
+</body>
+</html>
