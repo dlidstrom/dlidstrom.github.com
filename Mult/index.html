@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sv">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Mult — multiplication practice</title>
+<title>Mult — multiplikationsträning</title>
 <style>
   :root {
     --cell-edge: #24517e;
@@ -87,7 +87,7 @@
 <body>
 <div id="app">
   <h1>Mult</h1>
-  <p class="subtitle">Multiplication practice, 2&ndash;10 &times; 2&ndash;10</p>
+  <p class="subtitle">Multiplikationsträning, 2&ndash;10 &times; 2&ndash;10</p>
 
   <div id="quiz">
     <div class="progress" id="progress"></div>
@@ -97,11 +97,11 @@
   </div>
 
   <div class="results" id="results" style="display:none">
-    <h2>Done!</h2>
-    <div class="stat"><span>Questions</span><b id="statCount"></b></div>
-    <div class="stat"><span>Total time</span><b id="statTotal"></b></div>
-    <div class="stat"><span>Average time / question</span><b id="statAvg"></b></div>
-    <button id="restartBtn" type="button">Practice again</button>
+    <h2>Klart!</h2>
+    <div class="stat"><span>Frågor</span><b id="statCount"></b></div>
+    <div class="stat"><span>Total tid</span><b id="statTotal"></b></div>
+    <div class="stat"><span>Medeltid / fråga</span><b id="statAvg"></b></div>
+    <button id="restartBtn" type="button">Träna igen</button>
   </div>
 </div>
 
@@ -132,7 +132,7 @@ function nextQuestion() {
   current.a = randomFactor();
   current.b = randomFactor();
   questionEl.textContent = `${current.a} × ${current.b}`;
-  progressEl.textContent = `Question ${index + 1} of ${TOTAL_QUESTIONS}`;
+  progressEl.textContent = `Fråga ${index + 1} av ${TOTAL_QUESTIONS}`;
   hintEl.textContent = "";
   answerEl.value = "";
   answerEl.classList.remove("wrong");
@@ -180,7 +180,7 @@ answerEl.addEventListener("keydown", e => {
     answerEl.classList.remove("wrong");
     void answerEl.offsetWidth;
     answerEl.classList.add("wrong");
-    hintEl.textContent = "Not quite — try again.";
+    hintEl.textContent = "Inte riktigt — försök igen.";
   }
 });
 
